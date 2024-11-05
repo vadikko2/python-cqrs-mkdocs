@@ -1,0 +1,9 @@
+nav:
+    - index.md
+    - bootstrap.md
+    - ...
+    - outbox.md
+    - kafka.md
+    - fastapi.md
+    - faststream.md
+    - examples

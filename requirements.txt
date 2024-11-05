@@ -1,0 +1,5 @@
+mkdocs==1.*
+mkdocs-material==9.*
+mkdocs-awesome-pages-plugin==2.9.3
+
+pre-commit
