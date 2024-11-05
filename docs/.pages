@@ -1,5 +1,6 @@
 nav:
     - index.md
+    - request_handler.md
     - bootstrap.md
     - ...
     - outbox.md
