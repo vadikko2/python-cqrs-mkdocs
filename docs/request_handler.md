@@ -10,10 +10,9 @@ Request handlers can be divided into two main types:
 Command Handler executes the received command. The logic of the handler may include, for example, modifying the state of
 the domain model. As a result of executing the command, an event may be produced to the broker.
 
-??? note 
+??? note
 
     By default, the command handler does not return any result, but it is not mandatory.
-
 
 ```python
 from cqrs.requests.request_handler import RequestHandler, SyncRequestHandler

@@ -1,4 +1,22 @@
 site_name: python-cqrs
+nav:
+  - Home: index.md
+  - Core Concepts:
+    - Commands / Requests Handling: request_handler.md
+    - Events Handling: event_handler.md
+    - Bootstrap: bootstrap.md
+    - Dependency Injection: di.md
+    - Transaction Outbox: outbox.md
+  - Integrations:
+    - FastAPI Integration: fastapi.md
+    - FastStream Integration: faststream.md
+    - Kafka Integration: kafka.md
+    - Event Producing: event_producing.md
+    - Event Consuming: event_consuming.md
+  - Examples:
+    - Bootstrap Example: examples/bootstrap.md
+    - DI Example: examples/di.md
+    - Request Handler Example: examples/request_handler.md
 theme:
   name: material
   features:
@@ -6,19 +24,19 @@ theme:
     - content.code.annotate
     - content.code.select
   icon:
-    annotation: material/chevron-right-circle
+    annotation: material/plus-circle
   font:
     text: Roboto Mono
   palette:
     - scheme: default
       primary: indigo
-      accent: indigo
+      accent: deep-purple
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - scheme: slate
       primary: indigo
-      accent: indigo
+      accent: deep-purple
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -46,6 +64,10 @@ extra:
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/python-cqrs/
 plugins:
-    - search
-    - awesome-pages
-    - autorefs
+  - search
+  - awesome-pages
+  - autorefs
+extra_css:
+  - stylesheets/extra.css
+extra_javascript:
+  - javascripts/navigation.js
