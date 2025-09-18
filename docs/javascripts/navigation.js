@@ -50,28 +50,26 @@
         }
         
         // Fallback - используем реальный порядок страниц из MkDocs навигации
+        // Используем относительные ссылки, как генерирует MkDocs
         const pageOrder = [
-            { title: 'Home', url: '/python-cqrs-mkdocs/', path: 'index' },
-            { title: 'Commands / Requests Handling', url: '/python-cqrs-mkdocs/request_handler/', path: 'request_handler' },
-            { title: 'Events Handling', url: '/python-cqrs-mkdocs/event_handler/', path: 'event_handler' },
-            { title: 'Bootstrap', url: '/python-cqrs-mkdocs/bootstrap/', path: 'bootstrap' },
-            { title: 'Dependency Injection', url: '/python-cqrs-mkdocs/di/', path: 'di' },
-            { title: 'Transactional Outbox', url: '/python-cqrs-mkdocs/outbox/', path: 'outbox' },
-            { title: 'FastAPI integration', url: '/python-cqrs-mkdocs/fastapi/', path: 'fastapi' },
-            { title: 'Faststream integration', url: '/python-cqrs-mkdocs/faststream/', path: 'faststream' },
-            { title: 'Kafka integration', url: '/python-cqrs-mkdocs/kafka/', path: 'kafka' },
-            { title: 'Event Producing', url: '/python-cqrs-mkdocs/event_producing/', path: 'event_producing' },
-            { title: 'Event Consuming', url: '/python-cqrs-mkdocs/event_consuming/', path: 'event_consuming' },
-            { title: 'Examples Overview', url: '/python-cqrs-mkdocs/examples/', path: 'examples' },
-            { title: 'Bootstrap Example', url: '/python-cqrs-mkdocs/examples/bootstrap/', path: 'examples/bootstrap' },
-            { title: 'DI Example', url: '/python-cqrs-mkdocs/examples/di/', path: 'examples/di' },
-            { title: 'Request Handler Example', url: '/python-cqrs-mkdocs/examples/request_handler/', path: 'examples/request_handler' }
+            { title: 'Home', url: '../', path: 'index' },
+            { title: 'Commands / Requests Handling', url: 'request_handler/', path: 'request_handler' },
+            { title: 'Events Handling', url: 'event_handler/', path: 'event_handler' },
+            { title: 'Bootstrap', url: 'bootstrap/', path: 'bootstrap' },
+            { title: 'Dependency Injection', url: 'di/', path: 'di' },
+            { title: 'Transactional Outbox', url: 'outbox/', path: 'outbox' },
+            { title: 'FastAPI integration', url: 'fastapi/', path: 'fastapi' },
+            { title: 'Faststream integration', url: 'faststream/', path: 'faststream' },
+            { title: 'Kafka integration', url: 'kafka/', path: 'kafka' },
+            { title: 'Event Producing', url: 'event_producing/', path: 'event_producing' },
+            { title: 'Event Consuming', url: 'event_consuming/', path: 'event_consuming' },
+            { title: 'Examples Overview', url: 'examples/', path: 'examples' },
+            { title: 'Bootstrap Example', url: 'examples/bootstrap/', path: 'examples/bootstrap' },
+            { title: 'DI Example', url: 'examples/di/', path: 'examples/di' },
+            { title: 'Request Handler Example', url: 'examples/request_handler/', path: 'examples/request_handler' }
         ];
         
         const currentIndex = pageOrder.findIndex(page => {
-            // Точное совпадение URL
-            if (currentUrl === page.url) return true;
-            
             // Для главной страницы проверяем специальные случаи
             if (page.path === 'index') {
                 return currentUrl === '/' || 
@@ -130,11 +128,32 @@
         const container = document.createElement('div');
         container.className = 'navigation-buttons';
         
+        // Функция для получения правильного относительного пути
+        function getRelativeUrl(targetUrl, currentUrl) {
+            // Если это главная страница, возвращаем как есть
+            if (targetUrl === '../') {
+                return '../';
+            }
+            
+            // Определяем глубину текущей страницы
+            const currentDepth = currentUrl.split('/').filter(part => part && part !== 'python-cqrs-mkdocs').length;
+            
+            // Если мы на главной странице (depth = 0), используем URL как есть
+            if (currentDepth === 0) {
+                return targetUrl;
+            }
+            
+            // Для остальных страниц добавляем нужное количество "../"
+            const prefix = '../'.repeat(currentDepth);
+            return prefix + targetUrl;
+        }
+        
         // Кнопка "Предыдущая"
         if (prevPage) {
             const prevButton = document.createElement('a');
-            // Используем абсолютные ссылки для корректной навигации
-            prevButton.href = prevPage.url;
+            const relativeUrl = getRelativeUrl(prevPage.url, window.location.pathname);
+            prevButton.href = relativeUrl;
+            console.log('Prev button URL:', prevPage.url, '->', relativeUrl);
             prevButton.className = 'nav-button prev';
             prevButton.innerHTML = `
                 <span class="icon">←</span>
@@ -154,9 +173,9 @@
         // Кнопка "Следующая"
         if (nextPage) {
             const nextButton = document.createElement('a');
-            // Используем абсолютные ссылки для корректной навигации
-            nextButton.href = nextPage.url;
-            console.log('Next button URL:', nextPage.url);
+            const relativeUrl = getRelativeUrl(nextPage.url, window.location.pathname);
+            nextButton.href = relativeUrl;
+            console.log('Next button URL:', nextPage.url, '->', relativeUrl);
             nextButton.className = 'nav-button next';
             nextButton.innerHTML = `
                 <span>${nextPage.title}</span>
