@@ -2,6 +2,7 @@ site_name: python-cqrs
 site_url: https://vadikko2.github.io/python-cqrs-mkdocs/
 repo_url: https://github.com/vadikko2/python-cqrs
 repo_name: vadikko2/python-cqrs
+dev_addr: 127.0.0.1:8000
 nav:
   - Home: index.md
   - Core Concepts:
@@ -71,6 +72,8 @@ plugins:
   - search
   - awesome-pages
   - autorefs
+  - git-revision-date-localized:
+      enable_creation_date: true
 use_directory_urls: true
 strict: true
 extra_css:

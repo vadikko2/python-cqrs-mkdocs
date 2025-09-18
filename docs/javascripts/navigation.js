@@ -30,6 +30,7 @@
     // Функция для получения текущей страницы и соседних страниц
     function getCurrentPageInfo() {
         const currentUrl = window.location.pathname;
+        console.log('Current URL:', currentUrl);
         const nav = getNavigationStructure();
         
         // Если у нас есть доступ к MkDocs навигации
@@ -67,11 +68,25 @@
             { title: 'Request Handler Example', url: '/python-cqrs-mkdocs/examples/request_handler/', path: 'examples/request_handler' }
         ];
         
-        const currentIndex = pageOrder.findIndex(page => 
-            currentUrl.includes(page.path) || currentUrl === page.url
-        );
+        const currentIndex = pageOrder.findIndex(page => {
+            // Точное совпадение URL
+            if (currentUrl === page.url) return true;
+            
+            // Для главной страницы проверяем специальные случаи
+            if (page.path === 'index') {
+                return currentUrl === '/' || 
+                       currentUrl.endsWith('/python-cqrs-mkdocs/') || 
+                       currentUrl.endsWith('/python-cqrs-mkdocs') || 
+                       currentUrl.endsWith('/index.html') || 
+                       currentUrl.endsWith('/python-cqrs-mkdocs/index.html');
+            }
+            
+            // Для остальных страниц проверяем, что path содержится в URL
+            return currentUrl.includes('/' + page.path + '/') || currentUrl.endsWith('/' + page.path);
+        });
         
         if (currentIndex !== -1) {
+            console.log('Found page at index:', currentIndex, pageOrder[currentIndex]);
             return {
                 current: pageOrder[currentIndex],
                 prev: currentIndex > 0 ? pageOrder[currentIndex - 1] : null,
@@ -79,8 +94,9 @@
             };
         }
         
-        // Специальная обработка для главной страницы (когда currentUrl заканчивается на /)
-        if (currentUrl === '/' || currentUrl.endsWith('/python-cqrs-mkdocs/') || currentUrl.endsWith('/python-cqrs-mkdocs') || currentUrl.endsWith('/index.html') || currentUrl.endsWith('/python-cqrs-mkdocs/index.html')) {
+        // Специальная обработка для главной страницы (если не найдена в pageOrder)
+        if (currentIndex === -1 && (currentUrl === '/' || currentUrl.endsWith('/python-cqrs-mkdocs/') || currentUrl.endsWith('/python-cqrs-mkdocs') || currentUrl.endsWith('/index.html') || currentUrl.endsWith('/python-cqrs-mkdocs/index.html'))) {
+            console.log('Using special handling for home page');
             return {
                 current: pageOrder[0], // Home
                 prev: null,
@@ -117,7 +133,8 @@
         // Кнопка "Предыдущая"
         if (prevPage) {
             const prevButton = document.createElement('a');
-            prevButton.href = prevPage.url;
+            // Используем относительные ссылки, как генерирует MkDocs
+            prevButton.href = prevPage.url.replace('/python-cqrs-mkdocs/', '');
             prevButton.className = 'nav-button prev';
             prevButton.innerHTML = `
                 <span class="icon">←</span>
@@ -137,7 +154,10 @@
         // Кнопка "Следующая"
         if (nextPage) {
             const nextButton = document.createElement('a');
-            nextButton.href = nextPage.url;
+            // Используем относительные ссылки, как генерирует MkDocs
+            const relativeUrl = nextPage.url.replace('/python-cqrs-mkdocs/', '');
+            nextButton.href = relativeUrl;
+            console.log('Next button URL:', nextPage.url, '->', relativeUrl);
             nextButton.className = 'nav-button next';
             nextButton.innerHTML = `
                 <span>${nextPage.title}</span>
