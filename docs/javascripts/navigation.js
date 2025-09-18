@@ -133,8 +133,8 @@
         // Кнопка "Предыдущая"
         if (prevPage) {
             const prevButton = document.createElement('a');
-            // Используем относительные ссылки, как генерирует MkDocs
-            prevButton.href = prevPage.url.replace('/python-cqrs-mkdocs/', '');
+            // Используем абсолютные ссылки для корректной навигации
+            prevButton.href = prevPage.url;
             prevButton.className = 'nav-button prev';
             prevButton.innerHTML = `
                 <span class="icon">←</span>
@@ -154,10 +154,9 @@
         // Кнопка "Следующая"
         if (nextPage) {
             const nextButton = document.createElement('a');
-            // Используем относительные ссылки, как генерирует MkDocs
-            const relativeUrl = nextPage.url.replace('/python-cqrs-mkdocs/', '');
-            nextButton.href = relativeUrl;
-            console.log('Next button URL:', nextPage.url, '->', relativeUrl);
+            // Используем абсолютные ссылки для корректной навигации
+            nextButton.href = nextPage.url;
+            console.log('Next button URL:', nextPage.url);
             nextButton.className = 'nav-button next';
             nextButton.innerHTML = `
                 <span>${nextPage.title}</span>
