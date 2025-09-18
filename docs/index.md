@@ -2,6 +2,21 @@
     <img src="img.png" alt="Python CQRS" class="hero-image">
     <h1 class="hero-title">Python CQRS</h1>
     <p class="hero-subtitle">Modern CQRS pattern implementation with Transaction Outbox support</p>
+    
+    <div class="project-links">
+        <a href="https://github.com/vadikko2/python-cqrs" class="project-link github-link" target="_blank" rel="noopener">
+            <span class="icon">🐙</span>
+            <span class="text">GitHub</span>
+        </a>
+        <a href="https://pypi.org/project/python-cqrs/" class="project-link pypi-link" target="_blank" rel="noopener">
+            <span class="icon">📦</span>
+            <span class="text">PyPI</span>
+        </a>
+        <a href="https://clickpy.clickhouse.com/dashboard/python-cqrs" class="project-link stats-link" target="_blank" rel="noopener">
+            <span class="icon">📊</span>
+            <span class="text">Downloads</span>
+        </a>
+    </div>
 </div>
 
 ---
@@ -188,3 +203,13 @@ pip install git+https://github.com/vadikko2/python-cqrs
 ```bash
 uv add python-cqrs
 ```
+
+---
+
+## About
+
+This framework is developed by the **Timeweb.Cloud** development team.
+
+<div class="company-info">
+    <p>Built with ❤️ by <a href="https://timeweb.cloud/" target="_blank" rel="noopener">Timeweb.Cloud</a> — your reliable cloud infrastructure partner.</p>
+</div>

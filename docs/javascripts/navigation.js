@@ -50,16 +50,17 @@
         
         // Fallback - используем реальный порядок страниц из MkDocs навигации
         const pageOrder = [
-            { title: 'Home', url: '/', path: 'index' },
-            { title: 'Commands / Requests Handling', url: '/request_handler/', path: 'request_handler' },
-            { title: 'Bootstrap', url: '/bootstrap/', path: 'bootstrap' },
-            { title: 'Dependency Injection', url: '/di/', path: 'di' },
-            { title: 'Transactional Outbox', url: '/outbox/', path: 'outbox' },
-            { title: 'FastAPI integration', url: '/fastapi/', path: 'fastapi' },
-            { title: 'Faststream integration', url: '/faststream/', path: 'faststream' },
-            { title: 'Kafka integration', url: '/kafka/', path: 'kafka' },
-            { title: 'Event Consuming', url: '/event_consuming/', path: 'event_consuming' },
-            { title: 'Event Producing', url: '/event_producing/', path: 'event_producing' }
+            { title: 'Home', url: '../', path: 'index' },
+            { title: 'Commands / Requests Handling', url: '../request_handler/', path: 'request_handler' },
+            { title: 'Events Handling', url: '../event_handler/', path: 'event_handler' },
+            { title: 'Bootstrap', url: '../bootstrap/', path: 'bootstrap' },
+            { title: 'Dependency Injection', url: '../di/', path: 'di' },
+            { title: 'Transactional Outbox', url: '../outbox/', path: 'outbox' },
+            { title: 'FastAPI integration', url: '../fastapi/', path: 'fastapi' },
+            { title: 'Faststream integration', url: '../faststream/', path: 'faststream' },
+            { title: 'Kafka integration', url: '../kafka/', path: 'kafka' },
+            { title: 'Event Producing', url: '../event_producing/', path: 'event_producing' },
+            { title: 'Event Consuming', url: '../event_consuming/', path: 'event_consuming' }
         ];
         
         const currentIndex = pageOrder.findIndex(page => 
@@ -71,6 +72,15 @@
                 current: pageOrder[currentIndex],
                 prev: currentIndex > 0 ? pageOrder[currentIndex - 1] : null,
                 next: currentIndex < pageOrder.length - 1 ? pageOrder[currentIndex + 1] : null
+            };
+        }
+        
+        // Специальная обработка для главной страницы (когда currentUrl заканчивается на /)
+        if (currentUrl === '/' || currentUrl.endsWith('/python-cqrs-mkdocs/') || currentUrl.endsWith('/python-cqrs-mkdocs') || currentUrl.endsWith('/index.html')) {
+            return {
+                current: pageOrder[0], // Home
+                prev: null,
+                next: pageOrder[1] // Commands / Requests Handling
             };
         }
         
@@ -115,7 +125,7 @@
             prevButton.className = 'nav-button prev disabled';
             prevButton.innerHTML = `
                 <span class="icon">←</span>
-                <span>Introducing</span>
+                <span>Previous</span>
             `;
             container.appendChild(prevButton);
         }

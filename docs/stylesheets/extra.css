@@ -1,3 +1,30 @@
+/* Timeweb.Cloud корпоративные цвета */
+:root {
+  --timeweb-primary: #0066CC;
+  --timeweb-primary-dark: #003d7a;
+  --timeweb-primary-light: #004d99;
+  --timeweb-accent: #0052a3;
+  --timeweb-text: #333333;
+  --timeweb-text-light: #666666;
+  --timeweb-bg-light: rgba(0, 102, 204, 0.03);
+  --timeweb-bg-medium: rgba(0, 102, 204, 0.05);
+  --timeweb-bg-dark: rgba(0, 102, 204, 0.08);
+  --timeweb-border: rgba(0, 102, 204, 0.15);
+  --timeweb-border-dark: rgba(0, 102, 204, 0.2);
+  --timeweb-shadow: rgba(0, 102, 204, 0.2);
+}
+
+[data-md-color-scheme="slate"] {
+  --timeweb-text: #ffffff;
+  --timeweb-text-light: #cccccc;
+  --timeweb-bg-light: rgba(0, 102, 204, 0.05);
+  --timeweb-bg-medium: rgba(0, 102, 204, 0.08);
+  --timeweb-bg-dark: rgba(0, 102, 204, 0.12);
+  --timeweb-border: rgba(0, 102, 204, 0.2);
+  --timeweb-border-dark: rgba(0, 102, 204, 0.3);
+  --timeweb-shadow: rgba(0, 102, 204, 0.3);
+}
+
 /* Стили для главного изображения */
 .hero-image {
     display: block;
@@ -6,13 +33,13 @@
     width: 100%;
     height: auto;
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px var(--timeweb-shadow);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-image:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 40px var(--timeweb-shadow);
 }
 
 /* Центрирование изображения с текстом */
@@ -20,9 +47,9 @@
     text-align: center;
     margin: 2rem 0;
     padding: 1rem;
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.05) 0%, rgba(103, 58, 183, 0.05) 100%);
+    background: linear-gradient(135deg, var(--timeweb-bg-light) 0%, var(--timeweb-bg-medium) 100%);
     border-radius: 16px;
-    border: 1px solid rgba(63, 81, 181, 0.1);
+    border: 1px solid var(--timeweb-border);
 }
 
 .image-container img {
@@ -32,43 +59,43 @@
     width: 100%;
     height: auto;
     border-radius: 12px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .image-container img:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 40px rgba(0, 102, 204, 0.3);
 }
 
 /* Темная тема - дополнительные стили */
 [data-md-color-scheme="slate"] .image-container {
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.08) 0%, rgba(103, 58, 183, 0.08) 100%);
-    border: 1px solid rgba(63, 81, 181, 0.2);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.08) 0%, rgba(0, 61, 122, 0.08) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
 }
 
 [data-md-color-scheme="slate"] .image-container img {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.3);
     filter: brightness(1.05) contrast(1.1);
 }
 
 [data-md-color-scheme="slate"] .image-container img:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 12px 40px rgba(0, 102, 204, 0.4);
     filter: brightness(1.1) contrast(1.15);
 }
 
 /* Светлая тема */
 [data-md-color-scheme="default"] .image-container {
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.03) 0%, rgba(103, 58, 183, 0.03) 100%);
-    border: 1px solid rgba(63, 81, 181, 0.1);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 61, 122, 0.03) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.1);
 }
 
 [data-md-color-scheme="default"] .image-container img {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.15);
 }
 
 [data-md-color-scheme="default"] .image-container img:hover {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 12px 40px rgba(0, 102, 204, 0.25);
 }
 
 [data-md-color-scheme="default"] .nav-button {
@@ -112,7 +139,7 @@
     left: -2px;
     right: -2px;
     bottom: -2px;
-    background: linear-gradient(45deg, #3f51b5, #673ab7, #9c27b0, #e91e63);
+    background: linear-gradient(45deg, #0066CC, #003d7a, #004d99, #0052a3);
     border-radius: 18px;
     z-index: -1;
     opacity: 0;
@@ -255,9 +282,9 @@
     text-align: center;
     margin: 2rem 0 4rem 0;
     padding: 3rem 2rem;
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.05) 0%, rgba(103, 58, 183, 0.05) 100%);
+    background: linear-gradient(135deg, var(--timeweb-bg-light) 0%, var(--timeweb-bg-medium) 100%);
     border-radius: 20px;
-    border: 1px solid rgba(63, 81, 181, 0.1);
+    border: 1px solid var(--timeweb-border);
     position: relative;
     overflow: hidden;
 }
@@ -269,7 +296,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(63, 81, 181, 0.02) 50%, transparent 70%);
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 102, 204, 0.02) 50%, transparent 70%);
     pointer-events: none;
 }
 
@@ -277,7 +304,7 @@
     font-size: 3.5rem;
     font-weight: 700;
     margin: 1rem 0 0.5rem 0;
-    background: linear-gradient(135deg, #3f51b5, #673ab7, #9c27b0);
+    background: linear-gradient(135deg, var(--timeweb-primary), var(--timeweb-primary-dark), var(--timeweb-primary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -299,13 +326,13 @@
     height: auto;
     margin: 0 auto 2rem auto;
     border-radius: 16px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .hero-image:hover {
     transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 12px 40px rgba(0, 102, 204, 0.3);
 }
 
 /* Архитектурная диаграмма */
@@ -315,9 +342,9 @@
     justify-content: space-between;
     margin: 2rem 0;
     padding: 2rem;
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.03) 0%, rgba(103, 58, 183, 0.03) 100%);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 61, 122, 0.03) 100%);
     border-radius: 16px;
-    border: 1px solid rgba(63, 81, 181, 0.1);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     flex-wrap: wrap;
     gap: 1rem;
 }
@@ -341,7 +368,7 @@
 
 .arch-section h4 {
     margin: 0 0 0.5rem 0;
-    color: #3f51b5;
+    color: #0066CC;
     font-size: 1.1rem;
     font-weight: 600;
 }
@@ -354,7 +381,7 @@
 
 .arch-arrow {
     font-size: 1.5rem;
-    color: #3f51b5;
+    color: #0066CC;
     font-weight: bold;
     margin: 0 0.5rem;
 }
@@ -364,20 +391,20 @@
     text-align: center;
     margin: 2rem 0;
     padding: 1.5rem;
-    background: rgba(63, 81, 181, 0.03);
+    background: rgba(0, 102, 204, 0.03);
     border-radius: 12px;
-    border: 1px solid rgba(63, 81, 181, 0.1);
+    border: 1px solid rgba(0, 102, 204, 0.15);
     transition: all 0.3s ease;
 }
 
 .cta-section:hover {
-    background: rgba(63, 81, 181, 0.05);
-    border-color: rgba(63, 81, 181, 0.15);
+    background: rgba(0, 102, 204, 0.05);
+    border-color: rgba(0, 102, 204, 0.2);
 }
 
 .cta-section h3 {
     margin: 0 0 0.5rem 0;
-    color: #3f51b5;
+    color: #0066CC;
     font-size: 1.4rem;
     font-weight: 500;
 }
@@ -396,26 +423,26 @@
 }
 
 .md-content ul li strong {
-    color: #3f51b5;
+    color: #0066CC;
     font-weight: 600;
 }
 
 /* Темная тема */
 [data-md-color-scheme="slate"] .hero-section {
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.08) 0%, rgba(103, 58, 183, 0.08) 100%);
-    border: 1px solid rgba(63, 81, 181, 0.2);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.08) 0%, rgba(0, 61, 122, 0.08) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
 }
 
 [data-md-color-scheme="slate"] .hero-title {
-    background: linear-gradient(135deg, #5c6bc0, #7e57c2, #ba68c8);
+    background: linear-gradient(135deg, #0066CC, #003d7a, #004d99);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
 [data-md-color-scheme="slate"] .architecture-diagram {
-    background: linear-gradient(135deg, rgba(63, 81, 181, 0.05) 0%, rgba(103, 58, 183, 0.05) 100%);
-    border: 1px solid rgba(63, 81, 181, 0.2);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(0, 61, 122, 0.05) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
 }
 
 [data-md-color-scheme="slate"] .arch-section {
@@ -429,21 +456,213 @@
 }
 
 [data-md-color-scheme="slate"] .arch-section h4 {
-    color: #5c6bc0;
+    color: #0066CC;
 }
 
 [data-md-color-scheme="slate"] .cta-section {
-    background: rgba(63, 81, 181, 0.05);
-    border: 1px solid rgba(63, 81, 181, 0.15);
+    background: rgba(0, 102, 204, 0.05);
+    border: 1px solid rgba(0, 102, 204, 0.15);
 }
 
 [data-md-color-scheme="slate"] .cta-section:hover {
-    background: rgba(63, 81, 181, 0.08);
-    border-color: rgba(63, 81, 181, 0.2);
+    background: rgba(0, 102, 204, 0.08);
+    border-color: rgba(0, 102, 204, 0.2);
 }
 
 [data-md-color-scheme="slate"] .cta-section h3 {
-    color: #5c6bc0;
+    color: #0066CC;
+}
+
+/* Стили для ссылок проекта */
+.project-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+.project-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--md-default-fg-color);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+
+.project-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.project-link:hover::before {
+    left: 100%;
+}
+
+.project-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    text-decoration: none;
+    color: var(--md-default-fg-color);
+}
+
+.project-link .icon {
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+    transition: transform 0.3s ease;
+}
+
+.project-link:hover .icon {
+    transform: scale(1.1);
+}
+
+.project-link .text {
+    font-weight: 600;
+}
+
+/* Специальные стили для разных ссылок */
+.github-link {
+    background: linear-gradient(135deg, rgba(36, 41, 46, 0.1) 0%, rgba(36, 41, 46, 0.2) 100%);
+    border-color: rgba(36, 41, 46, 0.3);
+}
+
+.github-link:hover {
+    background: linear-gradient(135deg, rgba(36, 41, 46, 0.2) 0%, rgba(36, 41, 46, 0.3) 100%);
+    border-color: rgba(36, 41, 46, 0.4);
+}
+
+.pypi-link {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 102, 204, 0.2) 100%);
+    border-color: rgba(0, 102, 204, 0.3);
+}
+
+.pypi-link:hover {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.2) 0%, rgba(0, 102, 204, 0.3) 100%);
+    border-color: rgba(0, 102, 204, 0.4);
+}
+
+.stats-link {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+.stats-link:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.3) 100%);
+    border-color: rgba(76, 175, 80, 0.4);
+}
+
+/* Стили для информации о компании */
+.company-info {
+    text-align: center;
+    margin: 3rem 0 2rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 61, 122, 0.03) 100%);
+    border-radius: 16px;
+    border: 1px solid rgba(0, 102, 204, 0.15);
+    position: relative;
+    overflow: hidden;
+}
+
+.company-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 102, 204, 0.02) 50%, transparent 70%);
+    pointer-events: none;
+}
+
+.company-info p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--md-default-fg-color--light);
+    position: relative;
+    z-index: 1;
+}
+
+.company-info a {
+    color: #0066CC;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.company-info a:hover {
+    color: #003d7a;
+    text-decoration: underline;
+}
+
+/* Темная тема для ссылок проекта */
+[data-md-color-scheme="slate"] .project-link {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--md-default-fg-color);
+}
+
+[data-md-color-scheme="slate"] .project-link:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--md-default-fg-color);
+}
+
+[data-md-color-scheme="slate"] .github-link {
+    background: linear-gradient(135deg, rgba(36, 41, 46, 0.15) 0%, rgba(36, 41, 46, 0.25) 100%);
+    border-color: rgba(36, 41, 46, 0.3);
+}
+
+[data-md-color-scheme="slate"] .github-link:hover {
+    background: linear-gradient(135deg, rgba(36, 41, 46, 0.25) 0%, rgba(36, 41, 46, 0.35) 100%);
+    border-color: rgba(36, 41, 46, 0.4);
+}
+
+[data-md-color-scheme="slate"] .pypi-link {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.25) 100%);
+    border-color: rgba(0, 102, 204, 0.3);
+}
+
+[data-md-color-scheme="slate"] .pypi-link:hover {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.25) 0%, rgba(0, 102, 204, 0.35) 100%);
+    border-color: rgba(0, 102, 204, 0.4);
+}
+
+[data-md-color-scheme="slate"] .stats-link {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.25) 100%);
+    border-color: rgba(76, 175, 80, 0.3);
+}
+
+[data-md-color-scheme="slate"] .stats-link:hover {
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25) 0%, rgba(76, 175, 80, 0.35) 100%);
+    border-color: rgba(76, 175, 80, 0.4);
+}
+
+[data-md-color-scheme="slate"] .company-info {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(0, 61, 122, 0.05) 100%);
+    border: 1px solid rgba(0, 102, 204, 0.2);
+}
+
+[data-md-color-scheme="slate"] .company-info a {
+    color: #0066CC;
+}
+
+[data-md-color-scheme="slate"] .company-info a:hover {
+    color: #003d7a;
 }
 
 /* Адаптивность */
@@ -465,6 +684,16 @@
         max-width: 150px;
     }
     
+    .project-links {
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+    
+    .project-link {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
     .architecture-diagram {
         flex-direction: column;
         text-align: center;
@@ -478,6 +707,15 @@
     .arch-section {
         min-width: auto;
         width: 100%;
+    }
+    
+    .company-info {
+        margin: 2rem 0 1rem 0;
+        padding: 1.5rem;
+    }
+    
+    .company-info p {
+        font-size: 1rem;
     }
 }
 
