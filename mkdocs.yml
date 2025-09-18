@@ -1,5 +1,7 @@
 site_name: python-cqrs
 site_url: https://vadikko2.github.io/python-cqrs-mkdocs/
+repo_url: https://github.com/vadikko2/python-cqrs
+repo_name: vadikko2/python-cqrs
 nav:
   - Home: index.md
   - Core Concepts:
@@ -15,6 +17,7 @@ nav:
     - Event Producing: event_producing.md
     - Event Consuming: event_consuming.md
   - Examples:
+    - Examples Overview: examples/index.md
     - Bootstrap Example: examples/bootstrap.md
     - DI Example: examples/di.md
     - Request Handler Example: examples/request_handler.md
@@ -68,6 +71,8 @@ plugins:
   - search
   - awesome-pages
   - autorefs
+use_directory_urls: true
+strict: true
 extra_css:
   - stylesheets/extra.css
 extra_javascript:

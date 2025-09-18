@@ -50,17 +50,21 @@
         
         // Fallback - используем реальный порядок страниц из MkDocs навигации
         const pageOrder = [
-            { title: 'Home', url: '../', path: 'index' },
-            { title: 'Commands / Requests Handling', url: '../request_handler/', path: 'request_handler' },
-            { title: 'Events Handling', url: '../event_handler/', path: 'event_handler' },
-            { title: 'Bootstrap', url: '../bootstrap/', path: 'bootstrap' },
-            { title: 'Dependency Injection', url: '../di/', path: 'di' },
-            { title: 'Transactional Outbox', url: '../outbox/', path: 'outbox' },
-            { title: 'FastAPI integration', url: '../fastapi/', path: 'fastapi' },
-            { title: 'Faststream integration', url: '../faststream/', path: 'faststream' },
-            { title: 'Kafka integration', url: '../kafka/', path: 'kafka' },
-            { title: 'Event Producing', url: '../event_producing/', path: 'event_producing' },
-            { title: 'Event Consuming', url: '../event_consuming/', path: 'event_consuming' }
+            { title: 'Home', url: '/python-cqrs-mkdocs/', path: 'index' },
+            { title: 'Commands / Requests Handling', url: '/python-cqrs-mkdocs/request_handler/', path: 'request_handler' },
+            { title: 'Events Handling', url: '/python-cqrs-mkdocs/event_handler/', path: 'event_handler' },
+            { title: 'Bootstrap', url: '/python-cqrs-mkdocs/bootstrap/', path: 'bootstrap' },
+            { title: 'Dependency Injection', url: '/python-cqrs-mkdocs/di/', path: 'di' },
+            { title: 'Transactional Outbox', url: '/python-cqrs-mkdocs/outbox/', path: 'outbox' },
+            { title: 'FastAPI integration', url: '/python-cqrs-mkdocs/fastapi/', path: 'fastapi' },
+            { title: 'Faststream integration', url: '/python-cqrs-mkdocs/faststream/', path: 'faststream' },
+            { title: 'Kafka integration', url: '/python-cqrs-mkdocs/kafka/', path: 'kafka' },
+            { title: 'Event Producing', url: '/python-cqrs-mkdocs/event_producing/', path: 'event_producing' },
+            { title: 'Event Consuming', url: '/python-cqrs-mkdocs/event_consuming/', path: 'event_consuming' },
+            { title: 'Examples Overview', url: '/python-cqrs-mkdocs/examples/', path: 'examples' },
+            { title: 'Bootstrap Example', url: '/python-cqrs-mkdocs/examples/bootstrap/', path: 'examples/bootstrap' },
+            { title: 'DI Example', url: '/python-cqrs-mkdocs/examples/di/', path: 'examples/di' },
+            { title: 'Request Handler Example', url: '/python-cqrs-mkdocs/examples/request_handler/', path: 'examples/request_handler' }
         ];
         
         const currentIndex = pageOrder.findIndex(page => 
@@ -76,7 +80,7 @@
         }
         
         // Специальная обработка для главной страницы (когда currentUrl заканчивается на /)
-        if (currentUrl === '/' || currentUrl.endsWith('/python-cqrs-mkdocs/') || currentUrl.endsWith('/python-cqrs-mkdocs') || currentUrl.endsWith('/index.html')) {
+        if (currentUrl === '/' || currentUrl.endsWith('/python-cqrs-mkdocs/') || currentUrl.endsWith('/python-cqrs-mkdocs') || currentUrl.endsWith('/index.html') || currentUrl.endsWith('/python-cqrs-mkdocs/index.html')) {
             return {
                 current: pageOrder[0], // Home
                 prev: null,
