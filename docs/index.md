@@ -197,24 +197,28 @@ user_data = await mediator.send(GetUserQuery( # (15)
 ## Architecture
 
 <div class="architecture-diagram">
-    <div class="arch-section">
-        <h4>Commands</h4>
-        <p>Modify system state</p>
+    <div class="arch-row">
+        <div class="arch-section">
+            <h4>Request</h4>
+            <p>Commands & Queries</p>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-section">
+            <h4>RequestHandler</h4>
+            <p>Execute business logic</p>
+        </div>
     </div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-section">
-        <h4>Handlers</h4>
-        <p>Execute business logic</p>
-    </div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-section">
-        <h4>Events</h4>
-        <p>Notify about changes</p>
-    </div>
-    <div class="arch-arrow">→</div>
-    <div class="arch-section">
-        <h4>Outbox</h4>
-        <p>Guaranteed delivery</p>
+    <div class="arch-row">
+        <div class="arch-arrow arch-event-arrow">→</div>
+        <div class="arch-section">
+            <h4>Event</h4>
+            <p>Notify about changes</p>
+        </div>
+        <div class="arch-arrow">→</div>
+        <div class="arch-section">
+            <h4>EventHandler</h4>
+            <p>Process side effects</p>
+        </div>
     </div>
 </div>
 
