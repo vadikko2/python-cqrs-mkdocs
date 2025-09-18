@@ -87,7 +87,7 @@ class CreateUserHandler(cqrs.RequestHandler[CreateUserCommand, CreateUserRespons
     async def handle(self, request: CreateUserCommand) -> CreateUserResponse:
         user_id = f"user_{request.email}" # (7)
         
-        self._events.append(UserCreatedEvent( # (8)
+        self._events.append(UserCreatedEvent( # (9)
             user_id=user_id,
             email=request.email,
             name=request.name,
@@ -103,10 +103,10 @@ class CreateUserHandler(cqrs.RequestHandler[CreateUserCommand, CreateUserRespons
 class GetUserHandler(cqrs.RequestHandler[GetUserQuery, GetUserResponse]):
     @property
     def events(self) -> list[Event]:
-        return [] # (6)
+        return [] # (8)
     
     async def handle(self, request: GetUserQuery) -> GetUserResponse:
-        return GetUserResponse( # (6)
+        return GetUserResponse( # (10)
             user_id=request.user_id,
             email="user@example.com",
             name="John Doe",
