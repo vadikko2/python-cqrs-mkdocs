@@ -72,8 +72,6 @@ plugins:
   - search
   - awesome-pages
   - autorefs
-  - git-revision-date-localized:
-      enable_creation_date: true
 use_directory_urls: true
 strict: true
 extra_css:
