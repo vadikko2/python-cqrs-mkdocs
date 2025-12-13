@@ -1,210 +1,110 @@
 # Dependency Injection
 
+## Table of Contents
+
+- [Overview](#overview)
+- [Supported Libraries](#supported-libraries)
+- [Key Concepts](#key-concepts)
+- [Integration with Bootstrap](#integration-with-bootstrap)
+- [Benefits](#benefits)
+- [Best Practices](#best-practices)
+
 Dependency Injection (DI) is a design pattern that allows injecting dependencies into application components, simplifying their management and improving code testability.
 
 ## Overview
 
-The `python-cqrs` package uses the `di` library for dependency injection. This allows you to bind implementations to interfaces and automatically resolve dependencies in your handlers.
+The `python-cqrs` package supports multiple DI container libraries:
 
-## Basic Setup
+- **`di`** — Lightweight, modern dependency injection library (default)
+- **`dependency-injector`** — Feature-rich DI library with configuration management and FastAPI integration
 
-Here's how to set up a DI container with `python-cqrs`:
+Both libraries allow you to bind implementations to interfaces and automatically resolve dependencies in your handlers.
 
-```python
-import di
-from di import Container
-from di.dependent import Dependent
-from cqrs import OutboxedEventRepository, SqlAlchemyOutboxedEventRepository
-from app.meeting_api import MeetingAPIImplementation, MeetingAPIProtocol
+## Supported Libraries
 
-def setup_di() -> Container:
-    """
-    Setup DI container with implementation bindings.
-    """
-    container = Container()
-    
-    # Bind repository implementation
-    container.bind(
-        di.bind_by_type(
-            Dependent(SqlAlchemyOutboxedEventRepository, scope="request"),
-            OutboxedEventRepository
-        )
-    )
-    
-    # Bind service implementation
-    container.bind(
-        di.bind_by_type(
-            Dependent(MeetingAPIImplementation, scope="request"),
-            MeetingAPIProtocol
-        )
-    )
-    
-    return container
-```
+### `di` Library
 
-## Using DI with Bootstrap
+The `di` library is the default DI container for `python-cqrs`. It provides:
 
-Once you have your DI container set up, you can use it with the bootstrap function:
+- **Type-based resolution** — Automatic dependency resolution by type
+- **Scoped dependencies** — Support for singleton, request, and scoped lifetimes
+- **Simple API** — Easy to use and configure
+- **Type safety** — Full type checking support
+
+### `dependency-injector` Library
+
+The `dependency-injector` library offers advanced features:
+
+- **Configuration management** — Built-in support for YAML, dict, and Pydantic settings
+- **Resource management** — Automatic initialization and cleanup of resources
+- **Container wiring** — Direct injection into FastAPI endpoints
+- **Nested containers** — Better organization for large applications
+
+
+## Key Concepts
+
+### Binding Implementations
+
+Dependencies are bound by type, allowing the container to automatically resolve implementations:
 
 ```python
-import functools
-from cqrs.requests import bootstrap as request_bootstrap
-from app import dependencies, mapping, orm
-
-@functools.lru_cache
-def mediator_factory():
-    return request_bootstrap.bootstrap(
-        di_container=dependencies.setup_di(),
-        commands_mapper=mapping.init_commands,
-        queries_mapper=mapping.init_queries,
-        domain_events_mapper=mapping.init_events,
-        on_startup=[orm.init_store_event_mapper],
-    )
-```
-
-## Handler with Dependencies
-
-Here's an example of a command handler that uses dependency injection:
-
-```python
-from cqrs.requests import RequestHandler
-from cqrs.events import Event
-from app.meeting_api import MeetingAPIProtocol
-
-class JoinMeetingCommandHandler(RequestHandler[JoinMeetingCommand, None]):
-    
-    def __init__(self, meetings_api: MeetingAPIProtocol) -> None:
-        self._meetings_api = meetings_api
-        self._events: list[Event] = []
-
-    @property
-    def events(self) -> list[Event]:
-        return self._events
-
-    async def handle(self, request: JoinMeetingCommand) -> None:
-        await self._meetings_api.join_user(request.user_id, request.meeting_id)
-        
-        # Add domain event
-        self._events.append(
-            UserJoinedMeetingEvent(
-                user_id=request.user_id,
-                meeting_id=request.meeting_id
-            )
-        )
-```
-
-## Scopes
-
-The `di` library supports different scopes for dependency resolution:
-
-- **`"singleton"`**: One instance per container
-- **`"request"`**: One instance per request
-- **`"scoped"`**: One instance per scope
-
-```python
-# Singleton scope
 container.bind(
     di.bind_by_type(
-        Dependent(DatabaseConnection, scope="singleton"),
-        DatabaseConnection
-    )
-)
-
-# Request scope
-container.bind(
-    di.bind_by_type(
-        Dependent(UserService, scope="request"),
-        UserService
+        Dependent(ImplementationClass, scope="request"),
+        InterfaceProtocol
     )
 )
 ```
 
-## Advanced Configuration
+### Dependency Scopes
 
-For more complex scenarios, you can configure dependencies with additional parameters:
+The `di` library supports different scopes:
 
-```python
-def setup_advanced_di() -> Container:
-    container = Container()
-    
-    # Bind with factory function
-    container.bind(
-        di.bind_by_type(
-            Dependent(
-                lambda: DatabaseConnection(
-                    host="localhost",
-                    port=5432,
-                    database="myapp"
-                ),
-                scope="singleton"
-            ),
-            DatabaseConnection
-        )
-    )
-    
-    # Bind with dependencies
-    container.bind(
-        di.bind_by_type(
-            Dependent(
-                UserService,
-                scope="request",
-                use_cache=True
-            ),
-            UserService
-        )
-    )
-    
-    return container
-```
+- **`"singleton"`** — One instance per container (shared across all requests)
+- **`"request"`** — One instance per request (new instance for each handler)
+- **`"scoped"`** — One instance per scope (custom scope management)
 
-## Testing with DI
+### Automatic Resolution
 
-Dependency injection makes testing easier by allowing you to mock dependencies:
+Handlers receive dependencies automatically through constructor injection:
 
 ```python
-import pytest
-from unittest.mock import Mock
-from app.dependencies import setup_di
-from app.handlers import JoinMeetingCommandHandler
-
-@pytest.fixture
-def mock_meeting_api():
-    return Mock(spec=MeetingAPIProtocol)
-
-@pytest.fixture
-def test_container(mock_meeting_api):
-    container = setup_di()
-    container.bind(
-        di.bind_by_type(
-            Dependent(lambda: mock_meeting_api, scope="request"),
-            MeetingAPIProtocol
-        )
-    )
-    return container
-
-async def test_join_meeting_command(test_container, mock_meeting_api):
-    handler = test_container.solve(JoinMeetingCommandHandler)
-    
-    command = JoinMeetingCommand(user_id="user1", meeting_id="meeting1")
-    await handler.handle(command)
-    
-    mock_meeting_api.join_user.assert_called_once_with("user1", "meeting1")
+class MyHandler(RequestHandler[MyCommand, None]):
+    def __init__(self, service: ServiceProtocol) -> None:
+        self._service = service
 ```
+
+The container automatically resolves `ServiceProtocol` and injects it into the handler.
+
+## Integration with Bootstrap
+
+DI containers are integrated with the bootstrap process:
+
+```python
+mediator = bootstrap.bootstrap(
+    di_container=container,
+    commands_mapper=commands_mapper,
+    queries_mapper=queries_mapper,
+    domain_events_mapper=domain_events_mapper,
+)
+```
+
+The container is used to resolve all handlers and their dependencies automatically.
 
 ## Benefits
 
-Using dependency injection with `python-cqrs` provides several benefits:
+Using dependency injection with `python-cqrs` provides:
 
-1. **Simplified dependency management**: The DI container handles creation and management of dependencies
-2. **Improved testability**: Easy to mock dependencies for unit testing
-3. **Flexibility**: Easy to swap implementations without changing core application code
-4. **Better separation of concerns**: Dependencies are explicitly declared and injected
-5. **Configuration management**: Centralized configuration of application dependencies
+1. **Simplified dependency management** — Container handles creation and lifecycle
+2. **Improved testability** — Easy to mock dependencies for unit testing
+3. **Flexibility** — Swap implementations without changing core code
+4. **Better separation of concerns** — Dependencies explicitly declared
+5. **Configuration management** — Centralized dependency configuration
 
 ## Best Practices
 
-1. **Use interfaces**: Always bind implementations to interfaces, not concrete classes
-2. **Choose appropriate scopes**: Use singleton for stateless services, request for stateful ones
-3. **Keep constructors simple**: Avoid complex logic in constructors
-4. **Use factory functions**: For complex object creation, use factory functions
-5. **Test with mocks**: Always test your handlers with mocked dependencies
+1. **Use interfaces** — Always bind implementations to interfaces, not concrete classes
+2. **Choose appropriate scopes** — Use singleton for stateless services, request for stateful ones
+3. **Keep constructors simple** — Avoid complex logic in constructors
+4. **Use factory functions** — For complex object creation, use factory functions
+5. **Test with mocks** — Always test handlers with mocked dependencies

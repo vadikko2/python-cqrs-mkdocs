@@ -29,11 +29,14 @@ applications. It helps separate read and write operations, improving scalability
 
 ### Key Benefits
 
-- 🚀 **Performance** — separation of commands and queries
+- 🚀 **Performance** — separation of commands and queries, parallel event processing
 - 🔒 **Reliability** — Transaction Outbox for guaranteed event delivery
 - 🎯 **Type Safety** — full Pydantic v2 support
 - 🔌 **Integrations** — FastAPI, FastStream, Kafka out of the box
 - ⚡ **Simplicity** — bootstrap for quick setup
+- 📡 **Streaming** — real-time progress updates with StreamingRequestHandler
+- 🔗 **Flexibility** — Chain of Responsibility pattern support
+- 📦 **Protobuf** — Protocol Buffers events support
 
 ---
 
@@ -172,25 +175,48 @@ user_data = await mediator.send(GetUserQuery( # (15)
 - Clear separation of commands and queries
 - Independent scaling of read/write models
 - Optimization for specific use cases
+- Support for both async and sync handlers
 
 ### 📦 Transaction Outbox
 
-- Guaranteed event delivery
-- Kafka, RabbitMQ support
+- Guaranteed event delivery with at-least-once semantics
+- Kafka support via aiokafka
 - Automatic failure handling
+- Support for Notification and ECST events
 
 ### 🔌 Ready Integrations
 
-- **FastAPI** — HTTP API endpoints
+- **FastAPI** — HTTP API endpoints and SSE streaming support
 - **FastStream** — Kafka event processing
 - **Kafka** — via aiokafka
-- **Pydantic v2** — data validation
+- **Pydantic v2** — full data validation support
+- **Protobuf** — Protocol Buffers events serialization
 
 ### ⚙️ Bootstrap
 
 - Automatic DI container setup
 - Command, query, and event mapping
 - Ready configurations for popular frameworks
+- **Multiple DI containers support** — works with `di` and `dependency-injector` libraries
+
+### 📡 Streaming Requests
+
+- `StreamingRequestHandler` for incremental processing
+- Real-time progress updates via `StreamingRequestMediator`
+- Perfect for large batches and file processing
+- SSE (Server-Sent Events) integration with FastAPI
+
+### 🔗 Chain of Responsibility
+
+- `CORRequestHandler` for sequential request processing
+- Multiple handlers per request with fallback support
+- Flexible handler chaining
+
+### ⚡ Parallel Event Processing
+
+- Configurable concurrency limits for event handlers
+- Parallel processing of domain events
+- Improved performance for independent event handlers
 
 ---
 
@@ -273,10 +299,6 @@ async def handle_user_event(
 - [**Dependency Injection**](di.md) — dependency management
 - [**Kafka Integration**](kafka.md) — Kafka configuration
 - [**Event Producing**](event_producing.md) — event publishing
-
-### Examples
-
-- [**Examples**](examples/index.md) — practical examples and tutorials
 
 ---
 

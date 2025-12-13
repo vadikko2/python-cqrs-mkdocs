@@ -1,11 +1,13 @@
 # Request Handlers
 
+## Table of Contents
+
+- [Command Handler](#command-handler)
+- [Query Handler](#query-handler)
+
 Request handlers can be divided into two main types:
 
-1. [Command Handler](#command-handler)
-2. [Query Handler](#query-handler)
-
-## **Command Handler**
+## Command Handler
 
 Command Handler executes the received command. The logic of the handler may include, for example, modifying the state of
 the domain model. As a result of executing the command, an event may be produced to the broker.
@@ -47,7 +49,7 @@ class SyncJoinMeetingCommandHandler(SyncRequestHandler[JoinMeetingCommand, None]
           ...
 ```
 
-## **Query Handler**
+## Query Handler
 
 Query Handler returns a representation of the requested data, for example, from
 the [read model](https://radekmaziarka.pl/2018/01/08/cqrs-third-step-simple-read-model/#simple-read-model---to-the-rescue).
@@ -74,5 +76,3 @@ class ReadMeetingQueryHandler(RequestHandler[ReadMeetingQuery, ReadMeetingQueryR
           link = await self._meetings_api.get_link(request.meeting_id)
           return ReadMeetingQueryResult(link=link, meeting_id=request.meeting_id)
 ```
-
-A complete examples can be found [here](examples/request_handler.md).

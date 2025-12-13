@@ -7,21 +7,18 @@ nav:
   - Home: index.md
   - Core Concepts:
     - Commands / Requests Handling: request_handler.md
+    - Stream Handling: stream_handling.md
+    - Chain of Responsibility: chain_of_responsibility.md
     - Events Handling: event_handler.md
+    - Transaction Outbox: outbox.md
     - Bootstrap: bootstrap.md
     - Dependency Injection: di.md
-    - Transaction Outbox: outbox.md
   - Integrations:
     - FastAPI Integration: fastapi.md
     - FastStream Integration: faststream.md
     - Kafka Integration: kafka.md
     - Event Producing: event_producing.md
     - Event Consuming: event_consuming.md
-  - Examples:
-    - Examples Overview: examples/index.md
-    - Bootstrap Example: examples/bootstrap.md
-    - DI Example: examples/di.md
-    - Request Handler Example: examples/request_handler.md
 theme:
   name: material
   features:
@@ -59,7 +56,11 @@ markdown_extensions:
       pygments_lang_class: true
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details
   - attr_list
 extra:
