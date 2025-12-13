@@ -14,12 +14,20 @@
 
 ## Overview
 
-FastAPI integration with `python-cqrs` allows you to build RESTful APIs where FastAPI handles HTTP layer (routing, validation, serialization) while CQRS handles business logic through command/query handlers. This separation provides:
+FastAPI integration with `python-cqrs` allows you to build RESTful APIs where FastAPI handles HTTP layer (routing, validation, serialization) while CQRS handles business logic through command/query handlers.
 
-- **Clear separation of concerns** — HTTP layer vs business logic
-- **Type safety** — Full Pydantic v2 support
-- **Testability** — Easy to test handlers independently
-- **Scalability** — Commands and queries can scale independently
+| Benefit | Description |
+|---------|-------------|
+| **Separation of Concerns** | HTTP layer vs business logic |
+| **Type Safety** | Full Pydantic v2 support |
+| **Testability** | Easy to test handlers independently |
+| **Scalability** | Commands and queries can scale independently |
+
+!!! note "Prerequisites"
+    Understanding of [Bootstrap](bootstrap/index.md), [Request Handlers](request_handler.md), and [Stream Handling](stream_handling/index.md) is recommended.
+
+!!! tip "Quick Start"
+    This integration shows how to use mediators created via [Bootstrap](bootstrap/index.md) in FastAPI endpoints. See [Stream Handling](stream_handling/index.md) for SSE examples.
 
 ## Setup
 
@@ -63,6 +71,17 @@ async def create_user(
 ):
     return await mediator.send(command)
 ```
+
+### Mediator Factory Comparison
+
+| Factory Type | Performance | Use Case |
+|--------------|-------------|----------|
+| **Basic Factory** | Creates new mediator per request | Development, testing |
+| **Singleton Factory** | Reuses mediator across requests | Production (recommended) |
+| **Per-Request Factory** | Creates mediator per request with DI | Advanced scenarios |
+
+!!! tip "Production Recommendation"
+    Use singleton mediator factory for better performance. The mediator is thread-safe and can be safely reused.
 
 ### Singleton Mediator (Recommended for Production)
 

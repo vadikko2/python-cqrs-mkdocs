@@ -6,19 +6,45 @@ dev_addr: 127.0.0.1:8000
 nav:
   - Home: index.md
   - Core Concepts:
-    - Commands / Requests Handling: request_handler.md
-    - Stream Handling: stream_handling.md
-    - Chain of Responsibility: chain_of_responsibility.md
-    - Events Handling: event_handler.md
-    - Transaction Outbox: outbox.md
-    - Bootstrap: bootstrap.md
+    - Bootstrap:
+      - Overview: bootstrap/index.md
+      - Request Mediator: bootstrap/request_mediator.md
+      - Streaming Mediator: bootstrap/streaming_mediator.md
+      - Event Mediator: bootstrap/event_mediator.md
+      - Message Brokers: bootstrap/message_brokers.md
+      - Middlewares: bootstrap/middlewares.md
+      - DI Containers: bootstrap/di_containers.md
+      - Advanced: bootstrap/advanced.md
     - Dependency Injection: di.md
+    - Commands / Requests Handling: request_handler.md
+    - Stream Handling:
+      - Overview: stream_handling/index.md
+      - Configuration: stream_handling/configuration.md
+      - FastAPI Integration: stream_handling/fastapi_integration.md
+      - Reference: stream_handling/reference.md
+    - Chain of Responsibility:
+      - Overview: chain_of_responsibility/index.md
+      - Examples: chain_of_responsibility/examples.md
+      - Advanced: chain_of_responsibility/advanced.md
+    - Events Handling:
+      - Overview: event_handler/index.md
+      - Event Flow: event_handler/event_flow.md
+      - Runtime Processing: event_handler/runtime_processing.md
+      - Parallel Processing: event_handler/parallel_processing.md
+      - Event Types: event_handler/event_types.md
+      - Examples: event_handler/examples.md
+      - Best Practices: event_handler/best_practices.md
+    - Transaction Outbox:
+      - Overview: outbox/index.md
+      - Implementation: outbox/implementation.md
+      - Usage: outbox/usage.md
+      - Examples: outbox/examples.md
+      - Best Practices: outbox/best_practices.md
   - Integrations:
     - FastAPI Integration: fastapi.md
     - FastStream Integration: faststream.md
-    - Kafka Integration: kafka.md
     - Event Producing: event_producing.md
-    - Event Consuming: event_consuming.md
+    - Protobuf Integration: protobuf.md
 theme:
   name: material
   features:

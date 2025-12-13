@@ -29,14 +29,16 @@ applications. It helps separate read and write operations, improving scalability
 
 ### Key Benefits
 
-- 🚀 **Performance** — separation of commands and queries, parallel event processing
-- 🔒 **Reliability** — Transaction Outbox for guaranteed event delivery
-- 🎯 **Type Safety** — full Pydantic v2 support
-- 🔌 **Integrations** — FastAPI, FastStream, Kafka out of the box
-- ⚡ **Simplicity** — bootstrap for quick setup
-- 📡 **Streaming** — real-time progress updates with StreamingRequestHandler
-- 🔗 **Flexibility** — Chain of Responsibility pattern support
-- 📦 **Protobuf** — Protocol Buffers events support
+| Feature | Description |
+|---------|-------------|
+| 🚀 **Performance** | Separation of commands and queries, parallel event processing |
+| 🔒 **Reliability** | Transaction Outbox for guaranteed event delivery |
+| 🎯 **Type Safety** | Full Pydantic v2 support with runtime validation |
+| 🔌 **Integrations** | FastAPI, FastStream, Kafka out of the box |
+| ⚡ **Simplicity** | Bootstrap for quick setup and configuration |
+| 📡 **Streaming** | Real-time progress updates with StreamingRequestHandler |
+| 🔗 **Flexibility** | Chain of Responsibility pattern support |
+| 📦 **Protobuf** | Protocol Buffers events serialization support |
 
 ---
 
@@ -51,176 +53,49 @@ pip install python-cqrs
 ### Basic Example
 
 ```python
+import di
 import cqrs
-from cqrs.events import Event
-from datetime import datetime
+from cqrs.requests import bootstrap
 
-class CreateUserCommand(cqrs.Request): # (1)
+# 1. Define commands, queries, and events
+class CreateUserCommand(cqrs.Request):
     email: str
     name: str
 
-class GetUserQuery(cqrs.Request):
+class CreateUserResponse(cqrs.Response):
     user_id: str
 
-class CreateUserResponse(cqrs.Response): # (2)
-    user_id: str
-    email: str
-    name: str
-
-class GetUserResponse(cqrs.Response):
-    user_id: str
-    email: str
-    name: str
-    created_at: str
-
-class UserCreatedEvent(Event): # (3)
-    user_id: str
-    email: str
-    name: str
-    created_at: datetime
-
-class CreateUserHandler(cqrs.RequestHandler[CreateUserCommand, CreateUserResponse]): # (4)
+# 2. Create handlers
+class CreateUserHandler(cqrs.RequestHandler[CreateUserCommand, CreateUserResponse]):
     def __init__(self):
-        self._events: list[Event] = [] # (5)
+        self._events: list[cqrs.events.Event] = []
     
     @property
-    def events(self) -> list[Event]:
-        return self._events # (6)
+    def events(self) -> list[cqrs.events.Event]:
+        return self._events
     
     async def handle(self, request: CreateUserCommand) -> CreateUserResponse:
-        user_id = f"user_{request.email}" # (7)
-        
-        self._events.append(UserCreatedEvent( # (9)
-            user_id=user_id,
-            email=request.email,
-            name=request.name,
-            created_at=datetime.utcnow()
-        ))
-        
-        return CreateUserResponse(
-            user_id=user_id,
-            email=request.email,
-            name=request.name
-        )
+        user_id = f"user_{request.email}"
+        self._events.append(UserCreatedEvent(user_id=user_id, ...))
+        return CreateUserResponse(user_id=user_id)
 
-class GetUserHandler(cqrs.RequestHandler[GetUserQuery, GetUserResponse]):
-    @property
-    def events(self) -> list[Event]:
-        return [] # (8)
-    
-    async def handle(self, request: GetUserQuery) -> GetUserResponse:
-        return GetUserResponse( # (10)
-            user_id=request.user_id,
-            email="user@example.com",
-            name="John Doe",
-            created_at="2024-01-01T00:00:00Z"
-        )
-
-class UserCreatedEventHandler(cqrs.EventHandler[UserCreatedEvent]): # (11)
-    async def handle(self, event: UserCreatedEvent) -> None:
-        print(f"User created: {event.name} ({event.email}) with ID: {event.user_id}") # (12)
-
-mediator = cqrs.bootstrap.bootstrap( # (13)
+# 3. Bootstrap mediator
+mediator = bootstrap.bootstrap(
+    di_container=di.Container(),
     commands_mapper=lambda m: m.bind(CreateUserCommand, CreateUserHandler),
-    queries_mapper=lambda m: m.bind(GetUserQuery, GetUserHandler),
-    domain_events_mapper=lambda m: m.bind(UserCreatedEvent, UserCreatedEventHandler)
 )
 
-result = await mediator.send(CreateUserCommand( # (14)
-    email="user@example.com",
-    name="John Doe"
-))
-
-user_data = await mediator.send(GetUserQuery( # (15)
-    user_id="user_user@example.com"
-))
+# 4. Use mediator
+result = await mediator.send(CreateUserCommand(email="user@example.com", name="John"))
 ```
 
-1. **Commands and Queries**: Commands modify system state, queries read data. Both inherit from `cqrs.Request`.
-
-2. **Response Classes**: Response classes inherit from `cqrs.Response` and define the structure of returned data.
-
-3. **Events**: Events inherit from `cqrs.events.Event` and represent domain events that occurred.
-
-4. **Handlers**: **Command Handler** modifies state and can emit events. **Query Handler** reads data and typically doesn't emit events. Both must implement the `events` property
-
-5. **Event Storage**: Command handlers store events in `_events` list to emit them after processing.
-
-6. **Events Property**: Required by `RequestHandler` interface to access emitted events.
-
-7. **Business Logic**: Generate unique identifiers and perform domain operations.
-
-8. **Query Events**: Queries typically don't emit events as they only read data.
-
-9. **Event Emission**: Command handlers emit domain events by adding them to the `_events` list.
-
-10. **Read Model**: Query handlers fetch data from read models optimized for specific queries.
-
-11. **Event Handler**: Event handlers process domain events and handle side effects like notifications or read model updates.
-
-12. **Side Effects**: Event handlers handle side effects such as sending notifications, updating read models, or triggering other processes.
-
-13. **Mediator Configuration**: Bootstrap creates the mediator with command, query, and event mappings.
-
-14. **Usage**: Commands modify state and may emit events
-
-15. **Usage**: Queries read data without side effects
-
----
-
-## Key Features
-
-### 🎯 CQRS Pattern
-
-- Clear separation of commands and queries
-- Independent scaling of read/write models
-- Optimization for specific use cases
-- Support for both async and sync handlers
-
-### 📦 Transaction Outbox
-
-- Guaranteed event delivery with at-least-once semantics
-- Kafka support via aiokafka
-- Automatic failure handling
-- Support for Notification and ECST events
-
-### 🔌 Ready Integrations
-
-- **FastAPI** — HTTP API endpoints and SSE streaming support
-- **FastStream** — Kafka event processing
-- **Kafka** — via aiokafka
-- **Pydantic v2** — full data validation support
-- **Protobuf** — Protocol Buffers events serialization
-
-### ⚙️ Bootstrap
-
-- Automatic DI container setup
-- Command, query, and event mapping
-- Ready configurations for popular frameworks
-- **Multiple DI containers support** — works with `di` and `dependency-injector` libraries
-
-### 📡 Streaming Requests
-
-- `StreamingRequestHandler` for incremental processing
-- Real-time progress updates via `StreamingRequestMediator`
-- Perfect for large batches and file processing
-- SSE (Server-Sent Events) integration with FastAPI
-
-### 🔗 Chain of Responsibility
-
-- `CORRequestHandler` for sequential request processing
-- Multiple handlers per request with fallback support
-- Flexible handler chaining
-
-### ⚡ Parallel Event Processing
-
-- Configurable concurrency limits for event handlers
-- Parallel processing of domain events
-- Improved performance for independent event handlers
+See [Bootstrap](bootstrap/index.md) for detailed setup instructions.
 
 ---
 
 ## Architecture
+
+The `python-cqrs` framework follows a clear architectural pattern:
 
 <div class="architecture-diagram">
     <div class="arch-row">
@@ -248,79 +123,125 @@ user_data = await mediator.send(GetUserQuery( # (15)
     </div>
 </div>
 
----
+**Flow:**
 
-## FastAPI Integration
-
-```python
-import fastapi
-import cqrs
-
-app = fastapi.FastAPI()
-
-@app.post("/users")
-async def create_user(
-    command: CreateUserCommand,
-    mediator: cqrs.RequestMediator = fastapi.Depends(get_mediator)
-):
-    result = await mediator.send(command)
-    return {"user_id": result.data["user_id"]}
-```
-
-## Kafka Event Processing
-
-```python
-import faststream
-from faststream import kafka
-
-@broker.subscriber("user_events")
-async def handle_user_event(
-    event: cqrs.NotificationEvent[UserCreatedPayload],
-    mediator: cqrs.EventMediator = faststream.Depends(get_mediator)
-):
-    await mediator.send(event)
-```
+1. **Commands/Queries** are sent to the mediator
+2. **Request Handlers** execute business logic and may emit events
+3. **Events** are automatically dispatched to event handlers
+4. **Event Handlers** process side effects (notifications, read model updates, etc.)
 
 ---
+
+## Key Features
+
+### 🎯 CQRS Pattern
+
+| Aspect | Description |
+|--------|-------------|
+| **Separation** | Clear separation of commands and queries |
+| **Scaling** | Independent scaling of read/write models |
+| **Optimization** | Optimization for specific use cases |
+| **Handlers** | Support for both async and sync handlers |
+
+### 📦 Transaction Outbox
+
+| Feature | Benefit |
+|---------|---------|
+| **Guaranteed Delivery** | At-least-once semantics |
+| **Broker Support** | Kafka support via aiokafka |
+| **Failure Handling** | Automatic failure handling |
+| **Event Types** | Support for Notification and ECST events |
+
+### 🔌 Ready Integrations
+
+| Integration | Description |
+|-------------|-------------|
+| **FastAPI** | HTTP API endpoints and SSE streaming support |
+| **FastStream** | Kafka and RabbitMQ event processing |
+| **Kafka** | Native support via aiokafka |
+| **Pydantic v2** | Full data validation support |
+| **Protobuf** | Protocol Buffers events serialization |
+
+### ⚙️ Bootstrap
+
+| Feature | Description |
+|---------|-------------|
+| **DI Container** | Automatic DI container setup |
+| **Mapping** | Command, query, and event mapping |
+| **Configurations** | Ready configurations for popular frameworks |
+| **Multiple DI** | Works with `di` and `dependency-injector` libraries |
+
+### 📡 Streaming Requests
+
+| Feature | Use Case |
+|---------|----------|
+| **Incremental Processing** | `StreamingRequestHandler` for incremental processing |
+| **Progress Updates** | Real-time progress updates via `StreamingRequestMediator` |
+| **Large Batches** | Perfect for large batches and file processing |
+| **SSE Integration** | Server-Sent Events integration with FastAPI |
+
+### 🔗 Chain of Responsibility
+
+| Feature | Description |
+|---------|-------------|
+| **Sequential Processing** | `CORRequestHandler` for sequential request processing |
+| **Fallback Support** | Multiple handlers per request with fallback support |
+| **Flexible Chaining** | Flexible handler chaining |
+
+### ⚡ Parallel Event Processing
+
+| Feature | Benefit |
+|---------|---------|
+| **Concurrency Limits** | Configurable concurrency limits for event handlers |
+| **Parallel Processing** | Parallel processing of domain events |
+| **Performance** | Improved performance for independent event handlers |
 
 ## Documentation
 
 ### Core Concepts
 
-- [**Bootstrap**](bootstrap.md) — quick project setup
-- [**Request Handlers**](request_handler.md) — working with commands and queries
-- [**Event Handling**](event_consuming.md) — event processing
-- [**Transaction Outbox**](outbox.md) — reliable event delivery
+Start here to understand the fundamentals:
+
+| # | Topic | Description |
+|---|-------|-------------|
+| 1 | [**Bootstrap**](bootstrap/index.md) | Quick project setup and configuration |
+| 2 | [**Dependency Injection**](di.md) | Managing dependencies with DI containers |
+| 3 | [**Request Handlers**](request_handler.md) | Working with commands and queries |
+| 4 | [**Stream Handling**](stream_handling/index.md) | Incremental processing with streaming |
+| 5 | [**Chain of Responsibility**](chain_of_responsibility/index.md) | Sequential request processing |
+| 6 | [**Event Handling**](event_handler/index.md) | Processing domain events |
+| 7 | [**Transaction Outbox**](outbox/index.md) | Reliable event delivery pattern |
+
+!!! tip "Learning Path"
+    Follow the numbered sequence for the best learning experience. Each concept builds on the previous one.
 
 ### Integrations
 
-- [**FastAPI Integration**](fastapi.md) — HTTP API
-- [**FastStream Integration**](faststream.md) — Kafka events
-- [**Dependency Injection**](di.md) — dependency management
-- [**Kafka Integration**](kafka.md) — Kafka configuration
-- [**Event Producing**](event_producing.md) — event publishing
+Learn how to integrate with popular frameworks:
+
+| Integration | Description | Use Case |
+|-------------|-------------|----------|
+| [**FastAPI**](fastapi.md) | HTTP API endpoints and SSE streaming | Web applications |
+| [**FastStream**](faststream.md) | Kafka and RabbitMQ event processing | Event-driven systems |
+| [**Event Producing**](event_producing.md) | Publishing events to message brokers | Microservices communication |
+| [**Protobuf**](protobuf.md) | Protocol Buffers serialization | High-performance scenarios |
 
 ---
 
 ## Installation
 
-### Standard Installation
+Choose the installation method that best fits your workflow:
 
-```bash
-pip install python-cqrs
-```
+| Method | Command | Use Case |
+|--------|---------|----------|
+| **PyPI** | `pip install python-cqrs` | Standard installation |
+| **GitHub** | `pip install git+https://github.com/vadikko2/python-cqrs` | Latest development version |
+| **uv** | `uv add python-cqrs` | Modern Python package manager |
 
-### From GitHub
-
-```bash
-pip install git+https://github.com/vadikko2/python-cqrs
-```
-
-### Using uv
-
-```bash
-uv add python-cqrs
-```
+!!! info "Requirements"
+    - Python 3.8+
+    - Pydantic v2
+    - For integrations: FastAPI, FastStream, etc. (see specific integration docs)
 
 ---
 

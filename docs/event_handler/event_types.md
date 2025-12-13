@@ -1,0 +1,53 @@
+# Event Types
+
+See [Event Handling Overview](index.md) for general information.
+
+---
+
+## Overview
+
+
+| Event Type | Processing | Use Case |
+|------------|------------|----------|
+| **DomainEvent** | Processed by event handlers in-process | Domain logic, read model updates |
+| **NotificationEvent** | Sent to message brokers | Cross-service communication |
+
+### DomainEvent
+
+Domain events represent something that happened in the domain. They are processed by event handlers:
+
+```python
+class UserJoined(cqrs.DomainEvent, frozen=True):
+    user_id: str
+    meeting_id: str
+
+class UserJoinedEventHandler(cqrs.EventHandler[UserJoined]):
+    async def handle(self, event: UserJoined) -> None:
+        # Process domain event
+        ...
+```
+
+### NotificationEvent
+
+Notification events are sent to message brokers:
+
+```python
+class UserJoinedNotification(cqrs.NotificationEvent[UserJoinedPayload]):
+    event_name: str = "user_joined"
+    topic: str = "user_events"
+    payload: UserJoinedPayload
+
+# Automatically sent to message broker via EventEmitter
+```
+
+<details>
+<summary><strong>Event Type Comparison</strong></summary>
+
+| Aspect | DomainEvent | NotificationEvent |
+|--------|-------------|-------------------|
+| **Processing** | In-process handlers | Message broker |
+| **Latency** | Synchronous | Asynchronous |
+| **Reliability** | Immediate | Requires Outbox pattern |
+| **Use Case** | Domain logic | Cross-service communication |
+
+</details>
