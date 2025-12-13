@@ -504,12 +504,31 @@
     color: #0066CC;
 }
 
+/* Стили для badges проекта */
+.project-badges {
+    display: flex;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.project-badges img {
+    height: 28px;
+    transition: transform 0.2s ease;
+}
+
+.project-badges img:hover {
+    transform: scale(1.05);
+}
+
 /* Стили для ссылок проекта */
 .project-links {
     display: flex;
     justify-content: center;
     gap: 1.5rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     flex-wrap: wrap;
 }
 
@@ -734,6 +753,15 @@
     
     .hero-image {
         max-width: 150px;
+    }
+    
+    .project-badges {
+        gap: 0.6rem;
+        margin-top: 1rem;
+    }
+    
+    .project-badges img {
+        height: 24px;
     }
     
     .project-links {

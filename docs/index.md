@@ -3,6 +3,21 @@
     <h1 class="hero-title">Python CQRS</h1>
     <p class="hero-subtitle">Modern CQRS pattern implementation with Transaction Outbox support</p>
 
+    <div class="project-badges">
+        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/pypi/v/python-cqrs?label=pypi&logo=pypi&style=for-the-badge" alt="PyPI version">
+        </a>
+        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/pypi/dm/python-cqrs?label=downloads&logo=pypi&style=for-the-badge" alt="PyPI downloads">
+        </a>
+        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/pypi/pyversions/python-cqrs?label=python&logo=python&style=for-the-badge" alt="Python versions">
+        </a>
+        <a href="https://vadikko2.github.io/python-cqrs-mkdocs/" target="_blank" rel="noopener">
+            <img src="https://img.shields.io/badge/docs-mkdocs-blue?logo=readthedocs&style=for-the-badge" alt="Documentation">
+        </a>
+    </div>
+
     <div class="project-links">
         <a href="https://github.com/vadikko2/python-cqrs" class="project-link github-link" target="_blank" rel="noopener">
             <span class="icon">🐙</span>
