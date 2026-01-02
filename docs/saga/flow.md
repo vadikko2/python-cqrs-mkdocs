@@ -119,12 +119,14 @@ sequenceDiagram
 ### Tables
 
 **saga_executions:**
+
 - `id` (UUID) - Primary key
 - `status` (Enum) - PENDING, RUNNING, COMPENSATING, COMPLETED, FAILED
 - `context` (JSON) - Serialized context data
 - `created_at`, `updated_at` (DateTime)
 
 **saga_logs:**
+
 - `id` (BigInteger) - Primary key
 - `saga_id` (UUID) - Foreign key
 - `step_name` (String)

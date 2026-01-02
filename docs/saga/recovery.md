@@ -15,10 +15,10 @@ Sagas can be interrupted due to server crashes, network timeouts, or system over
 
 The saga pattern ensures eventual consistency through:
 
-- **Persistent State** - Saved after each step
-- **Recovery Mechanism** - Interrupted sagas can be resumed
-- **Compensation Guarantee** - Failed sagas are always compensated
-- **Terminal States** - All sagas eventually reach COMPLETED or FAILED
+- **Persistent State** — Saved after each step
+- **Recovery Mechanism** — Interrupted sagas can be resumed
+- **Compensation Guarantee** — Failed sagas are always compensated
+- **Terminal States** — All sagas eventually reach COMPLETED or FAILED
 
 ## Recovery Process
 
@@ -109,7 +109,7 @@ scheduler.start()
 
 ## Best Practices
 
-1. **Run recovery periodically** - Background job to scan for incomplete sagas
-2. **Handle failures** - Log errors and send alerts
-3. **Monitor metrics** - Track recovery rate, duration, and failures
-4. **Use persistent storage** - Memory storage loses data on restart
+1. **Run recovery periodically** — Background job to scan for incomplete sagas
+2. **Handle failures** — Log errors and send alerts
+3. **Monitor metrics** — Track recovery rate, duration, and failures
+4. **Use persistent storage** — Memory storage loses data on restart

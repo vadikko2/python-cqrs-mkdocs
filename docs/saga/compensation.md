@@ -63,9 +63,9 @@ class ReserveInventoryStep(SagaStepHandler[OrderContext, Response]):
 
 ### Best Practices
 
-1. **Idempotent** - Safe to call multiple times
-2. **Check Context** - Verify compensation is needed before executing
-3. **Handle Errors** - Gracefully handle missing resources
+1. **Idempotent** — Safe to call multiple times
+2. **Check Context** — Verify compensation is needed before executing
+3. **Handle Errors** — Gracefully handle missing resources
 
 ### Idempotent Example
 
@@ -101,8 +101,8 @@ saga = Saga(
 **Retry schedule:**
 
 - Attempt 1: fails, wait 1.0s
-- Attempt 2: fails, wait 2.0s (1.0 * 2.0)
-- Attempt 3: fails, wait 4.0s (2.0 * 2.0)
+- Attempt 2: fails, wait 2.0s (1.0 × 2.0)
+- Attempt 3: fails, wait 4.0s (2.0 × 2.0)
 - Attempt 4: final attempt
 
 ## Compensation Patterns
@@ -178,7 +178,7 @@ async def compensate(self, context: OrderContext) -> None:
 
 ## Best Practices
 
-1. **Idempotent** - Safe to call multiple times
-2. **Check Context** - Verify compensation is needed
-3. **Handle Failures** - Log errors appropriately
-4. **Test Logic** - Ensure compensation works correctly
+1. **Idempotent** — Safe to call multiple times
+2. **Check Context** — Verify compensation is needed
+3. **Handle Failures** — Log errors appropriately
+4. **Test Logic** — Ensure compensation works correctly

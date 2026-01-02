@@ -105,10 +105,10 @@ async with saga.transaction(context=context, saga_id=uuid.uuid4()) as transactio
 
 ## Key Features
 
-- **Automatic Compensation** - Failed steps trigger compensation of completed steps in reverse order
-- **State Persistence** - Saga state and execution history saved after each step
-- **Recovery** - Interrupted sagas can be resumed from persistent storage
-- **Eventual Consistency** - All sagas eventually reach terminal state (COMPLETED or FAILED)
+- **Automatic Compensation** — Failed steps trigger compensation of completed steps in reverse order
+- **State Persistence** — Saga state and execution history saved after each step
+- **Recovery** — Interrupted sagas can be resumed from persistent storage
+- **Eventual Consistency** — All sagas eventually reach terminal state (COMPLETED or FAILED)
 
 ## Documentation
 

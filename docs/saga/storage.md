@@ -39,6 +39,7 @@ history = await storage.get_step_history(saga_id)
 ```
 
 **Features:**
+
 - ✅ Fast and lightweight
 - ✅ No database setup required
 - ❌ Not persistent (data lost on restart)
@@ -50,12 +51,14 @@ Database-backed implementation for production.
 ### Database Schema
 
 **saga_executions:**
+
 - `id` (UUID) - Primary key
 - `status` (VARCHAR) - PENDING, RUNNING, COMPENSATING, COMPLETED, FAILED
 - `context` (JSON)
 - `created_at`, `updated_at` (TIMESTAMP)
 
 **saga_logs:**
+
 - `id` (BIGSERIAL) - Primary key
 - `saga_id` (UUID) - Foreign key
 - `step_name` (VARCHAR)
@@ -98,17 +101,19 @@ await storage.session.commit()
 ## Choosing Storage
 
 **Memory Storage:**
+
 - ✅ Unit tests, development
 - ❌ Not persistent
 
 **SQLAlchemy Storage:**
+
 - ✅ Production, multi-process
 - ✅ Recovery after restarts
 - ✅ Audit trail
 
 ## Best Practices
 
-1. **Use persistent storage in production** - Memory storage loses data on restart
-2. **Create indexes** - Index `saga_id` and `created_at` for better performance
-3. **Handle session lifecycle** - Commit and close SQLAlchemy sessions properly
-4. **Monitor storage size** - Archive old saga logs periodically
+1. **Use persistent storage in production** — Memory storage loses data on restart
+2. **Create indexes** — Index `saga_id` and `created_at` for better performance
+3. **Handle session lifecycle** — Commit and close SQLAlchemy sessions properly
+4. **Monitor storage size** — Archive old saga logs periodically
