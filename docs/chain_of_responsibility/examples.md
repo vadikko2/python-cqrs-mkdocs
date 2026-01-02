@@ -41,6 +41,7 @@ result = await mediator.send(
 ```
 
 The framework automatically:
+
 1. Resolves all handlers from the DI container
 2. Builds the chain using `build_chain()`
 3. Links handlers in the order specified

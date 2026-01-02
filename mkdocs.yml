@@ -26,6 +26,13 @@ nav:
       - Overview: chain_of_responsibility/index.md
       - Examples: chain_of_responsibility/examples.md
       - Advanced: chain_of_responsibility/advanced.md
+    - Saga Pattern:
+      - Overview: saga/index.md
+      - Flow Diagrams: saga/flow.md
+      - Storage: saga/storage.md
+      - Recovery & Eventual Consistency: saga/recovery.md
+      - Compensation Strategy: saga/compensation.md
+      - Examples: saga/examples.md
     - Events Handling:
       - Overview: event_handler/index.md
       - Event Flow: event_handler/event_flow.md
@@ -59,15 +66,6 @@ theme:
     - scheme: default
       primary: blue
       accent: blue
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - scheme: slate
-      primary: blue
-      accent: blue
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
 markdown_extensions:
   - admonition
   - toc:

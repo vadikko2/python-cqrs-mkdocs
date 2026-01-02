@@ -54,6 +54,7 @@ Request → Handler 1 → Handler 2 → Handler 3 → Default Handler
 ```
 
 Each handler in the chain:
+
 1. Receives the request
 2. Decides if it can handle it
 3. If yes: processes and returns result

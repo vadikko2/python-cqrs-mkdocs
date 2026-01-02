@@ -40,14 +40,11 @@ class UserJoinedNotification(cqrs.NotificationEvent[UserJoinedPayload]):
 # Automatically sent to message broker via EventEmitter
 ```
 
-<details>
-<summary><strong>Event Type Comparison</strong></summary>
+### Event Type Comparison
 
 | Aspect | DomainEvent | NotificationEvent |
-|--------|-------------|-------------------|
+|--------|---------------------|-------------------------|
 | **Processing** | In-process handlers | Message broker |
 | **Latency** | Synchronous | Asynchronous |
 | **Reliability** | Immediate | Requires Outbox pattern |
 | **Use Case** | Domain logic | Cross-service communication |
-
-</details>

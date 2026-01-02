@@ -51,21 +51,16 @@ graph TD
     
     Found -->|Yes| LoopStart[For Each Handler Type]
     LoopStart --> Resolve[Resolve Handler from DI]
-    Resolve --> CheckAsync{Is Async?}
+    Resolve --> Execute[await handler.handle]
     
-    CheckAsync -->|Yes| AsyncExec[await handler.handle]
-    CheckAsync -->|No| ThreadExec[asyncio.to_thread handler.handle]
-    
-    AsyncExec --> NextHandler{More Handlers?}
-    ThreadExec --> NextHandler
+    Execute --> NextHandler{More Handlers?}
     
     NextHandler -->|Yes| LoopStart
     NextHandler -->|No| End2[End]
     
     style Start fill:#e1f5ff
     style Resolve fill:#fff3e0
-    style AsyncExec fill:#c8e6c9
-    style ThreadExec fill:#c8e6c9
+    style Execute fill:#c8e6c9
 ```
 
 ### Dispatcher Implementation
@@ -85,11 +80,8 @@ class EventDispatcher:
             # 3. Resolve handler from DI container
             handler = await self._container.resolve(handler_type)
             
-            # 4. Execute handler (async or sync)
-            if asyncio.iscoroutinefunction(handler.handle):
-                await handler.handle(event)
-            else:
-                await asyncio.to_thread(handler.handle, event)
+            # 4. Execute handler
+            await handler.handle(event)
 ```
 
 
@@ -133,10 +125,7 @@ class EventEmitter:
             handler = await self._container.resolve(handler_type)
             
             # Execute handler
-            if asyncio.iscoroutinefunction(handler.handle):
-                await handler.handle(event)
-            else:
-                await asyncio.to_thread(handler.handle, event)
+            await handler.handle(event)
     
     @emit.register
     async def _(self, event: NotificationEvent) -> None:

@@ -1,22 +1,7 @@
 <div class="hero-section">
     <img src="img.png" alt="Python CQRS" class="hero-image">
     <h1 class="hero-title">Python CQRS</h1>
-    <p class="hero-subtitle">Modern CQRS pattern implementation with Transaction Outbox support</p>
-
-    <div class="project-badges">
-        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
-            <img src="https://img.shields.io/pypi/v/python-cqrs?label=pypi&logo=pypi&style=for-the-badge" alt="PyPI version">
-        </a>
-        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
-            <img src="https://img.shields.io/pypi/dm/python-cqrs?label=downloads&logo=pypi&style=for-the-badge" alt="PyPI downloads">
-        </a>
-        <a href="https://pypi.org/project/python-cqrs/" target="_blank" rel="noopener">
-            <img src="https://img.shields.io/pypi/pyversions/python-cqrs?label=python&logo=python&style=for-the-badge" alt="Python versions">
-        </a>
-        <a href="https://vadikko2.github.io/python-cqrs-mkdocs/" target="_blank" rel="noopener">
-            <img src="https://img.shields.io/badge/docs-mkdocs-blue?logo=readthedocs&style=for-the-badge" alt="Documentation">
-        </a>
-    </div>
+    <p class="hero-subtitle">Event-Driven Architecture Framework for Distributed Systems</p>
 
     <div class="project-links">
         <a href="https://github.com/vadikko2/python-cqrs" class="project-link github-link" target="_blank" rel="noopener">
@@ -54,6 +39,7 @@ applications. It helps separate read and write operations, improving scalability
 | 📡 **Streaming** | Real-time progress updates with StreamingRequestHandler |
 | 🔗 **Flexibility** | Chain of Responsibility pattern support |
 | 📦 **Protobuf** | Protocol Buffers events serialization support |
+| 🔄 **Saga Pattern** | Choreographic Saga for distributed transactions with automatic compensation |
 
 ---
 
@@ -156,7 +142,7 @@ The `python-cqrs` framework follows a clear architectural pattern:
 | **Separation** | Clear separation of commands and queries |
 | **Scaling** | Independent scaling of read/write models |
 | **Optimization** | Optimization for specific use cases |
-| **Handlers** | Support for both async and sync handlers |
+| **Handlers** | Async handlers with full type safety |
 
 ### 📦 Transaction Outbox
 
@@ -203,6 +189,16 @@ The `python-cqrs` framework follows a clear architectural pattern:
 | **Fallback Support** | Multiple handlers per request with fallback support |
 | **Flexible Chaining** | Flexible handler chaining |
 
+### 🔄 Saga Pattern
+
+| Feature | Description |
+|---------|-------------|
+| **Distributed Transactions** | Choreographic Saga pattern for managing distributed transactions |
+| **Automatic Compensation** | Automatic rollback of completed steps on failure |
+| **Recovery Mechanism** | Resume interrupted sagas from persistent storage |
+| **Eventual Consistency** | Ensures eventual consistency across distributed systems |
+| **Storage Support** | Memory and SQLAlchemy storage implementations |
+
 ### ⚡ Parallel Event Processing
 
 | Feature | Benefit |
@@ -224,8 +220,9 @@ Start here to understand the fundamentals:
 | 3 | [**Request Handlers**](request_handler.md) | Working with commands and queries |
 | 4 | [**Stream Handling**](stream_handling/index.md) | Incremental processing with streaming |
 | 5 | [**Chain of Responsibility**](chain_of_responsibility/index.md) | Sequential request processing |
-| 6 | [**Event Handling**](event_handler/index.md) | Processing domain events |
-| 7 | [**Transaction Outbox**](outbox/index.md) | Reliable event delivery pattern |
+| 6 | [**Saga Pattern**](saga/index.md) | Distributed transactions with automatic compensation and recovery |
+| 7 | [**Event Handling**](event_handler/index.md) | Processing domain events |
+| 8 | [**Transaction Outbox**](outbox/index.md) | Reliable event delivery pattern |
 
 !!! tip "Learning Path"
     Follow the numbered sequence for the best learning experience. Each concept builds on the previous one.

@@ -96,7 +96,7 @@ mediator = bootstrap.bootstrap_streaming(
 )
 ```
 
-> [!TIP]
-> - Set `max_concurrent_event_handlers` to limit resource consumption
-> - Set `concurrent_event_handle_enable=False` to process events sequentially
-> - Higher concurrency improves performance but uses more resources
+!!! tip "Configuration Tips"
+    - Set `max_concurrent_event_handlers` to limit resource consumption
+    - Set `concurrent_event_handle_enable=False` to process events sequentially
+    - Higher concurrency improves performance but uses more resources

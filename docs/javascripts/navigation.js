@@ -77,6 +77,13 @@
             { title: 'Chain of Responsibility', url: 'chain_of_responsibility/', path: 'chain_of_responsibility/index' },
             { title: 'CoR Examples', url: 'chain_of_responsibility/examples/', path: 'chain_of_responsibility/examples' },
             { title: 'CoR Advanced', url: 'chain_of_responsibility/advanced/', path: 'chain_of_responsibility/advanced' },
+            // Saga
+            { title: 'Saga Pattern', url: 'saga/', path: 'saga/index' },
+            { title: 'Saga Flow Diagrams', url: 'saga/flow/', path: 'saga/flow' },
+            { title: 'Saga Storage', url: 'saga/storage/', path: 'saga/storage' },
+            { title: 'Saga Recovery', url: 'saga/recovery/', path: 'saga/recovery' },
+            { title: 'Saga Compensation', url: 'saga/compensation/', path: 'saga/compensation' },
+            { title: 'Saga Examples', url: 'saga/examples/', path: 'saga/examples' },
             // Event Handler
             { title: 'Events Handling', url: 'event_handler/', path: 'event_handler/index' },
             { title: 'Event Flow', url: 'event_handler/event_flow/', path: 'event_handler/event_flow' },
@@ -226,53 +233,36 @@
         container.className = 'navigation-buttons';
         
         // Функция для получения правильного относительного пути
-        function getRelativeUrl(targetUrl, currentUrl) {
-            // Нормализуем текущий URL
-            const normalizedCurrent = currentUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
+        function getRelativeUrl(targetPage, currentUrl) {
+            // Используем path из pageOrder вместо url для более точного построения путей
+            const targetPath = targetPage.path || targetPage.url || targetPage;
+            
+            // Нормализуем текущий URL - убираем префикс python-cqrs-mkdocs и нормализуем
+            let normalizedCurrent = currentUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
+            normalizedCurrent = normalizedCurrent.replace(/^\/python-cqrs-mkdocs/, '').replace(/^\/+/, '');
             
             // Если это главная страница
-            if (targetUrl === '../' || targetUrl === 'index.html' || targetUrl === '') {
-                // Определяем глубину текущей страницы
-                const currentDepth = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== '').length;
+            if (targetPath === 'index' || targetPath === '../' || targetPath === 'index.html' || targetPath === '') {
+                const currentDepth = normalizedCurrent.split('/').filter(p => p && p !== 'index.html').length;
                 if (currentDepth === 0) {
                     return './';
                 }
-                return '../'.repeat(currentDepth) + 'index.html';
+                // В MkDocs с use_directory_urls главная страница - это просто относительный путь вверх
+                return '../'.repeat(currentDepth);
             }
             
-            // Определяем глубину текущей страницы
-            const currentDepth = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== '').length;
+            // Получаем части путей
+            const currentParts = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== 'index.html');
+            let targetParts = targetPath.split('/').filter(part => part && part !== 'index.html');
             
-            // Определяем глубину целевой страницы
-            const normalizedTarget = targetUrl.replace(/\/$/, '');
-            const targetDepth = normalizedTarget.split('/').filter(part => part && part !== '').length;
-            
-            // Если мы на главной странице (depth = 0)
-            if (currentDepth === 0) {
-                return targetUrl;
+            // В MkDocs с use_directory_urls страницы с path заканчивающимся на 'index' 
+            // доступны без '/index' в URL (например, 'stream_handling/index' -> 'stream_handling/')
+            // Убираем 'index' из конца пути для правильного построения URL
+            if (targetParts.length > 0 && targetParts[targetParts.length - 1] === 'index') {
+                targetParts = targetParts.slice(0, -1);
             }
             
-            // Вычисляем относительный путь
-            // Если обе страницы на одном уровне (например, request_handler и stream_handling)
-            // В MkDocs с use_directory_urls каждая страница находится в своей папке
-            // Поэтому из /request_handler/ нужно подняться на уровень вверх и войти в stream_handling/
-            if (targetDepth === 1 && currentDepth === 1) {
-                // Поднимаемся на один уровень вверх и входим в целевую папку
-                return '../' + normalizedTarget + '/';
-            }
-            
-            // Если целевая страница на том же уровне или выше
-            if (targetDepth <= 1 && currentDepth > 1) {
-                // Поднимаемся на нужное количество уровней вверх
-                const levelsUp = currentDepth - targetDepth;
-                return '../'.repeat(levelsUp) + normalizedTarget + '/';
-            }
-            
-            // Для страниц в подпапках
             // Находим общий префикс
-            const currentParts = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== '');
-            const targetParts = normalizedTarget.split('/').filter(part => part && part !== '');
-            
             let commonDepth = 0;
             for (let i = 0; i < Math.min(currentParts.length, targetParts.length); i++) {
                 if (currentParts[i] === targetParts[i]) {
@@ -284,22 +274,36 @@
             
             // Вычисляем сколько уровней нужно подняться
             const levelsUp = currentParts.length - commonDepth;
+            
             // Вычисляем путь от общего предка до цели
             const targetPathFromCommon = targetParts.slice(commonDepth).join('/');
             
-            if (levelsUp > 0) {
-                return '../'.repeat(levelsUp) + targetPathFromCommon + '/';
-            } else {
-                return targetPathFromCommon + '/';
+            // Строим относительный путь
+            if (levelsUp === 0 && targetPathFromCommon === '') {
+                return './';
             }
+            
+            // Строим путь, избегая двойных слешей
+            let relativePath = '';
+            if (levelsUp > 0) {
+                relativePath = '../'.repeat(levelsUp);
+            }
+            if (targetPathFromCommon) {
+                relativePath += targetPathFromCommon + '/';
+            }
+            
+            // Убираем двойные слеши
+            relativePath = relativePath.replace(/\/+/g, '/');
+            
+            return relativePath;
         }
         
         // Кнопка "Предыдущая"
         if (prevPage) {
             const prevButton = document.createElement('a');
-            const relativeUrl = getRelativeUrl(prevPage.url, window.location.pathname);
+            const relativeUrl = getRelativeUrl(prevPage, window.location.pathname);
             prevButton.href = relativeUrl;
-            console.log('Prev button URL:', prevPage.url, '->', relativeUrl);
+            console.log('Prev button URL:', prevPage.url, 'Path:', prevPage.path, '->', relativeUrl);
             prevButton.className = 'nav-button prev';
             prevButton.innerHTML = `
                 <span class="icon">←</span>
@@ -319,9 +323,9 @@
         // Кнопка "Следующая"
         if (nextPage) {
             const nextButton = document.createElement('a');
-            const relativeUrl = getRelativeUrl(nextPage.url, window.location.pathname);
+            const relativeUrl = getRelativeUrl(nextPage, window.location.pathname);
             nextButton.href = relativeUrl;
-            console.log('Next button URL:', nextPage.url, '->', relativeUrl);
+            console.log('Next button URL:', nextPage.url, 'Path:', nextPage.path, '->', relativeUrl);
             nextButton.className = 'nav-button next';
             nextButton.innerHTML = `
                 <span>${nextPage.title}</span>
@@ -343,20 +347,28 @@
 
     // Функция для добавления кнопок навигации на страницу
     function addNavigationButtons() {
-        // Добавляем кнопки на все страницы, включая главную
+        // Проверяем, что DOM полностью загружен
+        if (!document.body) {
+            return;
+        }
         
+        // Добавляем кнопки на все страницы, включая главную
         const pageInfo = getCurrentPageInfo();
         
         if (pageInfo.current) {
             const buttons = createNavigationButtons(pageInfo.prev, pageInfo.next);
             
-            // Ищем место для вставки кнопок (перед footer или в конце контента)
+            // Ищем место для вставки кнопок - в конце контента, но перед footer
             const content = document.querySelector('.md-content__inner');
             if (content) {
+                // Просто добавляем в конец контента
                 content.appendChild(buttons);
             } else {
-                // Fallback - добавляем в конец body
-                document.body.appendChild(buttons);
+                // Fallback - добавляем в конец main контента
+                const main = document.querySelector('main .md-content') || document.querySelector('main');
+                if (main) {
+                    main.appendChild(buttons);
+                }
             }
         }
     }
@@ -367,6 +379,7 @@
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', addNavigationButtons);
         } else {
+            // Если DOM уже загружен, запускаем сразу
             addNavigationButtons();
         }
     }

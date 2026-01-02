@@ -14,16 +14,6 @@
   --timeweb-shadow: rgba(0, 102, 204, 0.2);
 }
 
-[data-md-color-scheme="slate"] {
-  --timeweb-text: #ffffff;
-  --timeweb-text-light: #cccccc;
-  --timeweb-bg-light: rgba(0, 102, 204, 0.05);
-  --timeweb-bg-medium: rgba(0, 102, 204, 0.08);
-  --timeweb-bg-dark: rgba(0, 102, 204, 0.12);
-  --timeweb-border: rgba(0, 102, 204, 0.2);
-  --timeweb-border-dark: rgba(0, 102, 204, 0.3);
-  --timeweb-shadow: rgba(0, 102, 204, 0.3);
-}
 
 /* Стили для главного изображения */
 .hero-image {
@@ -66,22 +56,6 @@
 .image-container img:hover {
     transform: translateY(-2px);
     box-shadow: 0 12px 40px rgba(0, 102, 204, 0.3);
-}
-
-/* Темная тема - дополнительные стили */
-[data-md-color-scheme="slate"] .image-container {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.08) 0%, rgba(0, 61, 122, 0.08) 100%);
-    border: 1px solid rgba(0, 102, 204, 0.2);
-}
-
-[data-md-color-scheme="slate"] .image-container img {
-    box-shadow: 0 8px 32px rgba(0, 102, 204, 0.3);
-    filter: brightness(1.05) contrast(1.1);
-}
-
-[data-md-color-scheme="slate"] .image-container img:hover {
-    box-shadow: 0 12px 40px rgba(0, 102, 204, 0.4);
-    filter: brightness(1.1) contrast(1.15);
 }
 
 /* Светлая тема */
@@ -250,30 +224,6 @@
     }
 }
 
-/* Темная тема - усиленные неоновые эффекты */
-[data-md-color-scheme="slate"] .navigation-buttons {
-    border-top-color: var(--md-default-fg-color--lightest);
-}
-
-[data-md-color-scheme="slate"] .nav-button {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--md-default-fg-color);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-[data-md-color-scheme="slate"] .nav-button:hover {
-    background: rgba(255, 255, 255, 0.15);
-    color: var(--md-default-fg-color);
-    border-color: rgba(255, 255, 255, 0.25);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-}
-
-[data-md-color-scheme="slate"] .nav-button.disabled {
-    background: rgba(255, 255, 255, 0.04);
-    color: var(--md-default-fg-color--light);
-    border-color: rgba(255, 255, 255, 0.08);
-}
 
 /* Стили для новой структуры главной страницы */
 
@@ -458,51 +408,6 @@
     font-weight: 600;
 }
 
-/* Темная тема */
-[data-md-color-scheme="slate"] .hero-section {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.08) 0%, rgba(0, 61, 122, 0.08) 100%);
-    border: 1px solid rgba(0, 102, 204, 0.2);
-}
-
-[data-md-color-scheme="slate"] .hero-title {
-    background: linear-gradient(135deg, #0066CC, #003d7a, #004d99);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-[data-md-color-scheme="slate"] .architecture-diagram {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(0, 61, 122, 0.05) 100%);
-    border: 1px solid rgba(0, 102, 204, 0.2);
-}
-
-[data-md-color-scheme="slate"] .arch-section {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-[data-md-color-scheme="slate"] .arch-section:hover {
-    background: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
-}
-
-[data-md-color-scheme="slate"] .arch-section h4 {
-    color: #0066CC;
-}
-
-[data-md-color-scheme="slate"] .cta-section {
-    background: rgba(0, 102, 204, 0.05);
-    border: 1px solid rgba(0, 102, 204, 0.15);
-}
-
-[data-md-color-scheme="slate"] .cta-section:hover {
-    background: rgba(0, 102, 204, 0.08);
-    border-color: rgba(0, 102, 204, 0.2);
-}
-
-[data-md-color-scheme="slate"] .cta-section h3 {
-    color: #0066CC;
-}
 
 /* Стили для badges проекта */
 .project-badges {
@@ -659,61 +564,6 @@
     text-decoration: underline;
 }
 
-/* Темная тема для ссылок проекта */
-[data-md-color-scheme="slate"] .project-link {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-    color: var(--md-default-fg-color);
-}
-
-[data-md-color-scheme="slate"] .project-link:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--md-default-fg-color);
-}
-
-[data-md-color-scheme="slate"] .github-link {
-    background: linear-gradient(135deg, rgba(36, 41, 46, 0.15) 0%, rgba(36, 41, 46, 0.25) 100%);
-    border-color: rgba(36, 41, 46, 0.3);
-}
-
-[data-md-color-scheme="slate"] .github-link:hover {
-    background: linear-gradient(135deg, rgba(36, 41, 46, 0.25) 0%, rgba(36, 41, 46, 0.35) 100%);
-    border-color: rgba(36, 41, 46, 0.4);
-}
-
-[data-md-color-scheme="slate"] .pypi-link {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.25) 100%);
-    border-color: rgba(0, 102, 204, 0.3);
-}
-
-[data-md-color-scheme="slate"] .pypi-link:hover {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.25) 0%, rgba(0, 102, 204, 0.35) 100%);
-    border-color: rgba(0, 102, 204, 0.4);
-}
-
-[data-md-color-scheme="slate"] .stats-link {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.25) 100%);
-    border-color: rgba(76, 175, 80, 0.3);
-}
-
-[data-md-color-scheme="slate"] .stats-link:hover {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.25) 0%, rgba(76, 175, 80, 0.35) 100%);
-    border-color: rgba(76, 175, 80, 0.4);
-}
-
-[data-md-color-scheme="slate"] .company-info {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.05) 0%, rgba(0, 61, 122, 0.05) 100%);
-    border: 1px solid rgba(0, 102, 204, 0.2);
-}
-
-[data-md-color-scheme="slate"] .company-info a {
-    color: #0066CC;
-}
-
-[data-md-color-scheme="slate"] .company-info a:hover {
-    color: #003d7a;
-}
 
 /* Адаптивность для планшетов */
 @media (max-width: 1024px) and (min-width: 769px) {
@@ -844,4 +694,138 @@
     .hero-image {
         max-width: 120px;
     }
+}
+
+
+/* Желтые/светло-желтые узлы */
+
+/* Зеленые/светло-зеленые узлы */
+
+/* ЧЕРНЫЙ текст для всех зеленых узлов */
+
+/* Синие/светло-синие узлы */
+
+/* Общее правило для всех светлых цветов (яркость > 200) */
+
+/* Стили для текста в узлах с классом (например, для разных типов узлов) */
+
+/* Стили для успешных состояний (зеленые блоки) */
+
+/* ЧЕРНЫЙ текст для зеленых блоков */
+
+/* Стили для состояний ошибок (красные блоки) */
+
+/* ЧЕРНЫЙ текст для красных блоков */
+
+/* Стили для стрелок */
+
+
+/* Стили для текста в sequence diagrams */
+
+/* Стили для блоков в sequence diagrams */
+
+/* Стили для state diagrams */
+
+
+/* Стили для flowchart */
+
+/* Улучшение контраста для всех текстовых элементов */
+
+/* Стили для фоновых элементов */
+
+
+/* ФИНАЛЬНОЕ ПЕРЕОПРЕДЕЛЕНИЕ: По умолчанию белый текст, но для зеленых и красных - черный */
+
+/* МАКСИМАЛЬНО АГРЕССИВНОЕ ПРАВИЛО: Черный текст для ВСЕХ текстов рядом с зелеными/красными узлами */
+
+/* УНИВЕРСАЛЬНОЕ ПРАВИЛО: Переопределение для всех текстов, которые могут быть в светлых блоках */
+/* Используем более низкую специфичность, но с !important для переопределения инлайн стилей */
+
+/* Принудительное переопределение через атрибут data-text-color */
+
+/* Исключение: черный текст для текстов внутри зеленых и красных узлов */
+
+/* Дополнительные правила для текстов внутри узлов с зелеными/красными фонами */
+
+/* Дополнительное переопределение для всех узлов с яркими цветами */
+
+
+/* Улучшение контраста для таблиц */
+
+
+/* Улучшение контраста для кода */
+
+
+/* Улучшение контраста для ссылок */
+
+
+/* Улучшение контраста для заголовков */
+
+/* Улучшение контраста для блоков с предупреждениями и подсказками */
+
+
+/* Улучшение контраста для боковой панели навигации */
+
+/* Стили для Mermaid диаграмм - улучшение читаемости */
+.mermaid {
+    display: flex;
+    justify-content: center;
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--timeweb-bg-light);
+    border-radius: 8px;
+    overflow-x: auto;
+    overflow-y: visible;
+}
+
+/* Увеличение размера шрифта в диаграммах */
+.mermaid svg {
+    font-size: 14px !important;
+    min-width: 100%;
+}
+
+/* Улучшение видимости текста в узлах */
+.mermaid .nodeLabel,
+.mermaid .edgeLabel {
+    font-size: 14px !important;
+    font-weight: 500;
+}
+
+/* Улучшение видимости участников в sequence диаграммах */
+.mermaid .actor {
+    font-size: 14px !important;
+    font-weight: 600;
+}
+
+/* Улучшение видимости сообщений */
+.mermaid .messageText {
+    font-size: 13px !important;
+}
+
+/* Улучшение видимости заметок */
+.mermaid .noteText {
+    font-size: 12px !important;
+}
+
+/* Контейнер для диаграмм с пояснениями */
+.mermaid-container {
+    margin: 2rem 0;
+    padding: 1rem;
+    background: var(--timeweb-bg-light);
+    border-radius: 8px;
+    border: 1px solid var(--timeweb-border);
+}
+
+.mermaid-container .mermaid {
+    margin: 0;
+    padding: 1rem;
+    background: white;
+    border-radius: 4px;
+}
+
+.mermaid-container p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9em;
+    color: var(--timeweb-text-light);
+    font-style: italic;
 }

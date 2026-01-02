@@ -90,25 +90,6 @@ Chain of Responsibility is ideal for:
 | Registration | Single handler | List of handlers |
 
 
-For synchronous handlers, use `SyncCORRequestHandler`:
-
-```python
-from cqrs.requests.cor_request_handler import SyncCORRequestHandler
-
-class SyncCreditCardHandler(SyncCORRequestHandler[ProcessPaymentCommand, PaymentResult]):
-    @property
-    def events(self) -> list[cqrs.Event]:
-        return self._events
-
-    def handle(self, request: ProcessPaymentCommand) -> PaymentResult | None:
-        if request.payment_method == "credit_card":
-            return PaymentResult(success=True, ...)
-        
-        # Pass to next handler (synchronous)
-        return self.next(request)
-```
-
-
 Chain of Responsibility works well with:
 
 - **Dependency Injection** — Handlers can be injected with dependencies

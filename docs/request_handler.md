@@ -22,6 +22,7 @@ Request handlers process commands (write operations) and queries (read operation
 !!! tip "Related Topics"
     - [Stream Handling](stream_handling/index.md) — For incremental processing
     - [Chain of Responsibility](chain_of_responsibility/index.md) — For sequential handler chains
+    - [Saga Pattern](saga/index.md) — For distributed transactions with compensation
     - [Event Handling](event_handler/index.md) — For processing events emitted by command handlers
 
 Request handlers can be divided into two main types:
@@ -54,7 +55,7 @@ the domain model. As a result of executing the command, an event may be produced
 </details>
 
 ```python
-from cqrs.requests.request_handler import RequestHandler, SyncRequestHandler
+from cqrs.requests.request_handler import RequestHandler
 from cqrs.events.event import Event
 
 class JoinMeetingCommandHandler(RequestHandler[JoinMeetingCommand, None]):
@@ -69,21 +70,6 @@ class JoinMeetingCommandHandler(RequestHandler[JoinMeetingCommand, None]):
 
       async def handle(self, request: JoinMeetingCommand) -> None:
           await self._meetings_api.join_user(request.user_id, request.meeting_id)
-
-
-class SyncJoinMeetingCommandHandler(SyncRequestHandler[JoinMeetingCommand, None]):
-
-      def __init__(self, meetings_api: MeetingAPIProtocol) -> None:
-          self._meetings_api = meetings_api
-          self.events: list[Event] = []
-
-      @property
-      def events(self) -> typing.List[events.Event]:
-          return self._events
-
-      def handle(self, request: JoinMeetingCommand) -> None:
-          # do some sync logic
-          ...
 ```
 
 ## Query Handler
