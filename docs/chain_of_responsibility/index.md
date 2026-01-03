@@ -7,6 +7,7 @@
 - [Basic Example](#basic-example)
 - [Examples](examples.md)
 - [Advanced Topics](advanced.md)
+- [Mermaid Diagrams](../mermaid/chain_of_responsibility.md)
 
 The Chain of Responsibility pattern allows multiple handlers to process a request in sequence until one successfully handles it. This pattern is particularly useful when you have multiple processing strategies or need to implement fallback mechanisms.
 
@@ -31,6 +32,7 @@ The Chain of Responsibility pattern allows multiple handlers to process a reques
 
 - **[Examples](examples.md)** — Registering handlers and complete examples
 - **[Advanced Topics](advanced.md)** — Manual chain building, handler methods, and integration
+- **[Mermaid Diagrams](../mermaid/chain_of_responsibility.md)** — Generate Sequence and Class diagrams for documentation
 
 ## Pattern Description
 

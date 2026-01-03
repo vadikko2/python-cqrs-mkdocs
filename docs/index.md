@@ -40,6 +40,7 @@ applications. It helps separate read and write operations, improving scalability
 | 🔗 **Flexibility** | Chain of Responsibility pattern support |
 | 📦 **Protobuf** | Protocol Buffers events serialization support |
 | 🔄 **Saga Pattern** | Choreographic Saga for distributed transactions with automatic compensation |
+| 📊 **Mermaid Diagrams** | Built-in generation of Sequence and Class diagrams for Chain of Responsibility and Saga patterns |
 
 ---
 
@@ -206,6 +207,17 @@ The `python-cqrs` framework follows a clear architectural pattern:
 | **Concurrency Limits** | Configurable concurrency limits for event handlers |
 | **Parallel Processing** | Parallel processing of domain events |
 | **Performance** | Improved performance for independent event handlers |
+
+### 📊 Mermaid Diagram Generation
+
+| Feature | Description |
+|---------|-------------|
+| **Chain of Responsibility** | Generate Sequence and Class diagrams for handler chains |
+| **Saga Pattern** | Generate Sequence and Class diagrams for saga execution flows |
+| **Documentation** | Perfect for documentation, visualization, and understanding component structure |
+| **Multiple Formats** | Sequence diagrams for execution flow, Class diagrams for type structure |
+
+See [Mermaid Diagrams](mermaid/index.md) for detailed documentation.
 
 ## Documentation
 

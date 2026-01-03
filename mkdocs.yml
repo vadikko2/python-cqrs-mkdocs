@@ -33,6 +33,10 @@ nav:
       - Recovery & Eventual Consistency: saga/recovery.md
       - Compensation Strategy: saga/compensation.md
       - Examples: saga/examples.md
+    - Mermaid Diagrams:
+      - Overview: mermaid/index.md
+      - Chain of Responsibility: mermaid/chain_of_responsibility.md
+      - Saga Pattern: mermaid/saga.md
     - Events Handling:
       - Overview: event_handler/index.md
       - Event Flow: event_handler/event_flow.md
