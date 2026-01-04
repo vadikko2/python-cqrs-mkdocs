@@ -22,12 +22,12 @@ from cqrs.saga.mermaid import SagaMermaid
 from cqrs.saga.saga import Saga
 from cqrs.saga.storage.memory import MemorySagaStorage
 
-# Create your saga (see Saga Pattern documentation for details)
-saga = Saga(
-    steps=[ReserveInventoryStep, ProcessPaymentStep, ShipOrderStep],
-    container=container,
-    storage=MemorySagaStorage(),
-)
+# Create your saga class (steps are defined as class attribute)
+class OrderSaga(Saga[OrderContext]):
+    steps = [ReserveInventoryStep, ProcessPaymentStep, ShipOrderStep]
+
+# Create saga instance
+saga = OrderSaga()
 
 # Create Mermaid generator
 generator = SagaMermaid(saga)
@@ -93,11 +93,14 @@ class ProcessPaymentStep(SagaStepHandler[OrderContext, ProcessPaymentResponse]):
 class ShipOrderStep(SagaStepHandler[OrderContext, ShipOrderResponse]):
     # ... implementation
 
-saga = Saga(
-    steps=[ReserveInventoryStep, ProcessPaymentStep, ShipOrderStep],
-    container=container,
-    storage=storage,
-)
+class OrderSaga(Saga[OrderContext]):
+    steps = [
+        ReserveInventoryStep,
+        ProcessPaymentStep,
+        ShipOrderStep,
+    ]
+
+saga = OrderSaga()
 ```
 
 ### Generated Sequence Diagram
