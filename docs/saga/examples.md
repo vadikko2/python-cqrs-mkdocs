@@ -3,12 +3,17 @@
 ## Basic Saga Example
 
 ```python
+import dataclasses
+import uuid
+import di
+
+import cqrs
+from cqrs.saga import bootstrap
 from cqrs.saga.saga import Saga
 from cqrs.saga.step import SagaStepHandler, SagaStepResult
 from cqrs.saga.storage.memory import MemorySagaStorage
 from cqrs.saga.models import SagaContext
-import dataclasses
-import uuid
+from cqrs.response import Response
 
 @dataclasses.dataclass
 class OrderContext(SagaContext):
@@ -35,17 +40,34 @@ class ReserveInventoryStep(SagaStepHandler[OrderContext, Response]):
                 context.inventory_reservation_id
             )
 
-# Create and execute saga
+# Define saga class with steps
+class OrderSaga(Saga[OrderContext]):
+    steps = [ReserveInventoryStep, ProcessPaymentStep]
+
+# Setup DI container
+di_container = di.Container()
+# ... register services ...
+
+# Create saga storage
 storage = MemorySagaStorage()
-saga = Saga(
-    steps=[ReserveInventoryStep, ProcessPaymentStep],
-    container=container,
-    storage=storage,
+
+# Register saga in SagaMap
+def saga_mapper(mapper: cqrs.SagaMap) -> None:
+    mapper.bind(OrderContext, OrderSaga)
+
+# Create saga mediator using bootstrap
+mediator = bootstrap.bootstrap(
+    di_container=di_container,
+    sagas_mapper=saga_mapper,
+    saga_storage=storage,
 )
 
-async with saga.transaction(context=context, saga_id=uuid.uuid4()) as transaction:
-    async for step_result in transaction:
-        print(f"Step completed: {step_result.step_type.__name__}")
+# Execute saga
+context = OrderContext(order_id="123", items=["item_1"], total_amount=100.0)
+saga_id = uuid.uuid4()
+
+async for step_result in mediator.stream(context, saga_id=saga_id):
+    print(f"Step completed: {step_result.step_type.__name__}")
 ```
 
 **Complete example:** [`examples/saga.py`](https://github.com/vadikko2/cqrs/blob/master/examples/saga.py)
@@ -57,11 +79,20 @@ async with saga.transaction(context=context, saga_id=uuid.uuid4()) as transactio
 ```python
 from cqrs.saga.recovery import recover_saga
 
+# Get saga instance (or keep reference to saga class)
+saga = OrderSaga()
+
 # Recover interrupted saga
 saga_id = uuid.UUID("550e8400-e29b-41d4-a716-446655440000")
 
 try:
-    await recover_saga(saga, saga_id, OrderContext)
+    await recover_saga(
+        saga=saga,
+        saga_id=saga_id,
+        context_builder=OrderContext,
+        container=di_container,  # Same container used in bootstrap
+        storage=storage,
+    )
     print("Saga recovered successfully!")
 except RuntimeError:
     # Expected if saga was in COMPENSATING/FAILED state
@@ -77,19 +108,30 @@ except RuntimeError:
 ```python
 import fastapi
 import json
-from cqrs.saga.saga import Saga
+import uuid
+from cqrs.saga import bootstrap
+
+def mediator_factory() -> cqrs.SagaMediator:
+    """Create saga mediator using bootstrap."""
+    return bootstrap.bootstrap(
+        di_container=di_container,
+        sagas_mapper=saga_mapper,
+        saga_storage=storage,
+    )
 
 @app.post("/process-order")
-async def process_order(request: ProcessOrderRequest):
+async def process_order(
+    request: ProcessOrderRequest,
+    mediator: cqrs.SagaMediator = fastapi.Depends(mediator_factory),
+):
     async def generate_sse():
-        saga = Saga(steps=[...], container=container, storage=storage)
         saga_id = uuid.uuid4()
+        context = OrderContext(...)
         
         yield f"data: {json.dumps({'type': 'start', 'saga_id': str(saga_id)})}\n\n"
         
-        async with saga.transaction(context=context, saga_id=saga_id) as transaction:
-            async for step_result in transaction:
-                yield f"data: {json.dumps({'type': 'step_progress', 'step': step_result.step_type.__name__})}\n\n"
+        async for step_result in mediator.stream(context, saga_id=saga_id):
+            yield f"data: {json.dumps({'type': 'step_progress', 'step': step_result.step_type.__name__})}\n\n"
         
         yield f"data: {json.dumps({'type': 'complete'})}\n\n"
     
@@ -107,6 +149,7 @@ async def process_order(request: ProcessOrderRequest):
 ```python
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from cqrs.saga.storage.sqlalchemy import SqlAlchemySagaStorage, Base
+from cqrs.saga import bootstrap
 
 # Setup
 engine = create_async_engine("postgresql+asyncpg://user:pass@localhost/db")
@@ -117,11 +160,24 @@ async def create_storage() -> SqlAlchemySagaStorage:
 
 # Usage
 storage = await create_storage()
-saga = Saga(steps=[...], container=container, storage=storage)
 
-async with saga.transaction(context=context, saga_id=uuid.uuid4()) as transaction:
-    async for step_result in transaction:
-        print(f"Step: {step_result.step_type.__name__}")
+# Register saga in SagaMap
+def saga_mapper(mapper: cqrs.SagaMap) -> None:
+    mapper.bind(OrderContext, OrderSaga)
+
+# Create saga mediator using bootstrap
+mediator = bootstrap.bootstrap(
+    di_container=di_container,
+    sagas_mapper=saga_mapper,
+    saga_storage=storage,
+)
+
+# Execute saga
+context = OrderContext(...)
+saga_id = uuid.uuid4()
+
+async for step_result in mediator.stream(context, saga_id=saga_id):
+    print(f"Step: {step_result.step_type.__name__}")
 
 await storage.session.commit()
 ```
@@ -130,15 +186,14 @@ await storage.session.commit()
 
 ## Compensation Retry Configuration
 
+Compensation retry configuration is handled at the transaction level. When using `SagaMediator`, retry settings can be configured when creating the saga transaction. However, the recommended approach is to configure retry settings in your saga class or use the default settings.
+
+For advanced retry configuration, you can access the transaction directly:
+
 ```python
-saga = Saga(
-    steps=[...],
-    container=container,
-    storage=storage,
-    compensation_retry_count=5,      # Retry up to 5 times
-    compensation_retry_delay=2.0,    # Start with 2 second delay
-    compensation_retry_backoff=1.5,  # Multiply delay by 1.5 each time
-)
+# Note: Compensation retry is configured at the SagaTransaction level
+# When using mediator.stream(), default retry settings are used
+# For custom retry configuration, you may need to access the transaction directly
 ```
 
 ## Background Recovery Job
@@ -148,11 +203,18 @@ import asyncio
 from cqrs.saga.recovery import recover_saga
 
 async def recovery_job():
+    saga = OrderSaga()  # Get saga instance
     while True:
         incomplete_sagas = await find_incomplete_sagas()
         for saga_id in incomplete_sagas:
             try:
-                await recover_saga(saga, saga_id, OrderContext)
+                await recover_saga(
+                    saga=saga,
+                    saga_id=saga_id,
+                    context_builder=OrderContext,
+                    container=di_container,
+                    storage=storage,
+                )
             except RuntimeError:
                 pass  # Compensation completed
         await asyncio.sleep(60)  # Scan every minute

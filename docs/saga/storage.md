@@ -28,10 +28,22 @@ class ISagaStorage(abc.ABC):
 In-memory implementation for testing and development.
 
 ```python
+import cqrs
+from cqrs.saga import bootstrap
 from cqrs.saga.storage.memory import MemorySagaStorage
 
 storage = MemorySagaStorage()
-saga = Saga(steps=[...], container=container, storage=storage)
+
+# Register saga in SagaMap
+def saga_mapper(mapper: cqrs.SagaMap) -> None:
+    mapper.bind(OrderContext, OrderSaga)
+
+# Create saga mediator using bootstrap
+mediator = bootstrap.bootstrap(
+    di_container=di_container,
+    sagas_mapper=saga_mapper,
+    saga_storage=storage,
+)
 
 # Access storage data
 status, context_data = await storage.load_saga_state(saga_id)
@@ -72,6 +84,9 @@ Database-backed implementation for production.
 ### Usage
 
 ```python
+import uuid
+import cqrs
+from cqrs.saga import bootstrap
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from cqrs.saga.storage.sqlalchemy import SqlAlchemySagaStorage, Base
 
@@ -89,11 +104,24 @@ async def create_storage() -> SqlAlchemySagaStorage:
 
 # Usage
 storage = await create_storage()
-saga = Saga(steps=[...], container=container, storage=storage)
 
-async with saga.transaction(context=context, saga_id=saga_id) as transaction:
-    async for step_result in transaction:
-        print(f"Step: {step_result.step_type.__name__}")
+# Register saga in SagaMap
+def saga_mapper(mapper: cqrs.SagaMap) -> None:
+    mapper.bind(OrderContext, OrderSaga)
+
+# Create saga mediator using bootstrap
+mediator = bootstrap.bootstrap(
+    di_container=di_container,
+    sagas_mapper=saga_mapper,
+    saga_storage=storage,
+)
+
+# Execute saga
+context = OrderContext(...)
+saga_id = uuid.uuid4()
+
+async for step_result in mediator.stream(context, saga_id=saga_id):
+    print(f"Step: {step_result.step_type.__name__}")
 
 await storage.session.commit()
 ```

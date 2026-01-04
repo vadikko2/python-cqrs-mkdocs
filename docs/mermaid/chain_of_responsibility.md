@@ -49,6 +49,7 @@ The Sequence diagram visualizes the complete execution flow of a handler chain u
 - The diagram shows all possible paths through the chain using nested conditional blocks
 - **Any handler can process the request and stop the chain**, not just the last one
 - Handler names (not aliases) are used in `alt` conditions for better readability
+- **After a handler successfully processes a request**, events are collected from the handler's `events` property and processed by the EventMediator
 
 ### Example Handler Chain Code
 
@@ -92,6 +93,7 @@ handlers = [CreditCardHandler, PayPalHandler, DefaultPaymentHandler]
 ```text
 sequenceDiagram
     participant C as Chain
+    participant E as EventMediator
     participant H1 as CreditCardHandler
     participant H2 as PayPalHandler
     participant H3 as DefaultPaymentHandler
@@ -102,18 +104,30 @@ sequenceDiagram
     alt CreditCardHandler can handle
         H1-->>C: result
         Note over H1: Handler processed, chain stops
+        C->>H1: events
+        H1-->>C: List[Event]
+        C->>E: process events
+        Note over E: Events from CreditCardHandler processed
     else
         H1->>H2: next(request)
         Note over H1: Cannot handle, passing to next
         alt PayPalHandler can handle
             H2-->>C: result
             Note over H2: Handler processed, chain stops
+            C->>H2: events
+            H2-->>C: List[Event]
+            C->>E: process events
+            Note over E: Events from PayPalHandler processed
         else
             H2->>H3: next(request)
             Note over H2: Cannot handle, passing to next
             alt DefaultPaymentHandler can handle
                 H3-->>C: result
                 Note over H3: Handler processed (default)
+                C->>H3: events
+                H3-->>C: List[Event]
+                C->>E: process events
+                Note over E: Events from DefaultPaymentHandler processed
             end
         end
     end
@@ -124,6 +138,7 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant C as Chain
+    participant E as EventMediator
     participant H1 as CreditCardHandler
     participant H2 as PayPalHandler
     participant H3 as DefaultPaymentHandler
@@ -134,18 +149,30 @@ sequenceDiagram
     alt CreditCardHandler can handle
         H1-->>C: result
         Note over H1: Handler processed, chain stops
+        C->>H1: events
+        H1-->>C: List[Event]
+        C->>E: process events
+        Note over E: Events from CreditCardHandler processed
     else
         H1->>H2: next(request)
         Note over H1: Cannot handle, passing to next
         alt PayPalHandler can handle
             H2-->>C: result
             Note over H2: Handler processed, chain stops
+            C->>H2: events
+            H2-->>C: List[Event]
+            C->>E: process events
+            Note over E: Events from PayPalHandler processed
         else
             H2->>H3: next(request)
             Note over H2: Cannot handle, passing to next
             alt DefaultPaymentHandler can handle
                 H3-->>C: result
                 Note over H3: Handler processed (default)
+                C->>H3: events
+                H3-->>C: List[Event]
+                C->>E: process events
+                Note over E: Events from DefaultPaymentHandler processed
             end
         end
     end

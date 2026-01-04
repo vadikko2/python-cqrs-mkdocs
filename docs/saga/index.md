@@ -55,13 +55,17 @@ graph TD
 ## Basic Example
 
 ```python
+import dataclasses
+import uuid
+import di
+
+import cqrs
+from cqrs.saga import bootstrap
 from cqrs.saga.saga import Saga
 from cqrs.saga.step import SagaStepHandler, SagaStepResult
 from cqrs.saga.storage.memory import MemorySagaStorage
 from cqrs.saga.models import SagaContext
 from cqrs.response import Response
-import dataclasses
-import uuid
 
 # Context
 @dataclasses.dataclass
@@ -90,17 +94,34 @@ class ReserveInventoryStep(SagaStepHandler[OrderContext, Response]):
                 context.inventory_reservation_id
             )
 
-# Create and execute saga
+# Define saga class with steps
+class OrderSaga(Saga[OrderContext]):
+    steps = [ReserveInventoryStep]
+
+# Setup DI container
+di_container = di.Container()
+# ... register your services ...
+
+# Create saga storage
 storage = MemorySagaStorage()
-saga = Saga(
-    steps=[ReserveInventoryStep],
-    container=container,
-    storage=storage,
+
+# Register saga in SagaMap
+def saga_mapper(mapper: cqrs.SagaMap) -> None:
+    mapper.bind(OrderContext, OrderSaga)
+
+# Create saga mediator using bootstrap
+mediator = bootstrap.bootstrap(
+    di_container=di_container,
+    sagas_mapper=saga_mapper,
+    saga_storage=storage,
 )
 
-async with saga.transaction(context=context, saga_id=uuid.uuid4()) as transaction:
-    async for step_result in transaction:
-        print(f"Step completed: {step_result.step_type.__name__}")
+# Execute saga
+context = OrderContext(order_id="123", items=["item_1"], total_amount=100.0)
+saga_id = uuid.uuid4()
+
+async for step_result in mediator.stream(context, saga_id=saga_id):
+    print(f"Step completed: {step_result.step_type.__name__}")
 ```
 
 ## Key Features
