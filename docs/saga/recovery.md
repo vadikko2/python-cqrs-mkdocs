@@ -34,6 +34,7 @@ await recover_saga(
 ```
 
 Recovery steps:
+
 1. Load saga status and context from storage
 2. Reconstruct context object from persisted data
 3. Resume execution from last completed step or complete compensation
