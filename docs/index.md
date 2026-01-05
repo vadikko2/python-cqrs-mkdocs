@@ -39,7 +39,7 @@ applications. It helps separate read and write operations, improving scalability
 | 📡 **Streaming** | Real-time progress updates with StreamingRequestHandler |
 | 🔗 **Flexibility** | Chain of Responsibility pattern support |
 | 📦 **Protobuf** | Protocol Buffers events serialization support |
-| 🔄 **Saga Pattern** | Choreographic Saga for distributed transactions with automatic compensation |
+| 🔄 **Saga Pattern** | Orchestrated Saga for distributed transactions with automatic compensation |
 | 📊 **Mermaid Diagrams** | Built-in generation of Sequence and Class diagrams for Chain of Responsibility and Saga patterns |
 
 ---
@@ -194,7 +194,7 @@ The `python-cqrs` framework follows a clear architectural pattern:
 
 | Feature | Description |
 |---------|-------------|
-| **Distributed Transactions** | Choreographic Saga pattern for managing distributed transactions |
+| **Distributed Transactions** | Orchestrated Saga pattern for managing distributed transactions |
 | **Automatic Compensation** | Automatic rollback of completed steps on failure |
 | **Recovery Mechanism** | Resume interrupted sagas from persistent storage |
 | **Eventual Consistency** | Ensures eventual consistency across distributed systems |

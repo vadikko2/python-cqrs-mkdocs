@@ -4,9 +4,9 @@ The Saga pattern enables distributed transactions across multiple services by ex
 
 ## Overview
 
-The `python-cqrs` package implements the **Choreographic Saga** pattern. `SagaTransaction` manages step execution sequentially and handles automatic compensation on failure.
+The `python-cqrs` package implements the **Orchestrated Saga** pattern. `SagaTransaction` manages step execution sequentially and handles automatic compensation on failure.
 
-!!! important "Choreographic Saga"
+!!! important "Orchestrated Saga"
     `SagaTransaction` coordinates step execution, but each step handler is responsible for its own logic. The transaction manages flow, state persistence, and automatic compensation.
 
 ### Key Concepts
