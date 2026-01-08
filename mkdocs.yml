@@ -32,6 +32,11 @@ nav:
       - Storage: saga/storage.md
       - Recovery & Eventual Consistency: saga/recovery.md
       - Compensation Strategy: saga/compensation.md
+      - Fallback Pattern:
+        - Overview: saga/fallback/index.md
+        - Mechanics: saga/fallback/mechanics.md
+        - Circuit Breaker: saga/fallback/circuit_breaker.md
+        - Examples: saga/fallback/examples.md
       - Examples: saga/examples.md
     - Mermaid Diagrams:
       - Overview: mermaid/index.md
@@ -62,6 +67,7 @@ theme:
     - content.code.copy
     - content.code.annotate
     - content.code.select
+    - navigation.footer
   icon:
     annotation: material/plus-circle
   font:
@@ -91,6 +97,10 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.details
   - attr_list
+  - md_in_html
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 extra:
   social:
     - icon: fontawesome/brands/github

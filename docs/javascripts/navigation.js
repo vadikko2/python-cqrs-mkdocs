@@ -83,6 +83,10 @@
             { title: 'Saga Storage', url: 'saga/storage/', path: 'saga/storage' },
             { title: 'Saga Recovery', url: 'saga/recovery/', path: 'saga/recovery' },
             { title: 'Saga Compensation', url: 'saga/compensation/', path: 'saga/compensation' },
+            { title: 'Saga Fallback Pattern', url: 'saga/fallback/', path: 'saga/fallback/index' },
+            { title: 'Saga Fallback Mechanics', url: 'saga/fallback/mechanics/', path: 'saga/fallback/mechanics' },
+            { title: 'Saga Fallback Circuit Breaker', url: 'saga/fallback/circuit_breaker/', path: 'saga/fallback/circuit_breaker' },
+            { title: 'Saga Fallback Examples', url: 'saga/fallback/examples/', path: 'saga/fallback/examples' },
             { title: 'Saga Examples', url: 'saga/examples/', path: 'saga/examples' },
             // Event Handler
             { title: 'Events Handling', url: 'event_handler/', path: 'event_handler/index' },

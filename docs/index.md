@@ -22,44 +22,88 @@
 
 ---
 
+## Core Features
+
+<div class="grid cards" markdown>
+
+-   :material-rocket-launch: **Bootstrap**
+
+    Quick project setup and configuration with automatic DI container setup.
+
+    [:octicons-arrow-right-24: Get Started](bootstrap/index.md)
+
+-   :material-code-tags: **Request Handlers**
+
+    Handle commands and queries with full type safety and async support.
+
+    [:octicons-arrow-right-24: Learn More](request_handler.md)
+
+-   :material-sync: **Saga Pattern**
+
+    Orchestrated Saga for distributed transactions with automatic compensation.
+
+    [:octicons-arrow-right-24: Explore](saga/index.md)
+
+-   :material-bell-ring: **Event Handling**
+
+    Process domain events with parallel processing and runtime execution.
+
+    [:octicons-arrow-right-24: Discover](event_handler/index.md)
+
+-   :material-database-outline: **Transaction Outbox**
+
+    Guaranteed event delivery with at-least-once semantics.
+
+    [:octicons-arrow-right-24: Read More](outbox/index.md)
+
+-   :material-link-variant: **Chain of Responsibility**
+
+    Sequential request processing with flexible handler chaining.
+
+    [:octicons-arrow-right-24: See Details](chain_of_responsibility/index.md)
+
+-   :material-play-circle: **Streaming**
+
+    Incremental processing with real-time progress updates via SSE.
+
+    [:octicons-arrow-right-24: Learn More](stream_handling/index.md)
+
+-   :material-puzzle: **Integrations**
+
+    FastAPI, FastStream, Kafka, and Protobuf integrations out of the box.
+
+    [:octicons-arrow-right-24: View Integrations](fastapi.md)
+
+</div>
+
+---
+
 ## What is it?
 
-**Python CQRS** is a framework for implementing the CQRS (Command Query Responsibility Segregation) pattern in Python
-applications. It helps separate read and write operations, improving scalability, performance, and code maintainability.
+**Python CQRS** is a framework for implementing the CQRS (Command Query Responsibility Segregation) pattern in Python applications. It helps separate read and write operations, improving scalability, performance, and code maintainability.
 
-### Key Benefits
+**Key Highlights:**
 
-| Feature | Description |
-|---------|-------------|
-| 🚀 **Performance** | Separation of commands and queries, parallel event processing |
-| 🔒 **Reliability** | Transaction Outbox for guaranteed event delivery |
-| 🎯 **Type Safety** | Full Pydantic v2 support with runtime validation |
-| 🔌 **Integrations** | FastAPI, FastStream, Kafka out of the box |
-| ⚡ **Simplicity** | Bootstrap for quick setup and configuration |
-| 📡 **Streaming** | Real-time progress updates with StreamingRequestHandler |
-| 🔗 **Flexibility** | Chain of Responsibility pattern support |
-| 📦 **Protobuf** | Protocol Buffers events serialization support |
-| 🔄 **Saga Pattern** | Orchestrated Saga for distributed transactions with automatic compensation |
-| 📊 **Mermaid Diagrams** | Built-in generation of Sequence and Class diagrams for Chain of Responsibility and Saga patterns |
+- :material-rocket-launch: **Performance** — Separation of commands and queries, parallel event processing
+- :material-shield-check: **Reliability** — Transaction Outbox for guaranteed event delivery
+- :material-check-circle: **Type Safety** — Full Pydantic v2 support with runtime validation
+- :material-puzzle: **Ready Integrations** — FastAPI, FastStream, Kafka out of the box
+- :material-lightning-bolt: **Simple Setup** — Bootstrap for quick configuration
 
 ---
 
 ## Quick Start
 
-### Installation
-
 ```bash
 pip install python-cqrs
 ```
-
-### Basic Example
 
 ```python
 import di
 import cqrs
 from cqrs.requests import bootstrap
 
-# 1. Define commands, queries, and events
+# Define command, response and handler
 class CreateUserCommand(cqrs.Request):
     email: str
     name: str
@@ -67,27 +111,18 @@ class CreateUserCommand(cqrs.Request):
 class CreateUserResponse(cqrs.Response):
     user_id: str
 
-# 2. Create handlers
 class CreateUserHandler(cqrs.RequestHandler[CreateUserCommand, CreateUserResponse]):
-    def __init__(self):
-        self._events: list[cqrs.events.Event] = []
-    
-    @property
-    def events(self) -> list[cqrs.events.Event]:
-        return self._events
-    
     async def handle(self, request: CreateUserCommand) -> CreateUserResponse:
+        # Your business logic here
         user_id = f"user_{request.email}"
-        self._events.append(UserCreatedEvent(user_id=user_id, ...))
         return CreateUserResponse(user_id=user_id)
 
-# 3. Bootstrap mediator
+# Bootstrap and use
 mediator = bootstrap.bootstrap(
     di_container=di.Container(),
     commands_mapper=lambda m: m.bind(CreateUserCommand, CreateUserHandler),
 )
 
-# 4. Use mediator
 result = await mediator.send(CreateUserCommand(email="user@example.com", name="John"))
 ```
 
@@ -97,175 +132,35 @@ See [Bootstrap](bootstrap/index.md) for detailed setup instructions.
 
 ## Architecture
 
-The `python-cqrs` framework follows a clear architectural pattern:
+**Request** → **RequestHandler** → **Event** → **EventHandler**
 
-<div class="architecture-diagram">
-    <div class="arch-row">
-        <div class="arch-section">
-            <h4>Request</h4>
-            <p>Commands & Queries</p>
-        </div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-section">
-            <h4>RequestHandler</h4>
-            <p>Execute business logic</p>
-        </div>
-    </div>
-    <div class="arch-row">
-        <div class="arch-arrow arch-event-arrow">→</div>
-        <div class="arch-section">
-            <h4>Event</h4>
-            <p>Notify about changes</p>
-        </div>
-        <div class="arch-arrow">→</div>
-        <div class="arch-section">
-            <h4>EventHandler</h4>
-            <p>Process side effects</p>
-        </div>
-    </div>
-</div>
-
-**Flow:**
-
-1. **Commands/Queries** are sent to the mediator
-2. **Request Handlers** execute business logic and may emit events
-3. **Events** are automatically dispatched to event handlers
-4. **Event Handlers** process side effects (notifications, read model updates, etc.)
-
----
-
-## Key Features
-
-### 🎯 CQRS Pattern
-
-| Aspect | Description |
-|--------|-------------|
-| **Separation** | Clear separation of commands and queries |
-| **Scaling** | Independent scaling of read/write models |
-| **Optimization** | Optimization for specific use cases |
-| **Handlers** | Async handlers with full type safety |
-
-### 📦 Transaction Outbox
-
-| Feature | Benefit |
-|---------|---------|
-| **Guaranteed Delivery** | At-least-once semantics |
-| **Broker Support** | Kafka support via aiokafka |
-| **Failure Handling** | Automatic failure handling |
-| **Event Types** | Support for Notification and ECST events |
-
-### 🔌 Ready Integrations
-
-| Integration | Description |
-|-------------|-------------|
-| **FastAPI** | HTTP API endpoints and SSE streaming support |
-| **FastStream** | Kafka and RabbitMQ event processing |
-| **Kafka** | Native support via aiokafka |
-| **Pydantic v2** | Full data validation support |
-| **Protobuf** | Protocol Buffers events serialization |
-
-### ⚙️ Bootstrap
-
-| Feature | Description |
-|---------|-------------|
-| **DI Container** | Automatic DI container setup |
-| **Mapping** | Command, query, and event mapping |
-| **Configurations** | Ready configurations for popular frameworks |
-| **Multiple DI** | Works with `di` and `dependency-injector` libraries |
-
-### 📡 Streaming Requests
-
-| Feature | Use Case |
-|---------|----------|
-| **Incremental Processing** | `StreamingRequestHandler` for incremental processing |
-| **Progress Updates** | Real-time progress updates via `StreamingRequestMediator` |
-| **Large Batches** | Perfect for large batches and file processing |
-| **SSE Integration** | Server-Sent Events integration with FastAPI |
-
-### 🔗 Chain of Responsibility
-
-| Feature | Description |
-|---------|-------------|
-| **Sequential Processing** | `CORRequestHandler` for sequential request processing |
-| **Fallback Support** | Multiple handlers per request with fallback support |
-| **Flexible Chaining** | Flexible handler chaining |
-
-### 🔄 Saga Pattern
-
-| Feature | Description |
-|---------|-------------|
-| **Distributed Transactions** | Orchestrated Saga pattern for managing distributed transactions |
-| **Automatic Compensation** | Automatic rollback of completed steps on failure |
-| **Recovery Mechanism** | Resume interrupted sagas from persistent storage |
-| **Eventual Consistency** | Ensures eventual consistency across distributed systems |
-| **Storage Support** | Memory and SQLAlchemy storage implementations |
-
-### ⚡ Parallel Event Processing
-
-| Feature | Benefit |
-|---------|---------|
-| **Concurrency Limits** | Configurable concurrency limits for event handlers |
-| **Parallel Processing** | Parallel processing of domain events |
-| **Performance** | Improved performance for independent event handlers |
-
-### 📊 Mermaid Diagram Generation
-
-| Feature | Description |
-|---------|-------------|
-| **Chain of Responsibility** | Generate Sequence and Class diagrams for handler chains |
-| **Saga Pattern** | Generate Sequence and Class diagrams for saga execution flows |
-| **Documentation** | Perfect for documentation, visualization, and understanding component structure |
-| **Multiple Formats** | Sequence diagrams for execution flow, Class diagrams for type structure |
-
-See [Mermaid Diagrams](mermaid/index.md) for detailed documentation.
-
-## Documentation
-
-### Core Concepts
-
-Start here to understand the fundamentals:
-
-| # | Topic | Description |
-|---|-------|-------------|
-| 1 | [**Bootstrap**](bootstrap/index.md) | Quick project setup and configuration |
-| 2 | [**Dependency Injection**](di.md) | Managing dependencies with DI containers |
-| 3 | [**Request Handlers**](request_handler.md) | Working with commands and queries |
-| 4 | [**Stream Handling**](stream_handling/index.md) | Incremental processing with streaming |
-| 5 | [**Chain of Responsibility**](chain_of_responsibility/index.md) | Sequential request processing |
-| 6 | [**Saga Pattern**](saga/index.md) | Distributed transactions with automatic compensation and recovery |
-| 7 | [**Event Handling**](event_handler/index.md) | Processing domain events |
-| 8 | [**Transaction Outbox**](outbox/index.md) | Reliable event delivery pattern |
-
-!!! tip "Learning Path"
-    Follow the numbered sequence for the best learning experience. Each concept builds on the previous one.
-
-### Integrations
-
-Learn how to integrate with popular frameworks:
-
-| Integration | Description | Use Case |
-|-------------|-------------|----------|
-| [**FastAPI**](fastapi.md) | HTTP API endpoints and SSE streaming | Web applications |
-| [**FastStream**](faststream.md) | Kafka and RabbitMQ event processing | Event-driven systems |
-| [**Event Producing**](event_producing.md) | Publishing events to message brokers | Microservices communication |
-| [**Protobuf**](protobuf.md) | Protocol Buffers serialization | High-performance scenarios |
+Commands and queries flow through handlers, which execute business logic and emit events. Events are automatically dispatched to event handlers for side effects processing.
 
 ---
 
 ## Installation
 
-Choose the installation method that best fits your workflow:
-
-| Method | Command | Use Case |
-|--------|---------|----------|
-| **PyPI** | `pip install python-cqrs` | Standard installation |
-| **GitHub** | `pip install git+https://github.com/vadikko2/python-cqrs` | Latest development version |
-| **uv** | `uv add python-cqrs` | Modern Python package manager |
+```bash
+pip install python-cqrs
+```
 
 !!! info "Requirements"
-    - Python 3.8+
-    - Pydantic v2
-    - For integrations: FastAPI, FastStream, etc. (see specific integration docs)
+    Python 3.8+ • Pydantic v2
+
+---
+
+## Documentation
+
+Explore the comprehensive documentation to learn more about each feature:
+
+- **[Bootstrap](bootstrap/index.md)** — Quick project setup and configuration
+- **[Request Handlers](request_handler.md)** — Working with commands and queries
+- **[Saga Pattern](saga/index.md)** — Distributed transactions with automatic compensation
+- **[Event Handling](event_handler/index.md)** — Processing domain events
+- **[Transaction Outbox](outbox/index.md)** — Reliable event delivery
+- **[Stream Handling](stream_handling/index.md)** — Incremental processing with streaming
+- **[Chain of Responsibility](chain_of_responsibility/index.md)** — Sequential request processing
+- **[Integrations](fastapi.md)** — FastAPI, FastStream, Kafka, Protobuf
 
 ---
 

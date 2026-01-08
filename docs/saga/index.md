@@ -129,6 +129,7 @@ async for step_result in mediator.stream(context, saga_id=saga_id):
 - **Automatic Compensation** — Failed steps trigger compensation of completed steps in reverse order
 - **State Persistence** — Saga state and execution history saved after each step
 - **Recovery** — Interrupted sagas can be resumed from persistent storage
+- **Fallback Pattern** — Define alternative steps that execute when primary steps fail, with optional Circuit Breaker protection
 - **Eventual Consistency** — All sagas eventually reach terminal state (COMPLETED or FAILED)
 
 ## Documentation
@@ -137,4 +138,5 @@ async for step_result in mediator.stream(context, saga_id=saga_id):
 - **[Storage](storage.md)** — Memory and SQLAlchemy storage implementations
 - **[Recovery](recovery.md)** — How recovery ensures eventual consistency
 - **[Compensation](compensation.md)** — Compensation mechanism and best practices
+- **[Fallback Pattern](fallback/index.md)** — Fallback steps with Circuit Breaker protection
 - **[Examples](examples.md)** — Complete examples including FastAPI SSE integration
