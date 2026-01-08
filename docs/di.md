@@ -1,14 +1,5 @@
 # Dependency Injection
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Supported Libraries](#supported-libraries)
-- [Key Concepts](#key-concepts)
-- [Integration with Bootstrap](#integration-with-bootstrap)
-- [Benefits](#benefits)
-- [Best Practices](#best-practices)
-
 Dependency Injection (DI) is a design pattern that allows injecting dependencies into application components, simplifying their management and improving code testability.
 
 ## Overview

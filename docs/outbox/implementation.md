@@ -1,6 +1,14 @@
 # Implementation
 
-See [Transactional Outbox Overview](index.md) for general information.
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Transactional Outbox Overview**
+
+    Return to the Transactional Outbox overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
 
 ---
 

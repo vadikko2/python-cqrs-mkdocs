@@ -1,17 +1,5 @@
 # FastAPI Integration
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Setup](#setup)
-- [Mediator Dependency Injection](#mediator-dependency-injection)
-- [Command Handling (POST, PUT, DELETE)](#command-handling-post-put-delete)
-- [Query Handling (GET)](#query-handling-get)
-- [Event Handling with Background Tasks](#event-handling-with-background-tasks)
-- [Server-Sent Events (SSE) with Streaming](#server-sent-events-sse-with-streaming)
-- [Complete Example](#complete-example)
-- [Best Practices](#best-practices)
-
 ## Overview
 
 FastAPI integration with `python-cqrs` allows you to build RESTful APIs where FastAPI handles HTTP layer (routing, validation, serialization) while CQRS handles business logic through command/query handlers.

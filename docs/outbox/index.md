@@ -1,18 +1,36 @@
 # Transactional Outbox
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Why Use Transactional Outbox?](#why-use-transactional-outbox)
-- [Pattern Flow](#pattern-flow)
-- [Implementation](implementation.md)
-- [Usage](usage.md)
-- [Examples](examples.md)
-- [Best Practices](best_practices.md)
-
 The Transactional Outbox pattern ensures reliable event publishing by storing events in a database table within the same transaction as business logic. This guarantees that events are persisted even if the system crashes before they can be published to a message broker.
 
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-code-tags: **Implementation**
+
+    Interface and SQLAlchemy implementation for transactional outbox.
+
+    [:octicons-arrow-right-24: Read More](implementation.md)
+
+-   :material-play-circle: **Usage**
+
+    Event registration and publishing with at-least-once delivery guarantees.
+
+    [:octicons-arrow-right-24: Read More](usage.md)
+
+-   :material-code-json: **Examples**
+
+    Complete examples of transactional outbox pattern.
+
+    [:octicons-arrow-right-24: Read More](examples.md)
+
+-   :material-lightbulb-on: **Best Practices**
+
+    Best practices and recommendations for reliable event delivery.
+
+    [:octicons-arrow-right-24: Read More](best_practices.md)
+
+</div>
 
 The Transactional Outbox pattern solves the problem of ensuring event delivery in distributed systems. When a command handler processes a request and generates events, those events need to be published to a message broker. However, if the system crashes between processing the command and publishing the event, the event can be lost.
 
@@ -31,13 +49,6 @@ The Outbox pattern solves this by:
     - [Event Producing](../event_producing.md) — For configuring message brokers
     - [FastStream Integration](../faststream.md) — For consuming events from message brokers
     - [Bootstrap](../bootstrap/index.md) — For configuring outbox in bootstrap process
-
-## Quick Navigation
-
-- **[Implementation](implementation.md)** — Interface and SQLAlchemy implementation
-- **[Usage](usage.md)** — Event registration and publishing
-- **[Examples](examples.md)** — Complete examples
-- **[Best Practices](best_practices.md)** — Best practices and recommendations
 
 ## Why Use Transactional Outbox?
 

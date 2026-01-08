@@ -1,8 +1,40 @@
 # Saga Fallback Pattern
 
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Saga Overview**
+
+    Return to the Saga Pattern overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](../index.md)
+
+</div>
+
 The Fallback pattern allows you to define alternative steps that execute automatically when primary steps fail. This provides resilience and graceful degradation for distributed transactions.
 
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-cogs: **Mechanics & Internals**
+
+    Learn about execution flow, context snapshots, and compensation logic.
+
+    [:octicons-arrow-right-24: Read More](mechanics.md)
+
+-   :material-flash: **Circuit Breaker**
+
+    Understand how circuit breaker integration prevents cascading failures.
+
+    [:octicons-arrow-right-24: Read More](circuit_breaker.md)
+
+-   :material-code-json: **Examples**
+
+    See complete working examples of the Fallback pattern in action.
+
+    [:octicons-arrow-right-24: Read More](examples.md)
+
+</div>
 
 The `Fallback` wrapper enables saga steps to have backup execution paths. When a primary step fails, the fallback step executes automatically with the context restored to its state before the primary step attempted execution.
 
@@ -79,25 +111,3 @@ class OrderSaga(Saga[OrderContext]):
 5. **Idempotent Fallback Steps**: Ensure fallback steps are idempotent (safe to retry during recovery)
 6. **Proper Compensation**: Define `compensate()` methods for both primary and fallback steps
 7. **Failure Exception Filtering**: Use `failure_exceptions` to control which exceptions trigger fallback
-
-<div class="grid cards" markdown>
-
--   :material-cogs: **Mechanics & Internals**
-
-    Learn about execution flow, context snapshots, and compensation logic.
-
-    [:octicons-arrow-right-24: Read More](mechanics.md)
-
--   :material-flash: **Circuit Breaker**
-
-    Understand how circuit breaker integration prevents cascading failures.
-
-    [:octicons-arrow-right-24: Read More](circuit_breaker.md)
-
--   :material-code-json: **Examples**
-
-    See complete working examples of the Fallback pattern in action.
-
-    [:octicons-arrow-right-24: Read More](examples.md)
-
-</div>

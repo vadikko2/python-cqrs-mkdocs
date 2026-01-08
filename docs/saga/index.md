@@ -4,6 +4,46 @@ The Saga pattern enables distributed transactions across multiple services by ex
 
 ## Overview
 
+<div class="grid cards" markdown>
+
+-   :material-sitemap: **Flow Diagrams**
+
+    Visual representation of execution and compensation flows.
+
+    [:octicons-arrow-right-24: Read More](flow.md)
+
+-   :material-database: **Storage**
+
+    Memory and SQLAlchemy storage implementations for saga state persistence.
+
+    [:octicons-arrow-right-24: Read More](storage.md)
+
+-   :material-restore: **Recovery**
+
+    How recovery ensures eventual consistency for interrupted sagas.
+
+    [:octicons-arrow-right-24: Read More](recovery.md)
+
+-   :material-undo: **Compensation**
+
+    Compensation mechanism and best practices for rollback operations.
+
+    [:octicons-arrow-right-24: Read More](compensation.md)
+
+-   :material-flash: **Fallback Pattern**
+
+    Fallback steps with Circuit Breaker protection for resilient sagas.
+
+    [:octicons-arrow-right-24: Read More](fallback/index.md)
+
+-   :material-code-json: **Examples**
+
+    Complete examples including FastAPI SSE integration.
+
+    [:octicons-arrow-right-24: Read More](examples.md)
+
+</div>
+
 The `python-cqrs` package implements the **Orchestrated Saga** pattern. `SagaTransaction` manages step execution sequentially and handles automatic compensation on failure.
 
 !!! important "Orchestrated Saga"
@@ -131,12 +171,3 @@ async for step_result in mediator.stream(context, saga_id=saga_id):
 - **Recovery** — Interrupted sagas can be resumed from persistent storage
 - **Fallback Pattern** — Define alternative steps that execute when primary steps fail, with optional Circuit Breaker protection
 - **Eventual Consistency** — All sagas eventually reach terminal state (COMPLETED or FAILED)
-
-## Documentation
-
-- **[Flow Diagrams](flow.md)** — Visual representation of execution and compensation flows
-- **[Storage](storage.md)** — Memory and SQLAlchemy storage implementations
-- **[Recovery](recovery.md)** — How recovery ensures eventual consistency
-- **[Compensation](compensation.md)** — Compensation mechanism and best practices
-- **[Fallback Pattern](fallback/index.md)** — Fallback steps with Circuit Breaker protection
-- **[Examples](examples.md)** — Complete examples including FastAPI SSE integration

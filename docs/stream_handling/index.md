@@ -1,16 +1,30 @@
 # Stream Handling
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Basic Example](#basic-example)
-- [Configuration](configuration.md)
-- [FastAPI Integration](fastapi_integration.md)
-- [Reference](reference.md)
-
 Stream handling allows you to process requests incrementally and yield results as they become available. This is particularly useful for processing large batches of items, file uploads, or any operation that benefits from real-time progress updates.
 
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-cog: **Configuration**
+
+    Bootstrap setup and mediator usage for streaming requests.
+
+    [:octicons-arrow-right-24: Read More](configuration.md)
+
+-   :material-web: **FastAPI Integration**
+
+    SSE integration examples for real-time progress updates.
+
+    [:octicons-arrow-right-24: Read More](fastapi_integration.md)
+
+-   :material-book-open-page-variant: **Reference**
+
+    Key features, use cases, and best practices for stream handling.
+
+    [:octicons-arrow-right-24: Read More](reference.md)
+
+</div>
 
 `StreamingRequestHandler` works with `StreamingRequestMediator` to process requests incrementally. The handler yields results as they become available, and events are processed after each yield. This enables:
 
@@ -24,12 +38,6 @@ Stream handling allows you to process requests incrementally and yield results a
 
 !!! tip "Use Cases"
     Streaming is ideal for large batch operations, file processing, or any scenario where you want to provide real-time feedback. See [FastAPI Integration](fastapi_integration.md) for SSE examples.
-
-## Quick Navigation
-
-- **[Configuration](configuration.md)** — Bootstrap setup and mediator usage
-- **[FastAPI Integration](fastapi_integration.md)** — SSE integration examples
-- **[Reference](reference.md)** — Key features, use cases, and best practices
 
 ## Basic Example
 

@@ -1,5 +1,15 @@
 # Compensation Strategy
 
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Saga Overview**
+
+    Return to the Saga Pattern overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
+
 Compensation undoes the effects of completed steps when a saga fails, ensuring resources are properly released and the system returns to a consistent state.
 
 ## Overview

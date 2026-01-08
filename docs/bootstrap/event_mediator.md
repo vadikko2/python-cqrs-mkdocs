@@ -1,6 +1,14 @@
 # Event Mediator
 
-See [Bootstrap Overview](index.md) for general information.
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Bootstrap Overview**
+
+    Return to the Bootstrap overview page with all configuration options.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
 
 ---
 

@@ -1,5 +1,15 @@
 # Complete Example
 
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Saga Fallback Overview**
+
+    Return to the Saga Fallback overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
+
 Here is a complete example demonstrating the Fallback pattern with Circuit Breaker and Saga execution.
 
 ```python

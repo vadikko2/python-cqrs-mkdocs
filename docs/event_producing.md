@@ -1,14 +1,5 @@
 # Event Producing
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Basic Event Producing](#basic-event-producing)
-- [Kafka Event Producing](#kafka-event-producing)
-- [RabbitMQ Event Producing](#rabbitmq-event-producing)
-- [Complete Examples](#complete-examples)
-- [Best Practices](#best-practices)
-
 ## Overview
 
 Event producing allows you to publish events to message brokers (Kafka, RabbitMQ) for asynchronous processing. The `python-cqrs` package provides message broker abstractions that support both JSON and Protobuf serialization.

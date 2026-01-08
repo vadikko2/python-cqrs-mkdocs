@@ -1,11 +1,5 @@
 # Request Handlers
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Command Handler](#command-handler)
-- [Query Handler](#query-handler)
-
 ## Overview
 
 Request handlers process commands (write operations) and queries (read operations) in your CQRS application. They are the core of your business logic and are automatically resolved through the [Dependency Injection](di.md) container configured in [Bootstrap](bootstrap/index.md).

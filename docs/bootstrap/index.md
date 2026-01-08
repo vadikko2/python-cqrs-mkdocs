@@ -1,18 +1,52 @@
 # Bootstrap
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Mediator Types](#mediator-types)
-- [Request Mediator](request_mediator.md)
-- [Streaming Request Mediator](streaming_mediator.md)
-- [Event Mediator](event_mediator.md)
-- [Message Brokers](message_brokers.md)
-- [Middlewares](middlewares.md)
-- [Dependency Injection Containers](di_containers.md)
-- [Advanced Configuration](advanced.md)
-
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-code-tags: **Request Mediator**
+
+    Standard mediator for commands and queries with automatic handler resolution.
+
+    [:octicons-arrow-right-24: Read More](request_mediator.md)
+
+-   :material-play-circle: **Streaming Request Mediator**
+
+    For incremental processing and Server-Sent Events (SSE) support.
+
+    [:octicons-arrow-right-24: Read More](streaming_mediator.md)
+
+-   :material-bell-ring: **Event Mediator**
+
+    For processing events from message brokers like Kafka and RabbitMQ.
+
+    [:octicons-arrow-right-24: Read More](event_mediator.md)
+
+-   :material-message-processing: **Message Brokers**
+
+    Configure Kafka, RabbitMQ, and custom brokers for event publishing.
+
+    [:octicons-arrow-right-24: Read More](message_brokers.md)
+
+-   :material-filter-variant: **Middlewares**
+
+    Request interception and modification with custom middleware support.
+
+    [:octicons-arrow-right-24: Read More](middlewares.md)
+
+-   :material-puzzle: **DI Containers**
+
+    Dependency injection configuration and container setup.
+
+    [:octicons-arrow-right-24: Read More](di_containers.md)
+
+-   :material-cog: **Advanced Configuration**
+
+    Combining all options and manual setup for complex scenarios.
+
+    [:octicons-arrow-right-24: Read More](advanced.md)
+
+</div>
 
 The `bootstrap` utilities simplify the initial configuration of your CQRS application. They automatically set up:
 

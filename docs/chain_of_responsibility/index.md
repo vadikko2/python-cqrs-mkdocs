@@ -1,17 +1,30 @@
 # Chain of Responsibility
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Pattern Description](#pattern-description)
-- [Basic Example](#basic-example)
-- [Examples](examples.md)
-- [Advanced Topics](advanced.md)
-- [Mermaid Diagrams](../mermaid/chain_of_responsibility.md)
-
 The Chain of Responsibility pattern allows multiple handlers to process a request in sequence until one successfully handles it. This pattern is particularly useful when you have multiple processing strategies or need to implement fallback mechanisms.
 
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-code-json: **Examples**
+
+    Registering handlers and complete examples of Chain of Responsibility pattern.
+
+    [:octicons-arrow-right-24: Read More](examples.md)
+
+-   :material-cog: **Advanced Topics**
+
+    Manual chain building, handler methods, and integration patterns.
+
+    [:octicons-arrow-right-24: Read More](advanced.md)
+
+-   :material-sitemap: **Mermaid Diagrams**
+
+    Generate Sequence and Class diagrams for documentation.
+
+    [:octicons-arrow-right-24: Read More](../mermaid/chain_of_responsibility.md)
+
+</div>
 
 `CORRequestHandler` implements the Chain of Responsibility pattern, allowing multiple handlers to process a request sequentially. Each handler decides whether to process the request or pass it to the next handler in the chain. The chain stops when a handler successfully processes the request or when all handlers have been exhausted.
 
@@ -27,12 +40,6 @@ The Chain of Responsibility pattern allows multiple handlers to process a reques
 
 !!! tip "When to Use"
     Use Chain of Responsibility when you have multiple processing strategies or need fallback mechanisms. For standard request handling, use regular [Request Handlers](../request_handler.md).
-
-## Quick Navigation
-
-- **[Examples](examples.md)** — Registering handlers and complete examples
-- **[Advanced Topics](advanced.md)** — Manual chain building, handler methods, and integration
-- **[Mermaid Diagrams](../mermaid/chain_of_responsibility.md)** — Generate Sequence and Class diagrams for documentation
 
 ## Pattern Description
 

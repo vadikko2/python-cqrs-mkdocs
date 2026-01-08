@@ -1,16 +1,46 @@
 # Event Handling
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Event Flow](event_flow.md)
-- [Runtime Processing](runtime_processing.md)
-- [Parallel Processing](parallel_processing.md)
-- [Event Types](event_types.md)
-- [Examples](examples.md)
-- [Best Practices](best_practices.md)
-
 ## Overview
+
+<div class="grid cards" markdown>
+
+-   :material-routes: **Event Flow**
+
+    Understanding how events flow through the system from handlers to processing.
+
+    [:octicons-arrow-right-24: Read More](event_flow.md)
+
+-   :material-clock-fast: **Runtime Processing**
+
+    How events are processed synchronously in the same request context.
+
+    [:octicons-arrow-right-24: Read More](runtime_processing.md)
+
+-   :material-sync: **Parallel Processing**
+
+    Configuring parallel event processing with concurrency limits.
+
+    [:octicons-arrow-right-24: Read More](parallel_processing.md)
+
+-   :material-tag-multiple: **Event Types**
+
+    DomainEvent vs NotificationEvent and when to use each type.
+
+    [:octicons-arrow-right-24: Read More](event_types.md)
+
+-   :material-code-json: **Examples**
+
+    Complete examples of event handling patterns.
+
+    [:octicons-arrow-right-24: Read More](examples.md)
+
+-   :material-lightbulb-on: **Best Practices**
+
+    Best practices and recommendations for event handling.
+
+    [:octicons-arrow-right-24: Read More](best_practices.md)
+
+</div>
 
 Event handlers process domain events that are emitted from command handlers. These events represent something that happened in the domain and trigger side effects like sending notifications, updating read models, or triggering other workflows.
 
@@ -30,12 +60,3 @@ When a command handler processes a request, it can emit domain events through th
     - [Transaction Outbox](../outbox/index.md) — For reliable event delivery to message brokers
     - [Event Producing](../event_producing.md) — For publishing events to Kafka/RabbitMQ
     - [FastStream Integration](../faststream.md) — For consuming events from message brokers
-
-## Quick Navigation
-
-- **[Event Flow](event_flow.md)** — Understanding how events flow through the system
-- **[Runtime Processing](runtime_processing.md)** — How events are processed synchronously
-- **[Parallel Processing](parallel_processing.md)** — Configuring parallel event processing
-- **[Event Types](event_types.md)** — DomainEvent vs NotificationEvent
-- **[Examples](examples.md)** — Complete examples
-- **[Best Practices](best_practices.md)** — Best practices and recommendations

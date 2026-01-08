@@ -1,16 +1,5 @@
 # FastStream Integration
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Setup](#setup)
-- [Kafka Integration (aiokafka)](#kafka-integration-aiokafka)
-- [RabbitMQ Integration (aiopika)](#rabbitmq-integration-aiopika)
-- [Event Mediator Factory](#event-mediator-factory)
-- [Event Deserialization](#event-deserialization)
-- [Complete Examples](#complete-examples)
-- [Best Practices](#best-practices)
-
 ## Overview
 
 FastStream is a powerful framework for building event-driven applications with message brokers. The `python-cqrs` package integrates seamlessly with FastStream to process events from Kafka and RabbitMQ using CQRS event handlers.

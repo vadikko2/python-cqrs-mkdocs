@@ -1,16 +1,5 @@
 # Protobuf Integration
 
-## Table of Contents
-
-- [Overview](#overview)
-- [Setup](#setup)
-- [Protobuf Event Definition](#protobuf-event-definition)
-- [Event Producing with Protobuf](#event-producing-with-protobuf)
-- [Event Consuming with Protobuf](#event-consuming-with-protobuf)
-- [Schema Registry](#schema-registry)
-- [Complete Examples](#complete-examples)
-- [Best Practices](#best-practices)
-
 ## Overview
 
 Protobuf (Protocol Buffers) provides efficient binary serialization for events, offering significant advantages over JSON:

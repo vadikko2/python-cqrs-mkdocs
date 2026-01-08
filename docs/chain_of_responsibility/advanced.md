@@ -1,6 +1,14 @@
 # Advanced Topics
 
-See [Chain of Responsibility Overview](index.md) for general information.
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Chain of Responsibility Overview**
+
+    Return to the Chain of Responsibility overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
 
 ---
 

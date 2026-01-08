@@ -1,5 +1,15 @@
 # Mechanics & Internals
 
+<div class="grid cards" markdown>
+
+-   :material-home: **Back to Saga Fallback Overview**
+
+    Return to the Saga Fallback overview page with all topics.
+
+    [:octicons-arrow-left-24: Back to Overview](index.md)
+
+</div>
+
 ## How It Works
 
 ### Execution Flow
