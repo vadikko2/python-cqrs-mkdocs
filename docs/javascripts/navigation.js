@@ -231,161 +231,313 @@
         return result;
     }
 
-    // Функция для создания HTML кнопок навигации
-    function createNavigationButtons(prevPage, nextPage) {
-        const container = document.createElement('div');
-        container.className = 'navigation-buttons';
+    // Функция для получения правильного относительного пути
+    function getRelativeUrl(targetPage, currentUrl) {
+        // Используем path из pageOrder вместо url для более точного построения путей
+        const targetPath = targetPage.path || targetPage.url || targetPage;
         
-        // Функция для получения правильного относительного пути
-        function getRelativeUrl(targetPage, currentUrl) {
-            // Используем path из pageOrder вместо url для более точного построения путей
-            const targetPath = targetPage.path || targetPage.url || targetPage;
-            
-            // Нормализуем текущий URL - убираем префикс python-cqrs-mkdocs и нормализуем
-            let normalizedCurrent = currentUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
-            normalizedCurrent = normalizedCurrent.replace(/^\/python-cqrs-mkdocs/, '').replace(/^\/+/, '');
-            
-            // Если это главная страница
-            if (targetPath === 'index' || targetPath === '../' || targetPath === 'index.html' || targetPath === '') {
-                const currentDepth = normalizedCurrent.split('/').filter(p => p && p !== 'index.html').length;
-                if (currentDepth === 0) {
-                    return './';
-                }
-                // В MkDocs с use_directory_urls главная страница - это просто относительный путь вверх
-                return '../'.repeat(currentDepth);
-            }
-            
-            // Получаем части путей
-            const currentParts = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== 'index.html');
-            let targetParts = targetPath.split('/').filter(part => part && part !== 'index.html');
-            
-            // В MkDocs с use_directory_urls страницы с path заканчивающимся на 'index' 
-            // доступны без '/index' в URL (например, 'stream_handling/index' -> 'stream_handling/')
-            // Убираем 'index' из конца пути для правильного построения URL
-            if (targetParts.length > 0 && targetParts[targetParts.length - 1] === 'index') {
-                targetParts = targetParts.slice(0, -1);
-            }
-            
-            // Находим общий префикс
-            let commonDepth = 0;
-            for (let i = 0; i < Math.min(currentParts.length, targetParts.length); i++) {
-                if (currentParts[i] === targetParts[i]) {
-                    commonDepth++;
-                } else {
-                    break;
-                }
-            }
-            
-            // Вычисляем сколько уровней нужно подняться
-            const levelsUp = currentParts.length - commonDepth;
-            
-            // Вычисляем путь от общего предка до цели
-            const targetPathFromCommon = targetParts.slice(commonDepth).join('/');
-            
-            // Строим относительный путь
-            if (levelsUp === 0 && targetPathFromCommon === '') {
+        // Нормализуем текущий URL - убираем префикс python-cqrs-mkdocs и нормализуем
+        let normalizedCurrent = currentUrl.replace(/\/index\.html$/, '').replace(/\/$/, '');
+        normalizedCurrent = normalizedCurrent.replace(/^\/python-cqrs-mkdocs/, '').replace(/^\/+/, '');
+        
+        // Если это главная страница
+        if (targetPath === 'index' || targetPath === '../' || targetPath === 'index.html' || targetPath === '') {
+            const currentDepth = normalizedCurrent.split('/').filter(p => p && p !== 'index.html').length;
+            if (currentDepth === 0) {
                 return './';
             }
-            
-            // Строим путь, избегая двойных слешей
-            let relativePath = '';
-            if (levelsUp > 0) {
-                relativePath = '../'.repeat(levelsUp);
+            // В MkDocs с use_directory_urls главная страница - это просто относительный путь вверх
+            return '../'.repeat(currentDepth);
+        }
+        
+        // Получаем части путей
+        const currentParts = normalizedCurrent.split('/').filter(part => part && part !== 'python-cqrs-mkdocs' && part !== 'index.html');
+        let targetParts = targetPath.split('/').filter(part => part && part !== 'index.html');
+        
+        // В MkDocs с use_directory_urls страницы с path заканчивающимся на 'index' 
+        // доступны без '/index' в URL (например, 'stream_handling/index' -> 'stream_handling/')
+        // Убираем 'index' из конца пути для правильного построения URL
+        if (targetParts.length > 0 && targetParts[targetParts.length - 1] === 'index') {
+            targetParts = targetParts.slice(0, -1);
+        }
+        
+        // Находим общий префикс
+        let commonDepth = 0;
+        for (let i = 0; i < Math.min(currentParts.length, targetParts.length); i++) {
+            if (currentParts[i] === targetParts[i]) {
+                commonDepth++;
+            } else {
+                break;
             }
-            if (targetPathFromCommon) {
-                relativePath += targetPathFromCommon + '/';
-            }
-            
-            // Убираем двойные слеши
-            relativePath = relativePath.replace(/\/+/g, '/');
-            
-            return relativePath;
         }
         
-        // Кнопка "Предыдущая"
-        if (prevPage) {
-            const prevButton = document.createElement('a');
-            const relativeUrl = getRelativeUrl(prevPage, window.location.pathname);
-            prevButton.href = relativeUrl;
-            console.log('Prev button URL:', prevPage.url, 'Path:', prevPage.path, '->', relativeUrl);
-            prevButton.className = 'nav-button prev';
-            prevButton.innerHTML = `
-                <span class="icon">←</span>
-                <span>${prevPage.title}</span>
-            `;
-            container.appendChild(prevButton);
-        } else {
-            const prevButton = document.createElement('span');
-            prevButton.className = 'nav-button prev disabled';
-            prevButton.innerHTML = `
-                <span class="icon">←</span>
-                <span>Previous</span>
-            `;
-            container.appendChild(prevButton);
+        // Вычисляем сколько уровней нужно подняться
+        const levelsUp = currentParts.length - commonDepth;
+        
+        // Вычисляем путь от общего предка до цели
+        const targetPathFromCommon = targetParts.slice(commonDepth).join('/');
+        
+        // Строим относительный путь
+        if (levelsUp === 0 && targetPathFromCommon === '') {
+            return './';
         }
         
-        // Кнопка "Следующая"
-        if (nextPage) {
-            const nextButton = document.createElement('a');
-            const relativeUrl = getRelativeUrl(nextPage, window.location.pathname);
-            nextButton.href = relativeUrl;
-            console.log('Next button URL:', nextPage.url, 'Path:', nextPage.path, '->', relativeUrl);
-            nextButton.className = 'nav-button next';
-            nextButton.innerHTML = `
-                <span>${nextPage.title}</span>
-                <span class="icon">→</span>
-            `;
-            container.appendChild(nextButton);
-        } else {
-            const nextButton = document.createElement('span');
-            nextButton.className = 'nav-button next disabled';
-            nextButton.innerHTML = `
-                <span>Next</span>
-                <span class="icon">→</span>
-            `;
-            container.appendChild(nextButton);
+        // Строим путь, избегая двойных слешей
+        let relativePath = '';
+        if (levelsUp > 0) {
+            relativePath = '../'.repeat(levelsUp);
+        }
+        if (targetPathFromCommon) {
+            relativePath += targetPathFromCommon + '/';
         }
         
-        return container;
+        // Убираем двойные слеши
+        relativePath = relativePath.replace(/\/+/g, '/');
+        
+        return relativePath;
     }
 
-    // Функция для добавления кнопок навигации на страницу
+    // Функция для создания плиток навигации вверху страницы
+    function createNavigationTiles(prevPage, nextPage) {
+        const container = document.createElement('div');
+        container.className = 'nav-tiles-container';
+        
+        const cards = [];
+        
+        // Плитка "Предыдущая"
+        if (prevPage) {
+            const relativeUrl = getRelativeUrl(prevPage, window.location.pathname);
+            const card = document.createElement('article');
+            card.className = 'md-typeset nav-tile nav-tile-prev';
+            card.innerHTML = `
+                <a href="${relativeUrl}" class="nav-tile-link">
+                    <span class="nav-tile-icon">←</span>
+                    <div class="nav-tile-content">
+                        <span class="nav-tile-label">Previous</span>
+                        <span class="nav-tile-title">${prevPage.title}</span>
+                    </div>
+                </a>
+            `;
+            cards.push(card);
+        }
+        
+        // Плитка "Следующая"
+        if (nextPage) {
+            const relativeUrl = getRelativeUrl(nextPage, window.location.pathname);
+            const card = document.createElement('article');
+            card.className = 'md-typeset nav-tile nav-tile-next';
+            card.innerHTML = `
+                <a href="${relativeUrl}" class="nav-tile-link">
+                    <div class="nav-tile-content">
+                        <span class="nav-tile-label">Next</span>
+                        <span class="nav-tile-title">${nextPage.title}</span>
+                    </div>
+                    <span class="nav-tile-icon">→</span>
+                </a>
+            `;
+            cards.push(card);
+        }
+        
+        if (cards.length > 0) {
+            cards.forEach(card => container.appendChild(card));
+            return container;
+        }
+        
+        return null;
+    }
+
+
+    // Функция для добавления плиток навигации на страницу
     function addNavigationButtons() {
         // Проверяем, что DOM полностью загружен
         if (!document.body) {
             return;
         }
         
-        // Добавляем кнопки на все страницы, включая главную
+        // Добавляем плитки на все страницы, включая главную
         const pageInfo = getCurrentPageInfo();
         
         if (pageInfo.current) {
-            const buttons = createNavigationButtons(pageInfo.prev, pageInfo.next);
+            // Создаем плитки навигации
+            const tiles = createNavigationTiles(pageInfo.prev, pageInfo.next);
             
-            // Ищем место для вставки кнопок - в конце контента, но перед footer
-            const content = document.querySelector('.md-content__inner');
-            if (content) {
-                // Просто добавляем в конец контента
-                content.appendChild(buttons);
-            } else {
-                // Fallback - добавляем в конец main контента
-                const main = document.querySelector('main .md-content') || document.querySelector('main');
-                if (main) {
-                    main.appendChild(buttons);
+            if (tiles) {
+                // Ищем место для вставки плиток - в конце контента
+                const content = document.querySelector('.md-content__inner');
+                if (content) {
+                    // Добавляем плитки в конец контента
+                    content.appendChild(tiles);
+                } else {
+                    // Fallback - добавляем в конец main контента
+                    const main = document.querySelector('main .md-content') || document.querySelector('main');
+                    if (main) {
+                        main.appendChild(tiles);
+                    }
                 }
             }
         }
     }
 
+    // Функция для удаления стандартных кнопок навигации из подвала
+    function removeFooterNavigation() {
+        console.log('Attempting to remove footer navigation...');
+        
+        // Различные селекторы для навигационных элементов
+        const selectors = [
+            '.md-footer-nav',
+            '.md-footer-nav__link',
+            '.md-footer-nav__link--prev',
+            '.md-footer-nav__link--next',
+            '.md-footer__inner .md-footer-nav',
+            '.md-footer__inner > .md-footer-nav',
+            'nav.md-footer-nav',
+            'a.md-footer-nav__link',
+            '[rel="prev"]',
+            '[rel="next"]'
+        ];
+        
+        let removedCount = 0;
+        
+        selectors.forEach(selector => {
+            try {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(el => {
+                    // Проверяем, что элемент действительно в подвале
+                    if (el.closest('.md-footer') || el.closest('footer')) {
+                        console.log('Removing element:', selector, el);
+                        el.remove();
+                        removedCount++;
+                    }
+                });
+            } catch (e) {
+                console.warn('Error with selector', selector, e);
+            }
+        });
+        
+        // Также удаляем через поиск по тексту (на случай, если классы другие)
+        const footer = document.querySelector('.md-footer') || document.querySelector('footer');
+        if (footer) {
+            // Удаляем все ссылки с rel="prev" или rel="next"
+            const relLinks = footer.querySelectorAll('a[rel="prev"], a[rel="next"]');
+            relLinks.forEach(link => {
+                if (!link.closest('.nav-tiles-container')) {
+                    console.log('Removing navigation link by rel attribute');
+                    link.remove();
+                    removedCount++;
+                }
+            });
+            
+            // Удаляем ссылки по тексту
+            const allLinks = footer.querySelectorAll('a');
+            allLinks.forEach(link => {
+                const text = link.textContent.trim().toLowerCase();
+                // Проверяем различные варианты текста
+                if ((text.includes('previous') || text.includes('next') || 
+                     text.includes('предыдущ') || text.includes('следующ')) &&
+                    !link.closest('.nav-tiles-container')) {
+                    // Дополнительная проверка - что это действительно навигация
+                    const parent = link.parentElement;
+                    if (parent && (
+                        parent.classList.contains('md-footer-nav') ||
+                        parent.classList.contains('md-footer-nav__link') ||
+                        parent.closest('.md-footer-nav')
+                    )) {
+                        console.log('Removing navigation link by text:', text);
+                        // Удаляем родительский элемент, если это контейнер навигации
+                        if (parent.classList.contains('md-footer-nav__link')) {
+                            parent.remove();
+                        } else {
+                            link.remove();
+                        }
+                        removedCount++;
+                    }
+                }
+            });
+            
+            // Удаляем пустые контейнеры навигации
+            const emptyNavs = footer.querySelectorAll('.md-footer-nav:empty, nav:empty');
+            emptyNavs.forEach(nav => nav.remove());
+        }
+        
+        // Удаляем родительские контейнеры, если они пустые
+        const footerNav = document.querySelector('.md-footer-nav');
+        if (footerNav && footerNav.children.length === 0) {
+            footerNav.remove();
+            removedCount++;
+        }
+        
+        console.log('Removed', removedCount, 'footer navigation elements');
+        
+        return removedCount > 0;
+    }
+
     // Инициализация при загрузке страницы
     function init() {
+        // Функция для запуска удаления с повторными попытками
+        function attemptRemoveFooterNav(attempts = 0, maxAttempts = 15) {
+            const removed = removeFooterNavigation();
+            
+            // Если элементы не найдены и еще есть попытки, повторяем
+            if (attempts < maxAttempts) {
+                setTimeout(() => {
+                    attemptRemoveFooterNav(attempts + 1, maxAttempts);
+                }, 300);
+            }
+        }
+        
+        // Функция для полной инициализации
+        function fullInit() {
+            addNavigationButtons();
+            // Пробуем удалить с разными задержками
+            attemptRemoveFooterNav();
+        }
+        
         // Ждем полной загрузки DOM
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', addNavigationButtons);
+            document.addEventListener('DOMContentLoaded', fullInit);
         } else {
             // Если DOM уже загружен, запускаем сразу
-            addNavigationButtons();
+            fullInit();
         }
+        
+        // Также ждем полной загрузки страницы (включая все ресурсы)
+        window.addEventListener('load', () => {
+            setTimeout(() => attemptRemoveFooterNav(), 500);
+        });
+        
+        // Также удаляем при изменении DOM (для SPA навигации)
+        const observer = new MutationObserver((mutations) => {
+            let shouldRemove = false;
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) { // Element node
+                        if (node.classList && (
+                            node.classList.contains('md-footer-nav') ||
+                            node.classList.contains('md-footer-nav__link') ||
+                            (node.closest && node.closest('.md-footer'))
+                        )) {
+                            shouldRemove = true;
+                        }
+                        // Также проверяем дочерние элементы
+                        if (node.querySelector && (
+                            node.querySelector('.md-footer-nav') ||
+                            node.querySelector('.md-footer-nav__link')
+                        )) {
+                            shouldRemove = true;
+                        }
+                    }
+                });
+            });
+            
+            if (shouldRemove) {
+                setTimeout(() => attemptRemoveFooterNav(), 200);
+            }
+        });
+        
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
     }
 
     // Запускаем инициализацию

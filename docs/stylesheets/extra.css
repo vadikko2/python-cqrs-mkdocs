@@ -14,6 +14,187 @@
   --timeweb-shadow: rgba(0, 102, 204, 0.2);
 }
 
+/* Импорт шрифтов IBM Plex из Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+/* Улучшенная типографика для всей документации */
+:root {
+  --md-text-font: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --md-code-font: "IBM Plex Mono", "Roboto Mono", "SF Mono", Monaco, "Cascadia Code", "Source Code Pro", Menlo, Consolas, "DejaVu Sans Mono", monospace;
+}
+
+/* Применение шрифта Inter ко всему тексту документации */
+body,
+.md-typeset,
+.md-content,
+.md-content__inner {
+  font-family: var(--md-text-font) !important;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Улучшение читаемости основного текста */
+.md-typeset p {
+  font-size: 16px;
+  line-height: 1.7;
+  margin-bottom: 1em;
+  color: var(--md-default-fg-color);
+}
+
+/* Заголовки с улучшенной типографикой */
+.md-typeset h1 {
+  font-size: 2.5em;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-top: 0;
+  margin-bottom: 0.8em;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+  font-size: 2em;
+  font-weight: 600;
+  line-height: 1.3;
+  margin-top: 1.5em;
+  margin-bottom: 0.8em;
+  letter-spacing: -0.01em;
+}
+
+.md-typeset h3 {
+  font-size: 1.5em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.3em;
+  margin-bottom: 0.7em;
+}
+
+.md-typeset h4 {
+  font-size: 1.25em;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 1.2em;
+  margin-bottom: 0.6em;
+}
+
+.md-typeset h5 {
+  font-size: 1.1em;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+.md-typeset h6 {
+  font-size: 1em;
+  font-weight: 600;
+  line-height: 1.5;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
+/* Улучшение списков */
+.md-typeset ul,
+.md-typeset ol {
+  line-height: 1.7;
+  margin-bottom: 1em;
+}
+
+.md-typeset li {
+  margin-bottom: 0.4em;
+  line-height: 1.7;
+}
+
+/* Улучшение таблиц */
+.md-typeset table {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.md-typeset table th {
+  font-weight: 600;
+}
+
+.md-typeset table td {
+  line-height: 1.6;
+}
+
+/* Код должен оставаться моноширинным */
+.md-typeset code,
+.md-typeset pre,
+.md-typeset kbd {
+  font-family: var(--md-code-font) !important;
+  font-size: 0.9em;
+}
+
+/* Улучшение боковой навигации */
+.md-nav {
+  font-family: var(--md-text-font) !important;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.md-nav__link {
+  font-weight: 400;
+}
+
+.md-nav__item--active > .md-nav__link {
+  font-weight: 600;
+}
+
+/* Улучшение читаемости ссылок */
+.md-typeset a {
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.md-typeset a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Улучшение блоков с предупреждениями и подсказками */
+.md-typeset .admonition {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.md-typeset .admonition-title {
+  font-weight: 600;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  body,
+  .md-typeset,
+  .md-content,
+  .md-content__inner {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  
+  .md-typeset p {
+    font-size: 15px;
+    line-height: 1.65;
+  }
+  
+  .md-typeset h1 {
+    font-size: 2em;
+  }
+  
+  .md-typeset h2 {
+    font-size: 1.75em;
+  }
+  
+  .md-typeset h3 {
+    font-size: 1.4em;
+  }
+}
+
 
 /* Стили для главного изображения */
 .hero-image {
@@ -72,25 +253,6 @@
     box-shadow: 0 12px 40px rgba(0, 102, 204, 0.25);
 }
 
-[data-md-color-scheme="default"] .nav-button {
-    background: rgba(128, 128, 128, 0.12);
-    color: var(--md-default-fg-color);
-    border-color: rgba(128, 128, 128, 0.25);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-}
-
-[data-md-color-scheme="default"] .nav-button:hover {
-    background: rgba(128, 128, 128, 0.2);
-    color: var(--md-default-fg-color);
-    border-color: rgba(128, 128, 128, 0.35);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
-[data-md-color-scheme="default"] .nav-button.disabled {
-    background: rgba(128, 128, 128, 0.06);
-    color: var(--md-default-fg-color--light);
-    border-color: rgba(128, 128, 128, 0.15);
-}
 
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
@@ -124,105 +286,336 @@
     opacity: 0.1;
 }
 
-/* Стили для кнопок навигации */
-.navigation-buttons {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin: 3rem 0 2rem 0;
-    padding: 1.5rem 0;
-    border-top: 1px solid var(--md-default-fg-color--lightest);
-    gap: 1rem;
+/* Скрытие стандартных кнопок навигации Material for MkDocs в подвале */
+.md-footer-nav,
+.md-footer-nav__link,
+.md-footer-nav__link--prev,
+.md-footer-nav__link--next,
+nav.md-footer-nav,
+a.md-footer-nav__link {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    width: 0 !important;
+    overflow: hidden !important;
 }
 
-.nav-button {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.5rem 1rem;
-    background: rgba(128, 128, 128, 0.15);
-    color: var(--md-default-fg-color);
-    text-decoration: none;
-    border-radius: 0;
-    font-weight: 400;
-    font-size: 0.8rem;
-    letter-spacing: 0.1px;
-    transition: all 0.3s ease;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    min-width: 120px;
+/* Скрытие навигационных элементов в подвале через селекторы */
+.md-footer__inner .md-footer-nav,
+.md-footer__inner > .md-footer-nav,
+.md-footer .md-footer-nav,
+footer .md-footer-nav {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+.md-footer__inner .md-footer-nav__link,
+.md-footer__inner > .md-footer-nav__link,
+.md-footer .md-footer-nav__link,
+footer .md-footer-nav__link {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Скрытие ссылок навигации по атрибутам rel */
+.md-footer a[rel="prev"],
+.md-footer a[rel="next"],
+footer a[rel="prev"],
+footer a[rel="next"],
+.md-footer__inner a[rel="prev"],
+.md-footer__inner a[rel="next"] {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+}
+
+/* Дополнительное скрытие через родительские контейнеры */
+.md-footer__inner > nav,
+.md-footer > nav,
+footer > nav {
+    display: none !important;
+}
+
+/* Скрытие всех дочерних элементов навигации в подвале */
+.md-footer__inner nav,
+.md-footer nav,
+footer nav {
+    display: none !important;
+}
+
+/* Стили для плиток навигации внизу страницы */
+.nav-tiles-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin: 3rem 0 2rem 0;
+    padding: 1.5rem 0 0 0;
+    border-top: 1px solid var(--md-default-fg-color--lightest);
+}
+
+/* Если только одна плитка, центрируем её */
+.nav-tiles-container:has(.nav-tile:only-child) {
+    grid-template-columns: minmax(280px, 400px);
     justify-content: center;
-    border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.nav-tile {
+    margin: 0;
+    padding: 0;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--md-default-bg-color);
+    border: 1px solid var(--md-default-fg-color--lightest);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
     position: relative;
 }
 
-.nav-button:hover {
-    background: rgba(128, 128, 128, 0.25);
-    color: var(--md-default-fg-color);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+.nav-tile::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--timeweb-primary), var(--timeweb-primary-light));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.nav-tile:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15), 0 4px 8px rgba(0, 0, 0, 0.12);
+    border-color: var(--timeweb-primary);
+}
+
+.nav-tile:hover::before {
+    opacity: 1;
+}
+
+.nav-tile-link {
+    display: flex;
+    align-items: center;
+    padding: 1.5rem;
     text-decoration: none;
-    border-color: rgba(128, 128, 128, 0.3);
-}
-
-.nav-button:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-}
-
-.nav-button.prev {
-    margin-right: auto;
-}
-
-.nav-button.next {
-    margin-left: auto;
-}
-
-.nav-button .icon {
-    margin: 0 0.5rem;
-    font-size: 1em;
+    color: inherit;
     transition: all 0.3s ease;
+    gap: 1.25rem;
+    min-height: 90px;
+    position: relative;
 }
 
-.nav-button.prev .icon {
-    margin-right: 0.5rem;
-    margin-left: 0;
+.nav-tile-prev .nav-tile-link {
+    flex-direction: row;
 }
 
-.nav-button.next .icon {
-    margin-left: 0.5rem;
-    margin-right: 0;
+.nav-tile-next .nav-tile-link {
+    flex-direction: row-reverse;
+    text-align: right;
 }
 
-.nav-button:hover .icon {
-    transform: scale(1.05);
+.nav-tile-icon {
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--timeweb-primary);
+    flex-shrink: 0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    background: linear-gradient(135deg, var(--timeweb-bg-light), var(--timeweb-bg-medium));
+    border-radius: 0.5rem;
+    border: 1px solid var(--timeweb-border);
 }
 
-.nav-button.disabled {
-    background: rgba(128, 128, 128, 0.08);
+.nav-tile:hover .nav-tile-icon {
+    transform: scale(1.1) rotate(-5deg);
+    background: linear-gradient(135deg, var(--timeweb-bg-medium), var(--timeweb-bg-dark));
+    border-color: var(--timeweb-primary);
+    box-shadow: 0 2px 8px var(--timeweb-shadow);
+}
+
+.nav-tile-prev:hover .nav-tile-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.nav-tile-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    flex: 1;
+    min-width: 0;
+}
+
+.nav-tile-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
     color: var(--md-default-fg-color--light);
-    cursor: not-allowed;
-    pointer-events: none;
-    border-color: rgba(128, 128, 128, 0.1);
-    opacity: 0.6;
+    opacity: 0.8;
 }
 
-/* Адаптивность для мобильных устройств */
-@media (max-width: 768px) {
-    .navigation-buttons {
-        flex-direction: column;
-        gap: 1rem;
-        margin: 2rem 0 1rem 0;
+.nav-tile-title {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--md-default-fg-color);
+    line-height: 1.5;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.nav-tile:hover .nav-tile-title {
+    color: var(--timeweb-primary);
+}
+
+
+/* Плавное появление плиток */
+.nav-tile {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
     }
-    
-    .nav-button {
-        width: 100%;
-        min-width: auto;
-    }
-    
-    .nav-button.prev,
-    .nav-button.next {
-        margin: 0;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }
+
+.nav-tile-prev {
+    animation-delay: 0.1s;
+}
+
+.nav-tile-next {
+    animation-delay: 0.2s;
+}
+
+/* Поддержка темной темы для плиток навигации */
+[data-md-color-scheme="slate"] .nav-tile {
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
+}
+
+[data-md-color-scheme="slate"] .nav-tile:hover {
+    border-color: var(--timeweb-primary-light);
+    box-shadow: 0 8px 16px rgba(0, 102, 204, 0.2), 0 4px 8px rgba(0, 102, 204, 0.15);
+}
+
+[data-md-color-scheme="slate"] .nav-tile-icon {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.15), rgba(0, 102, 204, 0.25));
+    border-color: rgba(0, 102, 204, 0.3);
+}
+
+[data-md-color-scheme="slate"] .nav-tile:hover .nav-tile-icon {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.25), rgba(0, 102, 204, 0.35));
+    border-color: var(--timeweb-primary-light);
+    box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
+}
+
+/* Поддержка темной темы для блока информации о компании */
+[data-md-color-scheme="slate"] .company-info {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.15) 0%, rgba(0, 102, 204, 0.25) 100%);
+    border-color: rgba(0, 102, 204, 0.3);
+}
+
+[data-md-color-scheme="slate"] .company-info:hover {
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.25) 0%, rgba(0, 102, 204, 0.35) 100%);
+    border-color: var(--timeweb-primary-light);
+    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.2);
+}
+
+/* Поддержка темной темы для кнопок проекта */
+[data-md-color-scheme="slate"] .project-link {
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.2), 0 0.1rem 0.2rem rgba(0, 0, 0, 0.15);
+}
+
+[data-md-color-scheme="slate"] .project-link:hover {
+    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.3), 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
+    border-color: var(--timeweb-primary-light);
+}
+
+[data-md-color-scheme="slate"] .github-link:hover {
+    box-shadow: 0 0.4rem 1rem rgba(36, 41, 46, 0.3), 0 0.2rem 0.4rem rgba(36, 41, 46, 0.2);
+}
+
+[data-md-color-scheme="slate"] .pypi-link:hover {
+    box-shadow: 0 0.4rem 1rem rgba(0, 102, 204, 0.3), 0 0.2rem 0.4rem rgba(0, 102, 204, 0.2);
+}
+
+[data-md-color-scheme="slate"] .stats-link:hover {
+    box-shadow: 0 0.4rem 1rem rgba(76, 175, 80, 0.3), 0 0.2rem 0.4rem rgba(76, 175, 80, 0.2);
+}
+
+/* Адаптивность для плиток навигации */
+@media (max-width: 768px) {
+    .nav-tiles-container {
+        grid-template-columns: 1fr;
+        margin: 2rem 0 1.5rem 0;
+        padding: 1rem 0 0 0;
+        gap: 0.875rem;
+    }
+    
+    .nav-tile-link {
+        padding: 1.25rem;
+        min-height: 75px;
+        gap: 1rem;
+    }
+    
+    .nav-tile-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+    }
+    
+    .nav-tile-title {
+        font-size: 1rem;
+    }
+    
+    .nav-tile-label {
+        font-size: 0.625rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-tiles-container {
+        margin: 1.5rem 0 1rem 0;
+        padding: 0.875rem 0 0 0;
+    }
+    
+    .nav-tile-link {
+        padding: 1rem;
+        min-height: 70px;
+        gap: 0.875rem;
+    }
+    
+    .nav-tile-icon {
+        width: 2.25rem;
+        height: 2.25rem;
+        font-size: 1.375rem;
+    }
+    
+    .nav-tile-title {
+        font-size: 0.9375rem;
+    }
+}
+
 
 
 /* Стили для новой структуры главной страницы */
@@ -231,12 +624,13 @@
 .hero-section {
     text-align: center;
     margin: 2rem 0 4rem 0;
-    padding: 3rem 2rem;
+    padding: 4rem 3rem;
     background: linear-gradient(135deg, var(--timeweb-bg-light) 0%, var(--timeweb-bg-medium) 100%);
-    border-radius: 20px;
-    border: 1px solid var(--timeweb-border);
+    border-radius: 24px;
+    border: 2px solid var(--timeweb-border);
     position: relative;
     overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 102, 204, 0.08);
 }
 
 .hero-section::before {
@@ -246,29 +640,37 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(0, 102, 204, 0.02) 50%, transparent 70%);
+    background: linear-gradient(45deg, transparent 30%, rgba(0, 102, 204, 0.03) 50%, transparent 70%);
     pointer-events: none;
 }
 
 .hero-title {
-    font-size: 3.5rem;
+    font-size: 3.75rem;
     font-weight: 700;
-    margin: 1rem 0 0.5rem 0;
+    margin: 1rem 0 1rem 0;
     background: linear-gradient(135deg, var(--timeweb-primary), var(--timeweb-primary-dark), var(--timeweb-primary-light));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     position: relative;
     z-index: 1;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
 }
 
 .hero-subtitle {
-    font-size: 1.3rem;
-    color: var(--md-default-fg-color--light);
-    margin: 0;
-    font-weight: 400;
+    font-size: 1.75rem;
+    color: var(--md-default-fg-color);
+    margin: 0.5rem 0 2rem 0;
+    font-weight: 500;
     position: relative;
     z-index: 1;
+    line-height: 1.5;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0.85;
+    letter-spacing: -0.01em;
 }
 
 .hero-image {
@@ -428,11 +830,11 @@
     transform: scale(1.05);
 }
 
-/* Стили для ссылок проекта */
+/* Стили для ссылок проекта - в стиле карточек Core Features */
 .project-links {
     display: flex;
     justify-content: center;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1.5rem;
     flex-wrap: wrap;
 }
@@ -440,40 +842,28 @@
 .project-link {
     display: inline-flex;
     align-items: center;
-    padding: 0.75rem 1.5rem;
-    background: rgba(255, 255, 255, 0.1);
+    padding: 1rem 1.5rem;
+    background: var(--md-default-bg-color);
     color: var(--md-default-fg-color);
     text-decoration: none;
-    border-radius: 12px;
+    border-radius: 0.5rem;
     font-weight: 500;
     font-size: 0.95rem;
-    transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(10px);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: 0.05rem solid var(--md-default-fg-color--lightest);
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
-}
-
-.project-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.project-link:hover::before {
-    left: 100%;
+    min-width: 140px;
+    justify-content: center;
 }
 
 .project-link:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    transform: translateY(-0.25rem);
+    box-shadow: 0 0.4rem 1rem rgba(0, 0, 0, 0.1), 0 0.2rem 0.4rem rgba(0, 0, 0, 0.15);
     text-decoration: none;
     color: var(--md-default-fg-color);
+    border-color: var(--timeweb-primary);
 }
 
 .project-link .icon {
@@ -490,66 +880,89 @@
     font-weight: 600;
 }
 
-/* Специальные стили для разных ссылок */
+/* Специальные стили для разных ссылок - в стиле карточек */
 .github-link {
-    background: linear-gradient(135deg, rgba(36, 41, 46, 0.1) 0%, rgba(36, 41, 46, 0.2) 100%);
-    border-color: rgba(36, 41, 46, 0.3);
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
 }
 
 .github-link:hover {
-    background: linear-gradient(135deg, rgba(36, 41, 46, 0.2) 0%, rgba(36, 41, 46, 0.3) 100%);
-    border-color: rgba(36, 41, 46, 0.4);
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--light);
+    box-shadow: 0 0.4rem 1rem rgba(36, 41, 46, 0.15), 0 0.2rem 0.4rem rgba(36, 41, 46, 0.1);
 }
 
 .pypi-link {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 102, 204, 0.2) 100%);
-    border-color: rgba(0, 102, 204, 0.3);
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
 }
 
 .pypi-link:hover {
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.2) 0%, rgba(0, 102, 204, 0.3) 100%);
-    border-color: rgba(0, 102, 204, 0.4);
+    background: var(--md-default-bg-color);
+    border-color: var(--timeweb-primary);
+    box-shadow: 0 0.4rem 1rem rgba(0, 102, 204, 0.15), 0 0.2rem 0.4rem rgba(0, 102, 204, 0.1);
 }
 
 .stats-link {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.2) 100%);
-    border-color: rgba(76, 175, 80, 0.3);
+    background: var(--md-default-bg-color);
+    border-color: var(--md-default-fg-color--lightest);
 }
 
 .stats-link:hover {
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.2) 0%, rgba(76, 175, 80, 0.3) 100%);
-    border-color: rgba(76, 175, 80, 0.4);
+    background: var(--md-default-bg-color);
+    border-color: rgba(76, 175, 80, 0.5);
+    box-shadow: 0 0.4rem 1rem rgba(76, 175, 80, 0.15), 0 0.2rem 0.4rem rgba(76, 175, 80, 0.1);
 }
 
-/* Стили для информации о компании */
+/* Стили для информации о компании - в стиле плиток */
 .company-info {
-    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     margin: 3rem 0 2rem 0;
-    padding: 2rem;
-    background: linear-gradient(135deg, rgba(0, 102, 204, 0.03) 0%, rgba(0, 61, 122, 0.03) 100%);
-    border-radius: 16px;
-    border: 1px solid rgba(0, 102, 204, 0.15);
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.1) 0%, rgba(0, 102, 204, 0.2) 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 102, 204, 0.3);
     position: relative;
     overflow: hidden;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    max-width: fit-content;
 }
 
 .company-info::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, transparent 30%, rgba(0, 102, 204, 0.02) 50%, transparent 70%);
-    pointer-events: none;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
 }
 
-.company-info p {
+.company-info:hover::before {
+    left: 100%;
+}
+
+.company-info:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 102, 204, 0.15);
+    background: linear-gradient(135deg, rgba(0, 102, 204, 0.2) 0%, rgba(0, 102, 204, 0.3) 100%);
+    border-color: rgba(0, 102, 204, 0.4);
+}
+
+.company-info-text {
     margin: 0;
-    font-size: 1.1rem;
-    color: var(--md-default-fg-color--light);
+    font-size: 0.95rem;
+    color: var(--md-default-fg-color);
     position: relative;
     z-index: 1;
+    font-weight: 500;
+    display: inline-block;
+    font-family: var(--md-text-font-family, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
+    line-height: 1.5;
 }
 
 .company-info a {
@@ -561,7 +974,7 @@
 
 .company-info a:hover {
     color: #003d7a;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 
@@ -590,15 +1003,19 @@
 @media (max-width: 768px) {
     .hero-section {
         margin: 1rem 0 2rem 0;
-        padding: 2rem 1rem;
+        padding: 2.5rem 1.5rem;
+        border-radius: 20px;
     }
     
     .hero-title {
-        font-size: 2.5rem;
+        font-size: 2.75rem;
+        margin: 0.75rem 0 0.75rem 0;
     }
     
     .hero-subtitle {
-        font-size: 1.1rem;
+        font-size: 1.35rem;
+        margin: 0.5rem 0 1.5rem 0;
+        line-height: 1.5;
     }
     
     .hero-image {
@@ -615,13 +1032,14 @@
     }
     
     .project-links {
-        gap: 1rem;
+        gap: 0.75rem;
         margin-top: 1.5rem;
     }
     
     .project-link {
-        padding: 0.6rem 1.2rem;
+        padding: 0.875rem 1.25rem;
         font-size: 0.9rem;
+        min-width: 120px;
     }
     
     .architecture-diagram {
@@ -674,25 +1092,53 @@
     
     .company-info {
         margin: 2rem 0 1rem 0;
-        padding: 1.5rem;
+        padding: 0.6rem 1rem;
+        max-width: calc(100% - 2rem);
+        display: inline-flex;
     }
     
-    .company-info p {
-        font-size: 1rem;
+    .company-info-text {
+        font-size: 0.85rem;
+        white-space: normal;
+        line-height: 1.4;
     }
 }
 
 @media (max-width: 480px) {
+    .hero-section {
+        padding: 2rem 1.25rem;
+    }
+    
     .hero-title {
-        font-size: 2rem;
+        font-size: 2.25rem;
     }
     
     .hero-subtitle {
-        font-size: 1rem;
+        font-size: 1.2rem;
+        line-height: 1.5;
     }
     
     .hero-image {
         max-width: 120px;
+    }
+    
+    .company-info {
+        padding: 0.5rem 0.875rem;
+    }
+    
+    .company-info-text {
+        font-size: 0.8rem;
+    }
+    
+    .project-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        min-width: 100px;
+    }
+    
+    .project-link .icon {
+        font-size: 1rem;
+        margin-right: 0.4rem;
     }
 }
 

@@ -71,7 +71,7 @@ theme:
   icon:
     annotation: material/plus-circle
   font:
-    text: Roboto Mono
+    text: IBM Plex Sans
   palette:
     - scheme: default
       primary: blue

@@ -30,25 +30,25 @@
 
     Quick project setup and configuration with automatic DI container setup.
 
-    [:octicons-arrow-right-24: Get Started](bootstrap/index.md)
+    [:octicons-arrow-right-24: Read More](bootstrap/index.md)
 
 -   :material-code-tags: **Request Handlers**
 
     Handle commands and queries with full type safety and async support.
 
-    [:octicons-arrow-right-24: Learn More](request_handler.md)
+    [:octicons-arrow-right-24: Read More](request_handler.md)
 
 -   :material-sync: **Saga Pattern**
 
     Orchestrated Saga for distributed transactions with automatic compensation.
 
-    [:octicons-arrow-right-24: Explore](saga/index.md)
+    [:octicons-arrow-right-24: Read More](saga/index.md)
 
 -   :material-bell-ring: **Event Handling**
 
     Process domain events with parallel processing and runtime execution.
 
-    [:octicons-arrow-right-24: Discover](event_handler/index.md)
+    [:octicons-arrow-right-24: Read More](event_handler/index.md)
 
 -   :material-database-outline: **Transaction Outbox**
 
@@ -60,19 +60,25 @@
 
     Sequential request processing with flexible handler chaining.
 
-    [:octicons-arrow-right-24: See Details](chain_of_responsibility/index.md)
+    [:octicons-arrow-right-24: Read More](chain_of_responsibility/index.md)
 
 -   :material-play-circle: **Streaming**
 
     Incremental processing with real-time progress updates via SSE.
 
-    [:octicons-arrow-right-24: Learn More](stream_handling/index.md)
+    [:octicons-arrow-right-24: Read More](stream_handling/index.md)
 
 -   :material-puzzle: **Integrations**
 
     FastAPI, FastStream, Kafka, and Protobuf integrations out of the box.
 
-    [:octicons-arrow-right-24: View Integrations](fastapi.md)
+    [:octicons-arrow-right-24: Read More](fastapi.md)
+
+-   :material-graph: **Mermaid Diagrams**
+
+    Visualize architecture patterns and flows with interactive Mermaid diagrams.
+
+    [:octicons-arrow-right-24: Read More](mermaid/index.md)
 
 </div>
 
@@ -92,11 +98,28 @@
 
 ---
 
-## Quick Start
+## Installation
+
+Install Python CQRS using pip or uv:
+
+**Using pip:**
 
 ```bash
 pip install python-cqrs
 ```
+
+**Using uv:**
+
+```bash
+uv pip install python-cqrs
+```
+
+!!! info "Requirements"
+    Python 3.8+ • Pydantic v2
+
+---
+
+## Quick Start
 
 ```python
 import di
@@ -127,47 +150,3 @@ result = await mediator.send(CreateUserCommand(email="user@example.com", name="J
 ```
 
 See [Bootstrap](bootstrap/index.md) for detailed setup instructions.
-
----
-
-## Architecture
-
-**Request** → **RequestHandler** → **Event** → **EventHandler**
-
-Commands and queries flow through handlers, which execute business logic and emit events. Events are automatically dispatched to event handlers for side effects processing.
-
----
-
-## Installation
-
-```bash
-pip install python-cqrs
-```
-
-!!! info "Requirements"
-    Python 3.8+ • Pydantic v2
-
----
-
-## Documentation
-
-Explore the comprehensive documentation to learn more about each feature:
-
-- **[Bootstrap](bootstrap/index.md)** — Quick project setup and configuration
-- **[Request Handlers](request_handler.md)** — Working with commands and queries
-- **[Saga Pattern](saga/index.md)** — Distributed transactions with automatic compensation
-- **[Event Handling](event_handler/index.md)** — Processing domain events
-- **[Transaction Outbox](outbox/index.md)** — Reliable event delivery
-- **[Stream Handling](stream_handling/index.md)** — Incremental processing with streaming
-- **[Chain of Responsibility](chain_of_responsibility/index.md)** — Sequential request processing
-- **[Integrations](fastapi.md)** — FastAPI, FastStream, Kafka, Protobuf
-
----
-
-## About
-
-This framework is developed by the **Timeweb.Cloud** development team.
-
-<div class="company-info">
-    <p>Built with ❤️ by <a href="https://timeweb.cloud/" target="_blank" rel="noopener">Timeweb.Cloud</a> — your reliable cloud infrastructure partner.</p>
-</div>
