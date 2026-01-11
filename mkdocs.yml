@@ -1,5 +1,5 @@
 site_name: python-cqrs
-site_url: https://python-cqrs.dev/
+site_url: https://mkdocs.python-cqrs.dev/
 site_description: Документация по библиотеке python-cqrs. Паттерны CQRS, Saga, Mediator и Event Driven на Python.
 site_author: Vadim Kozyrevskii
 repo_url: https://github.com/vadikko2/python-cqrs
