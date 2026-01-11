@@ -26,4 +26,6 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements.txt
+      - name: Patch site_url for GitHub Pages
+        run: sed -i 's|https://python-cqrs.dev/|https://vadikko2.github.io/python-cqrs-mkdocs/|g' mkdocs.yml
       - run: mkdocs gh-deploy --force
