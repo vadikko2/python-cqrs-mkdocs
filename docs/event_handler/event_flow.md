@@ -25,9 +25,10 @@ sequenceDiagram
     participant Mediator
     participant Handler as Command Handler
     participant Events as Events Collection
-    participant Dispatcher as Event Dispatcher
-    participant Handlers as Event Handlers
+    participant Processor as Event Processor
     participant Emitter as Event Emitter
+    participant Handlers as Event Handlers
+    participant Broker as Message Broker
 
     Client->>Mediator: 1. Send Command
     Mediator->>Handler: 2. Execute Handler
@@ -35,14 +36,20 @@ sequenceDiagram
     Handler->>Events: 4. Collect Events
     Handler-->>Mediator: 5. Return Response
     
-    Mediator->>Dispatcher: 6. Process Events
-    Dispatcher->>Handlers: 7. Execute Handlers
-    Handlers-->>Dispatcher: 8. Complete
+    Mediator->>Processor: 6. Emit Events
+    Processor->>Emitter: 7. Emit Each Event
     
-    Mediator->>Emitter: 9. Emit Events
-    Emitter->>Emitter: 10. Send to Broker/Handlers
+    alt DomainEvent
+        Emitter->>Handlers: 8. Execute Event Handlers
+        Handlers-->>Emitter: 9. Complete
+    else NotificationEvent
+        Emitter->>Broker: 8. Send to Message Broker
+        Broker-->>Emitter: 9. Complete
+    end
     
-    Mediator-->>Client: 11. Return Response
+    Emitter-->>Processor: 10. Complete
+    Processor-->>Mediator: 11. Complete
+    Mediator-->>Client: 12. Return Response
 ```
 
 ### Detailed Event Processing Flow
@@ -54,27 +61,34 @@ graph TD
     C -->|Has Events?| D{Events Exist?}
     
     D -->|No| E[Return Response]
-    D -->|Yes| F[Process Events Parallel]
+    D -->|Yes| F[EventProcessor.emit_events]
     
-    F -->|For Each Event| G[EventDispatcher]
-    G -->|Find Handlers| H[EventMap Lookup]
-    H -->|Resolve Handler| I[DI Container]
-    I -->|Execute| J[Event Handler]
-    J -->|Complete| K{More Events?}
+    F -->|For Each Event| G{Parallel Enabled?}
     
-    K -->|Yes| F
-    K -->|No| L[Emit Events]
+    G -->|No| H[Sequential: EventEmitter.emit]
+    G -->|Yes| I[Parallel: Create Task with Semaphore]
+    I --> J[EventEmitter.emit]
     
-    L -->|DomainEvent| M[Process via Handlers]
-    L -->|NotificationEvent| N[Send to Broker]
+    H --> K{Event Type?}
+    J --> K
     
-    M --> E
-    N --> E
+    K -->|DomainEvent| L[EventEmitter: Find Handlers]
+    K -->|NotificationEvent| M[EventEmitter: Send to Broker]
+    
+    L --> N[EventMap Lookup]
+    N --> O[Resolve Handler from DI]
+    O --> P[Execute Event Handler]
+    P --> Q{More Events?}
+    
+    M --> Q
+    Q -->|Yes| F
+    Q -->|No| E
     
     style A fill:#e1f5ff
     style B fill:#fff3e0
-    style G fill:#c8e6c9
-    style J fill:#c8e6c9
+    style F fill:#c8e6c9
+    style L fill:#c8e6c9
+    style P fill:#c8e6c9
     style E fill:#f3e5f5
 ```
 
@@ -102,42 +116,54 @@ class JoinMeetingCommandHandler(RequestHandler[JoinMeetingCommand, None]):
         )
 ```
 
-### 2. Event Dispatch
+### 2. Event Emission
 
-After the command handler completes, the mediator collects events and dispatches them:
+After the command handler completes, the mediator collects events and emits them through EventProcessor:
 
 ```python
 dispatch_result = await self._dispatcher.dispatch(request)
 
-if dispatch_result.events:
-    # Process events (parallel or sequential)
-    await self._process_events_parallel(dispatch_result.events.copy())
-    # Emit events to broker or handlers
-    await self._send_events(dispatch_result.events.copy())
+# Events are emitted through EventProcessor
+# EventProcessor uses EventEmitter which handles:
+# - DomainEvent: processes via event handlers (in-process)
+# - NotificationEvent: sends to message broker
+await self._event_processor.emit_events(dispatch_result.events)
 ```
 
-### 3. Event Processing
+The `EventProcessor` handles parallel or sequential processing based on configuration, and `EventEmitter` routes events to appropriate handlers or message brokers.
 
-Events are processed through `EventDispatcher`, which finds registered handlers and executes them:
+### 3. Event Processing via EventEmitter
+
+Events are processed through `EventEmitter`, which routes them based on event type:
 
 ```mermaid
 graph TD
-    A[EventDispatcher.dispatch] -->|1. Get Event Type| B[EventMap.get]
-    B -->|2. Find Handlers| C{Handlers Found?}
-    C -->|No| D[Log Warning]
-    C -->|Yes| E[Loop Through Handlers]
-    E -->|3. Resolve Handler| F[DI Container]
-    F -->|4. Execute Handler| G[Handler.handle]
-    G -->|5. Process Side Effects| H[Complete]
+    A[EventEmitter.emit] -->|1. Get Event Type| B{Event Type?}
+    
+    B -->|DomainEvent| C[EventMap.get]
+    C -->|2. Find Handlers| D{Handlers Found?}
+    D -->|No| E[Log Warning]
+    D -->|Yes| F[Loop Through Handlers]
+    F -->|3. Resolve Handler| G[DI Container]
+    G -->|4. Execute Handler| H[Handler.handle]
+    H -->|5. Process Side Effects| I[Complete]
+    
+    B -->|NotificationEvent| J{Message Broker?}
+    J -->|No| K[Raise RuntimeError]
+    J -->|Yes| L[Send to Message Broker]
+    L --> I
     
     style A fill:#e1f5ff
-    style G fill:#c8e6c9
-    style H fill:#fff3e0
+    style H fill:#c8e6c9
+    style I fill:#fff3e0
 ```
 
-### 4. Event Emission
+### 4. Event Routing
 
-After processing, events are emitted through `EventEmitter`:
+`EventEmitter` automatically routes events based on their type:
 
-- **DomainEvent** — Processed by event handlers (in-process)
-- **NotificationEvent** — Sent to message broker (Kafka, RabbitMQ, etc.)
+- **DomainEvent** — Processed by event handlers registered in EventMap (in-process, synchronous)
+- **NotificationEvent** — Sent to message broker (Kafka, RabbitMQ, etc.) for asynchronous processing
+
+!!! important "Single Processing"
+    Events are processed **only once** through EventEmitter. There is no duplicate processing - DomainEvents are handled by event handlers, and NotificationEvents are sent to message brokers.

@@ -24,22 +24,32 @@ Events can be processed in parallel to improve performance. This is controlled b
 
 ```mermaid
 graph TD
-    Start[Process Events] --> CheckEnable{Parallel Enabled?}
+    Start[EventProcessor.emit_events] --> CheckEnable{Parallel Enabled?}
     
     CheckEnable -->|No| Sequential[Sequential Processing]
     Sequential --> LoopSeq[For Each Event]
-    LoopSeq --> ProcessSeq[Process Event]
-    ProcessSeq --> NextSeq{More Events?}
+    LoopSeq --> EmitSeq[EventEmitter.emit]
+    EmitSeq --> RouteSeq{Route Event}
+    RouteSeq -->|DomainEvent| HandlerSeq[Execute Handlers]
+    RouteSeq -->|NotificationEvent| BrokerSeq[Send to Broker]
+    HandlerSeq --> NextSeq{More Events?}
+    BrokerSeq --> NextSeq
     NextSeq -->|Yes| LoopSeq
     NextSeq -->|No| End1[End]
     
     CheckEnable -->|Yes| Parallel[Parallel Processing]
-    Parallel --> CreateTasks[Create Tasks for Each Event]
-    CreateTasks --> Semaphore[Acquire Semaphore]
-    Semaphore --> ProcessPar[Process Event]
-    ProcessPar --> ReleaseSem[Release Semaphore]
-    ReleaseSem --> Gather[asyncio.gather All Tasks]
-    Gather --> End2[End]
+    Parallel --> LoopPar[For Each Event]
+    LoopPar --> CreateTask[Create Task]
+    CreateTask --> Semaphore[Acquire Semaphore]
+    Semaphore --> EmitPar[EventEmitter.emit]
+    EmitPar --> RoutePar{Route Event}
+    RoutePar -->|DomainEvent| HandlerPar[Execute Handlers]
+    RoutePar -->|NotificationEvent| BrokerPar[Send to Broker]
+    HandlerPar --> ReleaseSem[Release Semaphore]
+    BrokerPar --> ReleaseSem
+    ReleaseSem --> NextPar{More Events?}
+    NextPar -->|Yes| LoopPar
+    NextPar -->|No| End2[End]
     
     style Start fill:#e1f5ff
     style Sequential fill:#fff3e0
@@ -49,42 +59,43 @@ graph TD
 
 ### Implementation
 
+The `EventProcessor` handles parallel or sequential event emission:
+
 ```python
-class RequestMediator:
+class EventProcessor:
     def __init__(
         self,
+        event_map: EventMap,
+        event_emitter: EventEmitter | None = None,
         max_concurrent_event_handlers: int = 1,
         concurrent_event_handle_enable: bool = True,
     ):
-        # Create semaphore to limit concurrency
-        self._event_semaphore = asyncio.Semaphore(max_concurrent_event_handlers)
+        self._event_emitter = event_emitter
+        self._max_concurrent_event_handlers = max_concurrent_event_handlers
         self._concurrent_event_handle_enable = concurrent_event_handle_enable
+        self._event_semaphore = asyncio.Semaphore(max_concurrent_event_handlers)
     
-    async def _process_event_with_semaphore(self, event: Event) -> None:
-        """Process a single event with semaphore limit."""
-        async with self._event_semaphore:
-            await self._event_dispatcher.dispatch(event)
-    
-    async def _process_events_parallel(
-        self,
-        events: List[Event],
-    ) -> None:
-        """Process events in parallel with semaphore limit or sequentially."""
-        if not events:
+    async def emit_events(self, events: List[Event]) -> None:
+        """Emit events via event emitter (parallel or sequential)."""
+        if not events or not self._event_emitter:
             return
         
         if not self._concurrent_event_handle_enable:
             # Sequential processing
             for event in events:
-                await self._event_dispatcher.dispatch(event)
+                await self._event_emitter.emit(event)
         else:
-            # Parallel processing with semaphore limit
-            tasks = [
-                self._process_event_with_semaphore(event) 
-                for event in events
-            ]
-            await asyncio.gather(*tasks)
+            # Parallel processing with semaphore limit (fire-and-forget)
+            for event in events:
+                asyncio.create_task(self._emit_event_with_semaphore(event))
+    
+    async def _emit_event_with_semaphore(self, event: Event) -> None:
+        """Emit a single event with semaphore limit."""
+        async with self._event_semaphore:
+            await self._event_emitter.emit(event)
 ```
+
+The `EventEmitter` then routes events to handlers or message brokers based on event type.
 
 ### Configuration
 
@@ -129,7 +140,9 @@ class ProcessOrderCommandHandler(RequestHandler[ProcessOrderCommand, None]):
         self._events.append(EmailNotificationEvent(...))
 
 # With max_concurrent_event_handlers=3:
-# - Events 1-3 process in parallel
-# - Event 4 waits for a slot
-# - All events complete before response is returned
+# - Events 1-3 emit in parallel (fire-and-forget tasks)
+# - Event 4 waits for a semaphore slot
+# - Each event is routed by EventEmitter:
+#   - DomainEvents → processed by handlers
+#   - NotificationEvents → sent to message broker
 ```

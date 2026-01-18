@@ -40,17 +40,19 @@ await mediator.send(JoinMeetingCommand(user_id="123", meeting_id="456"))
 # What happens:
 # 1. Command handler executes (synchronously)
 # 2. Events are collected from handler.events
-# 3. Events are processed by handlers (synchronously, in parallel if enabled)
-# 4. Events are emitted (synchronously)
-# 5. Response is returned
+# 3. Events are emitted through EventProcessor (synchronously, in parallel if enabled)
+#    - EventProcessor uses EventEmitter which routes events:
+#      - DomainEvent → processed by event handlers (in-process)
+#      - NotificationEvent → sent to message broker
+# 4. Response is returned
 ```
 
 
-The `EventDispatcher` is responsible for routing events to their handlers:
+The `EventEmitter` routes events to their handlers or message brokers. For DomainEvents, it uses EventDispatcher logic internally:
 
 ```mermaid
 graph TD
-    Start[EventDispatcher.dispatch] --> GetType[Get Event Type]
+    Start[EventEmitter.emit DomainEvent] --> GetType[Get Event Type]
     GetType --> Lookup[Lookup in EventMap]
     Lookup --> Found{Handlers Found?}
     
@@ -71,20 +73,21 @@ graph TD
     style Execute fill:#c8e6c9
 ```
 
-### Dispatcher Implementation
+### EventEmitter Implementation for DomainEvents
 
 ```python
-class EventDispatcher:
-    async def dispatch(self, event: Event) -> None:
+class EventEmitter:
+    @emit.register
+    async def _(self, event: DomainEvent) -> None:
         # 1. Find handlers for event type
-        handler_types = self._event_map.get(type(event), [])
+        handlers_types = self._event_map.get(type(event), [])
         
-        if not handler_types:
+        if not handlers_types:
             logger.warning(f"Handlers for event {type(event).__name__} not found")
             return
         
         # 2. Process each handler
-        for handler_type in handler_types:
+        for handler_type in handlers_types:
             # 3. Resolve handler from DI container
             handler = await self._container.resolve(handler_type)
             
@@ -92,8 +95,7 @@ class EventDispatcher:
             await handler.handle(event)
 ```
 
-
-The `EventEmitter` is responsible for emitting events after processing:
+The `EventEmitter` is responsible for emitting events and routing them based on type:
 
 ```mermaid
 graph TD
