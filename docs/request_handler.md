@@ -14,6 +14,7 @@ Request handlers process commands (write operations) and queries (read operation
     Before creating handlers, ensure you've configured [Bootstrap](bootstrap/index.md) and understand [Dependency Injection](di.md).
 
 !!! tip "Related Topics"
+    - [Request / Response Types](request_response_types/index.md) — Different types for requests and responses (Pydantic, Dataclasses, attrs, etc.)
     - [Stream Handling](stream_handling/index.md) — For incremental processing
     - [Chain of Responsibility](chain_of_responsibility/index.md) — For sequential handler chains
     - [Saga Pattern](saga/index.md) — For distributed transactions with compensation

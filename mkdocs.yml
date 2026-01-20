@@ -19,6 +19,17 @@ nav:
       - Advanced: bootstrap/advanced.md
     - Dependency Injection: di.md
     - Commands / Requests Handling: request_handler.md
+    - Request / Response Types:
+      - Overview: request_response_types/index.md
+      - Pydantic: request_response_types/pydantic.md
+      - Dataclasses: request_response_types/dataclasses.md
+      - Standard Classes: request_response_types/standard_classes.md
+      - NamedTuple: request_response_types/namedtuple.md
+      - Attrs: request_response_types/attrs.md
+      - Msgspec: request_response_types/msgspec.md
+      - TypedDict: request_response_types/typeddict.md
+      - Mixed Usage: request_response_types/mixed_usage.md
+      - Best Practices: request_response_types/best_practices.md
     - Stream Handling:
       - Overview: stream_handling/index.md
       - Configuration: stream_handling/configuration.md

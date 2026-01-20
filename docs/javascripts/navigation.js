@@ -68,6 +68,17 @@
             { title: 'Dependency Injection', url: 'di/', path: 'di' },
             // Request Handler
             { title: 'Commands / Requests Handling', url: 'request_handler/', path: 'request_handler' },
+            // Request / Response Types
+            { title: 'Request / Response Types', url: 'request_response_types/', path: 'request_response_types/index' },
+            { title: 'Pydantic', url: 'request_response_types/pydantic/', path: 'request_response_types/pydantic' },
+            { title: 'Dataclasses', url: 'request_response_types/dataclasses/', path: 'request_response_types/dataclasses' },
+            { title: 'Standard Classes', url: 'request_response_types/standard_classes/', path: 'request_response_types/standard_classes' },
+            { title: 'NamedTuple', url: 'request_response_types/namedtuple/', path: 'request_response_types/namedtuple' },
+            { title: 'Attrs', url: 'request_response_types/attrs/', path: 'request_response_types/attrs' },
+            { title: 'Msgspec', url: 'request_response_types/msgspec/', path: 'request_response_types/msgspec' },
+            { title: 'TypedDict', url: 'request_response_types/typeddict/', path: 'request_response_types/typeddict' },
+            { title: 'Mixed Usage', url: 'request_response_types/mixed_usage/', path: 'request_response_types/mixed_usage' },
+            { title: 'Best Practices', url: 'request_response_types/best_practices/', path: 'request_response_types/best_practices' },
             // Stream Handling
             { title: 'Stream Handling', url: 'stream_handling/', path: 'stream_handling/index' },
             { title: 'Stream Configuration', url: 'stream_handling/configuration/', path: 'stream_handling/configuration' },
