@@ -6,6 +6,7 @@ The `python-cqrs` library provides flexible support for different types of reque
 
 !!! tip "Interface Requirements"
     Both `IRequest` and `IResponse` interfaces require:
+    
     - `to_dict()` method: Convert instance to dictionary
     - `from_dict()` classmethod: Create instance from dictionary
 
