@@ -31,12 +31,14 @@ class ISagaStorage(abc.ABC):
     async def log_step(saga_id, step_name, action, status, details=None) -> None
     async def load_saga_state(saga_id, *, read_for_update: bool = False) -> tuple[SagaStatus, dict, int]
     async def get_step_history(saga_id) -> list[SagaLogEntry]
-    async def get_sagas_for_recovery(limit, max_recovery_attempts=5, stale_after_seconds=None) -> list[uuid.UUID]
+    async def get_sagas_for_recovery(limit, max_recovery_attempts=5, stale_after_seconds=None, saga_name=None) -> list[uuid.UUID]
     async def increment_recovery_attempts(saga_id, new_status: SagaStatus | None = None) -> None
+    async def set_recovery_attempts(saga_id, attempts: int) -> None
 ```
 
-- **get_sagas_for_recovery** — Returns saga IDs that need recovery (RUNNING, COMPENSATING, FAILED) with `recovery_attempts` &lt; `max_recovery_attempts`, optionally filtered by staleness. Used by recovery jobs.
+- **get_sagas_for_recovery** — Returns saga IDs that need recovery (RUNNING, COMPENSATING) with `recovery_attempts` &lt; `max_recovery_attempts`, optionally filtered by staleness and by saga name. When `saga_name` is `None` (default), returns all saga types; when set, only sagas with that name. Used by recovery jobs.
 - **increment_recovery_attempts** — Called automatically by `recover_saga()` on recovery failure; increments `recovery_attempts` and optionally updates status (e.g. to FAILED).
+- **set_recovery_attempts** — Sets the recovery attempt counter to an explicit value. Use to reset after successfully recovering a step (e.g. set to `0`) or to set to the maximum so the saga is excluded from further recovery (e.g. mark as permanently failed without changing status).
 
 ## Memory Storage
 
@@ -83,7 +85,7 @@ Database-backed implementation for production. It uses a session factory to mana
 - `status` (VARCHAR) - PENDING, RUNNING, COMPENSATING, COMPLETED, FAILED
 - `context` (JSON)
 - `version` (INTEGER) - Optimistic locking version (default: 1)
-- `recovery_attempts` (INTEGER) - Number of failed recovery attempts (default: 0); used by `get_sagas_for_recovery` and `increment_recovery_attempts`
+- `recovery_attempts` (INTEGER) - Number of failed recovery attempts (default: 0); used by `get_sagas_for_recovery`, `increment_recovery_attempts`, and `set_recovery_attempts`
 - `created_at`, `updated_at` (TIMESTAMP)
 
 **saga_logs:**
