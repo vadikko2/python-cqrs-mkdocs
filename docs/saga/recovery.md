@@ -10,16 +10,17 @@
 
 </div>
 
-Recovery ensures eventual consistency by resuming interrupted sagas from persistent storage, guaranteeing all sagas eventually reach a terminal state (COMPLETED or FAILED).
+Recovery ensures eventual consistency by resuming interrupted sagas from persistent storage, guaranteeing all sagas eventually reach a terminal state (COMPLETED or FAILED). Recovery **attempts** are tracked per saga so you can limit retries and exclude persistently failing sagas.
 
 ## Overview
 
 Sagas can be interrupted due to server crashes, network timeouts, or system overload. Recovery solves this by:
 
 1. Persisting saga state after each step
-2. Periodically scanning for incomplete sagas
+2. Periodically scanning for incomplete sagas (via `get_sagas_for_recovery`)
 3. Resuming execution from the last completed step
 4. Completing compensation if saga was in compensating state
+5. Tracking **recovery attempts** — on recovery failure, the storage increments `recovery_attempts` automatically so sagas can be retried or excluded when the limit is reached
 
 ## Eventual Consistency
 
@@ -27,6 +28,7 @@ The saga pattern ensures eventual consistency through:
 
 - **Persistent State** — Saved after each step
 - **Recovery Mechanism** — Interrupted sagas can be resumed
+- **Recovery Attempts** — Each saga has a `recovery_attempts` counter; it is incremented automatically when recovery fails, so you can limit retries and exclude sagas that exceed `max_recovery_attempts`
 - **Compensation Guarantee** — Failed sagas are always compensated
 - **Terminal States** — All sagas eventually reach COMPLETED or FAILED
 
@@ -93,6 +95,33 @@ except RuntimeError:
 **Status:** `COMPLETED`  
 **Recovery:** No action needed
 
+## Recovery Attempts
+
+Each saga in storage has a **recovery_attempts** counter. It is used to:
+
+- **Limit retries** — Sagas that fail recovery repeatedly can be excluded from future recovery runs
+- **Avoid infinite loops** — Persistently failing sagas (e.g. due to bad data) stop being picked after `max_recovery_attempts`
+
+**Automatic increment:** When `recover_saga()` fails (exception during resume), the storage's `increment_recovery_attempts(saga_id, new_status=SagaStatus.FAILED)` is called automatically. Callers do **not** need to call `increment_recovery_attempts` themselves.
+
+**Getting sagas for recovery:** Use `storage.get_sagas_for_recovery()` instead of a custom query:
+
+```python
+ids = await storage.get_sagas_for_recovery(
+    limit=50,
+    max_recovery_attempts=5,   # Only sagas with recovery_attempts < 5
+    stale_after_seconds=120,   # Only sagas not updated in last 2 minutes (avoids picking active sagas)
+)
+```
+
+| Parameter | Description |
+|-----------|-------------|
+| `limit` | Maximum number of saga IDs to return |
+| `max_recovery_attempts` | Only include sagas with `recovery_attempts` strictly less than this value (default: 5) |
+| `stale_after_seconds` | If set, only include sagas whose `updated_at` is older than (now − this value). Use to avoid picking sagas currently being executed. `None` = no filter |
+
+Returns saga IDs in status RUNNING, COMPENSATING, or FAILED, ordered by `updated_at` ascending (oldest first).
+
 ## Strict Backward Recovery
 
 Once a saga enters `COMPENSATING` or `FAILED` status, forward execution is **permanently disabled**. Only compensation can proceed.
@@ -103,20 +132,33 @@ This prevents "zombie states" where compensation actions conflict with new execu
 
 ### Background Recovery Job
 
+Use `storage.get_sagas_for_recovery()` to get saga IDs that need recovery. On recovery failure, `recover_saga()` calls `increment_recovery_attempts` internally — no extra code needed.
+
 ```python
 import asyncio
 from cqrs.saga.recovery import recover_saga
 
-async def recovery_job():
+async def recovery_job(storage, saga, context_builder, container):
     while True:
-        incomplete_sagas = await find_incomplete_sagas()
-        for saga_id in incomplete_sagas:
+        ids = await storage.get_sagas_for_recovery(
+            limit=50,
+            max_recovery_attempts=5,
+            stale_after_seconds=120,  # Avoid sagas currently being executed
+        )
+        for saga_id in ids:
             try:
-                await recover_saga(saga, saga_id, OrderContext)
+                await recover_saga(
+                    saga=saga,
+                    saga_id=saga_id,
+                    context_builder=context_builder,
+                    container=container,
+                    storage=storage,
+                )
             except RuntimeError:
-                pass  # Compensation completed
+                pass  # Expected when compensation completed (forward execution not allowed)
             except Exception as e:
-                logger.error(f"Recovery failed: {e}")
+                logger.error(f"Recovery failed for {saga_id}: {e}")
+                # recovery_attempts already incremented by recover_saga
         await asyncio.sleep(60)  # Scan every minute
 ```
 
@@ -127,13 +169,19 @@ async def recovery_job():
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(recovery_job, 'interval', minutes=5)
+scheduler.add_job(
+    lambda: recovery_job(storage, OrderSaga(), OrderContext, container),
+    'interval',
+    minutes=5,
+)
 scheduler.start()
 ```
 
 ## Best Practices
 
-1. **Run recovery periodically** — Background job to scan for incomplete sagas
-2. **Handle failures** — Log errors and send alerts
-3. **Monitor metrics** — Track recovery rate, duration, and failures
-4. **Use persistent storage** — Memory storage loses data on restart
+1. **Run recovery periodically** — Background job using `get_sagas_for_recovery()` to scan for incomplete sagas
+2. **Use `max_recovery_attempts`** — Exclude sagas that fail recovery too many times (e.g. 5) to avoid infinite retries
+3. **Use `stale_after_seconds`** — Avoid picking sagas that are currently being executed by another worker
+4. **Handle failures** — Log errors and send alerts; `increment_recovery_attempts` is called automatically by `recover_saga`
+5. **Monitor metrics** — Track recovery rate, duration, failures, and sagas exceeding max attempts
+6. **Use persistent storage** — Memory storage loses data on restart

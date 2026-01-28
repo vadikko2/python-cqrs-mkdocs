@@ -20,6 +20,9 @@
 
 </div>
 
+!!! warning "Breaking Changes in v5.0.0"
+    Starting with version 5.0.0, **Pydantic support will become optional**. The default implementations of `Request`, `Response`, `DomainEvent`, and `NotificationEvent` will be migrated to dataclasses-based implementations.
+
 ---
 
 ## Core Features
