@@ -1,5 +1,6 @@
 site_name: python-cqrs
-site_url: https://mkdocs.python-cqrs.dev/
+# Для локальной разработки; при деплое в GitHub Pages CI подставляет правильный site_url
+site_url: https://vadikko2.github.io/python-cqrs-mkdocs/
 site_description: Документация по библиотеке python-cqrs. Паттерны CQRS, Saga, Mediator и Event Driven на Python.
 site_author: Vadim Kozyrevskii
 repo_url: https://github.com/vadikko2/python-cqrs
@@ -126,6 +127,7 @@ plugins:
   - autorefs
 use_directory_urls: true
 strict: true
+docs_dir: docs
 extra_css:
   - stylesheets/extra.css
 extra_javascript:

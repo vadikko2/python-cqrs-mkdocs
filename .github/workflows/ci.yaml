@@ -26,6 +26,11 @@ jobs:
           restore-keys: |
             mkdocs-material-
       - run: pip install -r requirements.txt
-      - name: Patch site_url for GitHub Pages
-        run: sed -i 's|https://mkdocs.python-cqrs.dev/|https://vadikko2.github.io/python-cqrs-mkdocs/|g' mkdocs.yml
-      - run: mkdocs gh-deploy --force
+      - name: Build and verify assets
+        run: |
+          mkdocs build --strict
+          ls -la site/
+          test -f site/stylesheets/extra.css || (echo "ERROR: extra.css not in build" && exit 1)
+          test -f site/javascripts/star-link.js || (echo "ERROR: star-link.js not in build" && exit 1)
+      - name: Deploy to GitHub Pages
+        run: mkdocs gh-deploy --force
