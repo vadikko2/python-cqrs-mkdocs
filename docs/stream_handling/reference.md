@@ -53,3 +53,20 @@ Streaming handlers are ideal for:
 | Progress Updates | Not available | Real-time |
 | Event Processing | After completion | After each yield |
 | Use Case | Simple operations | Batch/long-running operations |
+
+### API Contract and Typing
+
+**StreamingRequestHandler**
+
+The base class declares `handle` as a **sync** method returning an iterator: `def handle(self, request: ReqT) -> AsyncIterator[ResT]`. Subclasses implement it as an **async generator** (`async def handle(...): ... yield ...`). This keeps types compatible with Pyright and mypy — **no type ignores** are needed on your handler's `handle` method.
+
+**Stream and consumption**
+
+- `mediator.stream(request)` is called **without** `await`.
+- It returns an `AsyncIterator`; consume it with `async for`:
+
+```python
+# Correct: no await, iterate with async for
+async for result in mediator.stream(command):
+    print(result)
+```

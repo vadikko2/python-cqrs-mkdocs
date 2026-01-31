@@ -4,18 +4,23 @@
     <p class="hero-subtitle">Event-Driven Architecture Framework for Distributed Systems</p>
 
     <div class="project-links">
-        <a href="https://github.com/vadikko2/python-cqrs" class="project-link github-link" target="_blank" rel="noopener">
-            <span class="icon">🐙</span>
-            <span class="text">GitHub</span>
+        <a href="https://github.com/vadikko2/python-cqrs" class="project-link star-link" target="_blank" rel="noopener">
+            <span class="star-link-icon star-link-icon-github">🐙</span>
+            <span class="star-link-text">Star if cool</span>
+            <span class="star-link-icon star-link-icon-star">⭐</span>
+            <span class="star-link-icon star-link-icon-sparkle">✨</span>
+            <span class="star-link-icon star-link-icon-sparkle">✨</span>
         </a>
-        <a href="https://pypi.org/project/python-cqrs/" class="project-link pypi-link" target="_blank" rel="noopener">
-            <span class="icon">📦</span>
-            <span class="text">PyPI</span>
-        </a>
-        <a href="https://clickpy.clickhouse.com/dashboard/python-cqrs" class="project-link stats-link" target="_blank" rel="noopener">
-            <span class="icon">📊</span>
-            <span class="text">Downloads</span>
-        </a>
+        <div class="project-links-row">
+            <a href="https://pypi.org/project/python-cqrs/" class="project-link pypi-link" target="_blank" rel="noopener">
+                <span class="icon">📦</span>
+                <span class="text">PyPI</span>
+            </a>
+            <a href="https://clickpy.clickhouse.com/dashboard/python-cqrs" class="project-link stats-link" target="_blank" rel="noopener">
+                <span class="icon">📊</span>
+                <span class="text">Downloads</span>
+            </a>
+        </div>
     </div>
 
 </div>

@@ -130,3 +130,4 @@ extra_css:
   - stylesheets/extra.css
 extra_javascript:
   - javascripts/navigation.js
+  - javascripts/star-link.js

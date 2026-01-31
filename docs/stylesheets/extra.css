@@ -551,16 +551,23 @@ footer nav {
     border-color: var(--timeweb-primary-light);
 }
 
-[data-md-color-scheme="slate"] .github-link:hover {
-    box-shadow: 0 0.4rem 1rem rgba(36, 41, 46, 0.3), 0 0.2rem 0.4rem rgba(36, 41, 46, 0.2);
-}
-
 [data-md-color-scheme="slate"] .pypi-link:hover {
     box-shadow: 0 0.4rem 1rem rgba(0, 102, 204, 0.3), 0 0.2rem 0.4rem rgba(0, 102, 204, 0.2);
 }
 
 [data-md-color-scheme="slate"] .stats-link:hover {
     box-shadow: 0 0.4rem 1rem rgba(76, 175, 80, 0.3), 0 0.2rem 0.4rem rgba(76, 175, 80, 0.2);
+}
+
+[data-md-color-scheme="slate"] .star-link {
+    background: linear-gradient(90deg, #a855f7 0%, #c026d3 35%, #ec4899 70%, #f472b6 100%) !important;
+    color: #faf5ff !important;
+    box-shadow: 0 4px 20px rgba(192, 38, 211, 0.5), 0 2px 10px rgba(236, 72, 153, 0.45), 0 0 32px rgba(244, 114, 182, 0.2) !important;
+}
+
+[data-md-color-scheme="slate"] .star-link:hover {
+    background: linear-gradient(90deg, #9333ea 0%, #a855f7 35%, #db2777 70%, #ec4899 100%) !important;
+    box-shadow: 0 6px 28px rgba(192, 38, 211, 0.6), 0 4px 14px rgba(236, 72, 153, 0.55), 0 0 44px rgba(244, 114, 182, 0.3) !important;
 }
 
 /* Адаптивность для плиток навигации */
@@ -833,15 +840,43 @@ footer nav {
 /* Стили для ссылок проекта - в стиле карточек Core Features */
 .project-links {
     display: flex;
-    justify-content: center;
-    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
     margin-top: 1.5rem;
-    flex-wrap: wrap;
+    width: 100%;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.project-links-row {
+    display: flex;
+    gap: 0.875rem;
+    width: 100%;
+}
+
+.project-links-row .project-link {
+    flex: 1;
+    min-width: 0;
+    padding: 0.7rem 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.project-links-row .project-link .text {
+    white-space: nowrap;
+}
+
+.project-links-row .project-link .icon {
+    font-size: 1rem;
+    margin-right: 0.4rem;
 }
 
 .project-link {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     padding: 1rem 1.5rem;
     background: var(--md-default-bg-color);
     color: var(--md-default-fg-color);
@@ -854,8 +889,7 @@ footer nav {
     box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.05), 0 0.1rem 0.2rem rgba(0, 0, 0, 0.1);
     position: relative;
     overflow: hidden;
-    min-width: 140px;
-    justify-content: center;
+    min-width: 0;
 }
 
 .project-link:hover {
@@ -880,21 +914,24 @@ footer nav {
     font-weight: 600;
 }
 
+.project-link,
+.project-link:hover,
+.project-link .text,
+.project-link .icon,
+.star-link,
+.star-link:hover,
+.star-link .star-link-text {
+    text-decoration: none !important;
+}
+
 /* Специальные стили для разных ссылок - в стиле карточек */
-.github-link {
-    background: var(--md-default-bg-color);
-    border-color: var(--md-default-fg-color--lightest);
-}
-
-.github-link:hover {
-    background: var(--md-default-bg-color);
-    border-color: var(--md-default-fg-color--light);
-    box-shadow: 0 0.4rem 1rem rgba(36, 41, 46, 0.15), 0 0.2rem 0.4rem rgba(36, 41, 46, 0.1);
-}
-
 .pypi-link {
     background: var(--md-default-bg-color);
     border-color: var(--md-default-fg-color--lightest);
+}
+
+.pypi-link .icon {
+    filter: drop-shadow(0 1px 2px rgba(139, 92, 246, 0.2));
 }
 
 .pypi-link:hover {
@@ -908,10 +945,175 @@ footer nav {
     border-color: var(--md-default-fg-color--lightest);
 }
 
+.stats-link .icon {
+    filter: drop-shadow(0 1px 2px rgba(236, 72, 153, 0.15));
+}
+
 .stats-link:hover {
     background: var(--md-default-bg-color);
     border-color: rgba(76, 175, 80, 0.5);
     box-shadow: 0 0.4rem 1rem rgba(76, 175, 80, 0.15), 0 0.2rem 0.4rem rgba(76, 175, 80, 0.1);
+}
+
+/* Кнопка "Star if cool" — неон в стиле CQRS; текст в тон картинке и проекту */
+.star-link {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(90deg, #a855f7 0%, #c026d3 35%, #ec4899 70%, #f472b6 100%) !important;
+    color: #faf5ff !important;
+    border: none !important;
+    box-shadow: 0 4px 20px rgba(192, 38, 211, 0.45), 0 2px 10px rgba(236, 72, 153, 0.4), 0 0 30px rgba(244, 114, 182, 0.25) !important;
+    min-width: auto;
+    padding: 1.35rem 2rem !important;
+    font-size: 1.1rem !important;
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    overflow: visible !important;
+    border-radius: 0.75rem !important;
+}
+
+.star-link:hover {
+    background: linear-gradient(90deg, #9333ea 0%, #a855f7 35%, #db2777 70%, #ec4899 100%) !important;
+    color: #faf5ff !important;
+    border: none !important;
+    box-shadow: 0 6px 28px rgba(192, 38, 211, 0.55), 0 4px 14px rgba(236, 72, 153, 0.5), 0 0 40px rgba(244, 114, 182, 0.35) !important;
+    transform: translateY(-0.35rem);
+}
+
+/* Летящие звёзды: появляются снизу из-под кнопки и улетают вверх; сброс невидим */
+@keyframes starFlyFromBottom {
+    0% {
+        transform: translate(-50%, 20px) scale(0.9);
+        opacity: 1;
+    }
+    50% {
+        transform: translate(-50%, -120px) scale(1.4);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(-50%, 20px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+@keyframes starFlyFromBottomSide {
+    0% {
+        transform: translateY(20px) scale(0.9);
+        opacity: 1;
+    }
+    50% {
+        transform: translateY(-120px) scale(1.4);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(20px) scale(0.9);
+        opacity: 0;
+    }
+}
+
+/* Звёзды по умолчанию скрыты; позиция — у нижнего края кнопки */
+.star-link-icon-star,
+.star-link-icon-sparkle {
+    position: absolute;
+    bottom: -4px;
+    opacity: 0;
+    pointer-events: none;
+    margin: 0 !important;
+}
+
+.star-link-icon-star {
+    left: 28%;
+    transform: translateX(-50%);
+}
+
+.star-link-icon-sparkle:nth-child(4) {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.star-link-icon-sparkle:nth-child(5) {
+    left: 72%;
+    transform: translateX(-50%);
+}
+
+.star-link:hover .star-link-icon-star {
+    animation: starFlyFromBottom 1.4s ease-out var(--delay-star, 0s) infinite;
+}
+
+.star-link:hover .star-link-icon-sparkle:nth-child(4) {
+    animation: starFlyFromBottom 1.4s ease-out var(--delay-sparkle-1, 0.25s) infinite;
+}
+
+.star-link:hover .star-link-icon-sparkle:nth-child(5) {
+    animation: starFlyFromBottom 1.4s ease-out var(--delay-sparkle-2, 0.5s) infinite;
+}
+
+.star-link::before,
+.star-link::after {
+    content: var(--star-before, "✨");
+    position: absolute;
+    bottom: -4px;
+    pointer-events: none;
+    font-size: 1rem;
+    opacity: 0;
+    line-height: 1;
+}
+
+.star-link::before {
+    left: 12%;
+}
+
+.star-link::after {
+    content: var(--star-after, "✨");
+    left: 88%;
+    margin-left: -0.5em;
+}
+
+.star-link:hover::before {
+    animation: starFlyFromBottomSide 1.4s ease-out var(--delay-before, 0.1s) infinite;
+    opacity: 1;
+}
+
+.star-link:hover::after {
+    animation: starFlyFromBottomSide 1.4s ease-out var(--delay-after, 0.35s) infinite;
+    opacity: 1;
+}
+
+.star-link-icon-github {
+    flex-shrink: 0;
+    font-size: 1.35rem;
+    line-height: 1;
+    opacity: 0.95;
+}
+
+.star-link-text {
+    font-weight: 700;
+    white-space: nowrap;
+    color: #faf5ff;
+    text-shadow: 0 0 20px rgba(248, 250, 252, 0.6), 0 0 40px rgba(196, 181, 253, 0.35), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.star-link-icon-star {
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.7));
+}
+
+.star-link-icon-sparkle {
+    flex-shrink: 0;
+    font-size: 1rem;
+    line-height: 1;
+    filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.8));
+}
+
+/* На кнопке без hover видны только иконка GitHub и текст */
+.star-link .star-link-icon-github,
+.star-link .star-link-text {
+    position: relative;
+    z-index: 1;
 }
 
 /* Стили для информации о компании - в стиле плиток */
@@ -1034,12 +1236,18 @@ footer nav {
     .project-links {
         gap: 0.75rem;
         margin-top: 1.5rem;
+        max-width: 100%;
     }
     
     .project-link {
         padding: 0.875rem 1.25rem;
         font-size: 0.9rem;
-        min-width: 120px;
+        min-width: 0;
+    }
+    
+    .project-links-row .project-link {
+        padding: 0.65rem 0.85rem;
+        font-size: 0.8rem;
     }
     
     .architecture-diagram {
@@ -1133,7 +1341,12 @@ footer nav {
     .project-link {
         padding: 0.75rem 1rem;
         font-size: 0.85rem;
-        min-width: 100px;
+        min-width: 0;
+    }
+    
+    .project-links-row .project-link {
+        padding: 0.55rem 0.7rem;
+        font-size: 0.75rem;
     }
     
     .project-link .icon {

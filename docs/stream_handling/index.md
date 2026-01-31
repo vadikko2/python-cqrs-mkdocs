@@ -90,3 +90,6 @@ class ProcessFilesCommandHandler(
             # Yield result - events will be processed after this yield
             yield result
 ```
+
+!!! tip "Typing"
+    The base `StreamingRequestHandler` declares `def handle(...) -> AsyncIterator[ResT]`. Your subclass implements it as an async generator (`async def handle(...): yield ...`). This is type-safe; no `# type: ignore` is needed. Call `mediator.stream(request)` **without** `await` and consume the result with `async for`.

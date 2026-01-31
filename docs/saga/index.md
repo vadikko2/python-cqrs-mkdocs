@@ -164,6 +164,9 @@ async for step_result in mediator.stream(context, saga_id=saga_id):
     print(f"Step completed: {step_result.step_type.__name__}")
 ```
 
+!!! tip "Stream API"
+    `mediator.stream(context, saga_id=...)` is called **without** `await` and returns an `AsyncIterator[SagaStepResult]`. Consume it with `async for` as shown above.
+
 ## Key Features
 
 - **Automatic Compensation** — Failed steps trigger compensation of completed steps in reverse order
