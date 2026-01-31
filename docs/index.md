@@ -25,9 +25,6 @@
 
 </div>
 
-!!! warning "Breaking Changes in v5.0.0"
-    Starting with version 5.0.0, **Pydantic support will become optional**. The default implementations of `Request`, `Response`, `DomainEvent`, and `NotificationEvent` will be migrated to dataclasses-based implementations.
-
 ---
 
 ## Core Features
@@ -78,7 +75,7 @@
 
 -   :material-puzzle: **Integrations**
 
-    FastAPI, FastStream, Kafka, and Protobuf integrations out of the box.
+    FastAPI and FastStream integrations out of the box.
 
     [:octicons-arrow-right-24: Read More](fastapi.md)
 
@@ -99,10 +96,22 @@
 **Key Highlights:**
 
 - :material-rocket-launch: **Performance** — Separation of commands and queries, parallel event processing
-- :material-shield-check: **Reliability** — Transaction Outbox for guaranteed event delivery
-- :material-check-circle: **Type Safety** — Full Pydantic v2 support with runtime validation
-- :material-puzzle: **Ready Integrations** — FastAPI, FastStream, Kafka out of the box
+- :material-shield-check: **Reliability** — Transaction Outbox for guaranteed event delivery, Saga with compensation support and eventual consistency
+- :material-check-circle: **Flexible Types** — Easy integration with any type: [Pydantic, dataclasses, msgspec, attrs, TypedDict and more](request_response_types/index.md)
+- :material-puzzle: **Ready Integrations** — FastAPI and FastStream out of the box
 - :material-lightning-bolt: **Simple Setup** — Bootstrap for quick configuration
+- :material-application-braces: **Proven Patterns** — CQRS, Saga, Outbox and more to keep services decoupled and maintainable
+
+---
+
+## Project status
+
+| Group | Badges |
+|-------|--------|
+| Python version & PyPI | [![Python Versions](https://img.shields.io/pypi/pyversions/python-cqrs?logo=python&logoColor=white)](https://pypi.org/project/python-cqrs/) [![PyPI](https://img.shields.io/pypi/v/python-cqrs?label=pypi&logo=pypi)](https://pypi.org/project/python-cqrs/) |
+| Downloads | [![Total downloads](https://pepy.tech/badge/python-cqrs)](https://pepy.tech/projects/python-cqrs) [![Downloads per month](https://pepy.tech/badge/python-cqrs/month)](https://pepy.tech/projects/python-cqrs) |
+| Quality & CI | [![Coverage](https://img.shields.io/codecov/c/github/vadikko2/python-cqrs?logo=codecov&logoColor=white)](https://codecov.io/gh/vadikko2/python-cqrs) [![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/vadikko2/python-cqrs?utm_source=badge) |
+| Documentation & community | [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue?logo=readthedocs)](https://mkdocs.python-cqrs.dev/) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vadikko2/python-cqrs) |
 
 ---
 
@@ -123,7 +132,7 @@ uv pip install python-cqrs
 ```
 
 !!! info "Requirements"
-    Python 3.8+ • Pydantic v2
+    Python 3.10+
 
 ---
 

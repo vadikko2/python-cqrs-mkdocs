@@ -12,6 +12,27 @@
   --timeweb-border: rgba(0, 102, 204, 0.15);
   --timeweb-border-dark: rgba(0, 102, 204, 0.2);
   --timeweb-shadow: rgba(0, 102, 204, 0.2);
+  /* Тёмно-синяя шапка */
+  --header-bg: #0d47a1;
+}
+
+/* Шапка сайта — тёмно-синий */
+.md-header,
+.md-tabs {
+  background-color: var(--header-bg) !important;
+}
+
+.md-header .md-header__title,
+.md-header .md-header__button,
+.md-header a,
+.md-tabs .md-tabs__link {
+  color: rgba(255, 255, 255, 0.9) !important;
+}
+
+.md-header .md-header__button:hover,
+.md-header a:hover,
+.md-tabs .md-tabs__link:hover {
+  color: #fff !important;
 }
 
 /* Импорт шрифтов IBM Plex из Google Fonts */
