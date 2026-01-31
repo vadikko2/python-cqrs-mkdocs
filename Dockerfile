@@ -7,9 +7,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Копируем код и собираем статику
+# Копируем код
 COPY . .
-RUN mkdocs build
+# При сборке можно передать SITE_URL: docker build --build-arg SITE_URL=https://mkdocs.python-cqrs.dev/ .
+ARG SITE_URL=https://mkdocs.python-cqrs.dev/
+RUN sed -i "s|^site_url:.*|site_url: ${SITE_URL}|" mkdocs.yml && mkdocs build
 
 # Этап запуска (Nginx)
 FROM nginx:alpine

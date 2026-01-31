@@ -1038,16 +1038,16 @@ footer nav {
     transform: translateX(-50%);
 }
 
-.star-link:hover .star-link-icon-star {
-    animation: starFlyFromBottom 1.4s ease-out var(--delay-star, 0s) infinite;
+.star-link .star-link-icon-star {
+    animation: starFlyFromBottom 1.85s ease-out var(--delay-star, 0s) infinite;
 }
 
-.star-link:hover .star-link-icon-sparkle:nth-child(4) {
-    animation: starFlyFromBottom 1.4s ease-out var(--delay-sparkle-1, 0.25s) infinite;
+.star-link .star-link-icon-sparkle:nth-child(4) {
+    animation: starFlyFromBottom 1.85s ease-out var(--delay-sparkle-1, 0.25s) infinite;
 }
 
-.star-link:hover .star-link-icon-sparkle:nth-child(5) {
-    animation: starFlyFromBottom 1.4s ease-out var(--delay-sparkle-2, 0.5s) infinite;
+.star-link .star-link-icon-sparkle:nth-child(5) {
+    animation: starFlyFromBottom 1.85s ease-out var(--delay-sparkle-2, 0.5s) infinite;
 }
 
 .star-link::before,
@@ -1071,13 +1071,13 @@ footer nav {
     margin-left: -0.5em;
 }
 
-.star-link:hover::before {
-    animation: starFlyFromBottomSide 1.4s ease-out var(--delay-before, 0.1s) infinite;
+.star-link::before {
+    animation: starFlyFromBottomSide 1.85s ease-out var(--delay-before, 0.1s) infinite;
     opacity: 1;
 }
 
-.star-link:hover::after {
-    animation: starFlyFromBottomSide 1.4s ease-out var(--delay-after, 0.35s) infinite;
+.star-link::after {
+    animation: starFlyFromBottomSide 1.85s ease-out var(--delay-after, 0.35s) infinite;
     opacity: 1;
 }
 

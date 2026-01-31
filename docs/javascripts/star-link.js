@@ -17,7 +17,7 @@
     }
 
     function randomizeStars(starLink) {
-        const delays = shuffle([0, 0.08, 0.16, 0.24, 0.32]);
+        const delays = shuffle([0, 0.05, 0.1, 0.15, 0.2]);
         starLink.style.setProperty('--delay-star', delays[0] + 's');
         starLink.style.setProperty('--delay-sparkle-1', delays[1] + 's');
         starLink.style.setProperty('--delay-sparkle-2', delays[2] + 's');
@@ -36,6 +36,8 @@
     function initStarLink() {
         const starLink = document.querySelector('.star-link');
         if (!starLink) return;
+
+        randomizeStars(starLink);
 
         starLink.addEventListener('mouseenter', function() {
             randomizeStars(starLink);
