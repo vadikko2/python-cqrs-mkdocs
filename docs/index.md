@@ -25,6 +25,9 @@
 
 </div>
 
+!!! warning "Breaking Changes in v5.0.0"
+    Starting with version 5.0.0, **Pydantic support will become optional**. The default implementations of `Request`, `Response`, `DomainEvent`, and `NotificationEvent` will be migrated to dataclasses-based implementations.
+
 ---
 
 ## Core Features
@@ -106,12 +109,16 @@
 
 ## Project status
 
+<div class="project-status-table-wrap" markdown="1">
+
 | Group | Badges |
 |-------|--------|
 | Python version & PyPI | [![Python Versions](https://img.shields.io/pypi/pyversions/python-cqrs?logo=python&logoColor=white)](https://pypi.org/project/python-cqrs/) [![PyPI](https://img.shields.io/pypi/v/python-cqrs?label=pypi&logo=pypi)](https://pypi.org/project/python-cqrs/) |
 | Downloads | [![Total downloads](https://pepy.tech/badge/python-cqrs)](https://pepy.tech/projects/python-cqrs) [![Downloads per month](https://pepy.tech/badge/python-cqrs/month)](https://pepy.tech/projects/python-cqrs) |
 | Quality & CI | [![Coverage](https://img.shields.io/codecov/c/github/vadikko2/python-cqrs?logo=codecov&logoColor=white)](https://codecov.io/gh/vadikko2/python-cqrs) [![CodSpeed](https://img.shields.io/endpoint?url=https://codspeed.io/badge.json)](https://codspeed.io/vadikko2/python-cqrs?utm_source=badge) |
 | Documentation & community | [![Documentation](https://img.shields.io/badge/docs-mkdocs-blue?logo=readthedocs)](https://mkdocs.python-cqrs.dev/) [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vadikko2/python-cqrs) |
+
+</div>
 
 ---
 

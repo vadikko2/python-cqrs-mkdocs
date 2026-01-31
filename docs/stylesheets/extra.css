@@ -12,11 +12,11 @@
   --timeweb-border: rgba(0, 102, 204, 0.15);
   --timeweb-border-dark: rgba(0, 102, 204, 0.2);
   --timeweb-shadow: rgba(0, 102, 204, 0.2);
-  /* Тёмно-синяя шапка */
-  --header-bg: #0d47a1;
+  /* Шапка в тон картинки: тёмно-фиолетовый (кирпич, неон CQRS) */
+  --header-bg: #311b92;
 }
 
-/* Шапка сайта — тёмно-синий */
+/* Шапка сайта — тёмно-фиолетовый */
 .md-header,
 .md-tabs {
   background-color: var(--header-bg) !important;
@@ -141,6 +141,69 @@ body,
 
 .md-typeset table td {
   line-height: 1.6;
+}
+
+/* Project status table: full width, columns fill space, badges centered */
+.project-status-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Material wraps tables in .md-typeset__table — force full width */
+#project-status ~ .md-typeset__table,
+.project-status-table-wrap .md-typeset__table {
+  width: 100% !important;
+  max-width: none !important;
+  display: block;
+}
+
+.project-status-table-wrap .md-typeset__table table,
+#project-status ~ .md-typeset__table table,
+.project-status-table-wrap table,
+#project-status + table {
+  width: 100% !important;
+  max-width: none !important;
+  table-layout: fixed;
+}
+
+/* Columns fill entire table: Group no wrap, Badges takes the rest */
+#project-status ~ .md-typeset__table th:first-child,
+#project-status ~ .md-typeset__table td:first-child,
+.project-status-table-wrap th:first-child,
+.project-status-table-wrap td:first-child {
+  width: 22%;
+  min-width: 11em;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+#project-status ~ .md-typeset__table th:nth-child(2),
+#project-status ~ .md-typeset__table td:nth-child(2),
+.project-status-table-wrap th:nth-child(2),
+.project-status-table-wrap td:nth-child(2) {
+  width: 78%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+/* Center badges in Badges column */
+#project-status ~ .md-typeset__table td:nth-child(2),
+#project-status ~ .md-typeset__table th:nth-child(2),
+.project-status-table-wrap td:nth-child(2),
+.project-status-table-wrap th:nth-child(2),
+#project-status + table td:nth-child(2),
+#project-status + table th:nth-child(2) {
+  text-align: center !important;
+}
+
+#project-status ~ .md-typeset__table td:nth-child(2) a,
+#project-status ~ .md-typeset__table td:nth-child(2) img,
+.project-status-table-wrap td:nth-child(2) a,
+.project-status-table-wrap td:nth-child(2) img,
+#project-status + table td:nth-child(2) a,
+#project-status + table td:nth-child(2) img {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 /* Код должен оставаться моноширинным */
