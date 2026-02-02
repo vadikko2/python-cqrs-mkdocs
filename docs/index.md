@@ -28,6 +28,8 @@
 !!! warning "Breaking Changes in v5.0.0"
     Starting with version 5.0.0, **Pydantic support will become optional**. The default implementations of `Request`, `Response`, `DomainEvent`, and `NotificationEvent` will be migrated to dataclasses-based implementations.
 
+    See the [planned release discussion on GitHub](https://github.com/vadikko2/python-cqrs/discussions/57) for the full list of breaking changes and migration details.
+
 ---
 
 ## Core Features
