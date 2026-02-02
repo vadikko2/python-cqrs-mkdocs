@@ -23,6 +23,7 @@
 | **Limit concurrency** | Set appropriate `max_concurrent_event_handlers` based on resources | Resource management |
 | **Idempotency** | Make event handlers idempotent when possible | Reliability |
 | **Logging** | Log important events for debugging and monitoring | Observability |
+| **Follow-up events** | Use `handler.events` for multi-level chains; follow-ups run in the same pipeline (BFS or parallel) | Design clarity |
 
 !!! warning "Performance Considerations"
     Event handlers execute synchronously in the request context. Keep them fast to avoid blocking the main request flow.
@@ -35,6 +36,7 @@ Event handling in `python-cqrs`:
 
 - **Runtime Processing** — Events are processed synchronously in the same request context
 - **Automatic Dispatch** — Events are automatically dispatched to registered handlers
+- **Event Propagation** — Handlers can return follow-up events via `events`; they are processed in the same pipeline (BFS or parallel with semaphore)
 - **Parallel Support** — Multiple events can be processed in parallel with configurable limits
 - **Two Types** — DomainEvent (in-process) and NotificationEvent (message broker)
 - **Side Effects** — Event handlers perform side effects without blocking command execution

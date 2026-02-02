@@ -78,7 +78,68 @@ await mediator.send(JoinMeetingCommand(user_id="123", meeting_id="456"))
 # Flow:
 # 1. Command handler executes
 # 2. UserJoined event is collected
-# 3. EventDispatcher processes event (finds UserJoinedEventHandler)
+# 3. EventProcessor.emit_events runs (EventEmitter finds UserJoinedEventHandler)
 # 4. UserJoinedEventHandler.handle() executes
 # 5. Response is returned
 ```
+
+---
+
+## Event handler chain (follow-up events)
+
+Event handlers can produce **follow-up events** via the `events` property. These are processed in the same pipeline (BFS in sequential mode, or under the same semaphore in parallel mode), enabling multi-level chains (e.g. L1 → L2 → L3).
+
+```python
+import typing
+import cqrs
+from cqrs.events.event import IEvent
+
+# Level 1: emitted by command handler
+class EventL1(cqrs.DomainEvent, frozen=True):
+    seed: str
+
+# Level 2: emitted by HandlerL1
+class EventL2(cqrs.DomainEvent, frozen=True):
+    seed: str
+
+# Level 3: emitted by HandlerL2 (terminal)
+class EventL3(cqrs.DomainEvent, frozen=True):
+    seed: str
+
+class HandlerL1(cqrs.EventHandler[EventL1]):
+    def __init__(self) -> None:
+        self._follow_ups: list[IEvent] = []
+
+    @property
+    def events(self) -> typing.Sequence[IEvent]:
+        return tuple(self._follow_ups)
+
+    async def handle(self, event: EventL1) -> None:
+        # Side effects...
+        self._follow_ups.append(EventL2(seed=event.seed))
+
+class HandlerL2(cqrs.EventHandler[EventL2]):
+    def __init__(self) -> None:
+        self._follow_ups: list[IEvent] = []
+
+    @property
+    def events(self) -> typing.Sequence[IEvent]:
+        return tuple(self._follow_ups)
+
+    async def handle(self, event: EventL2) -> None:
+        # Side effects...
+        self._follow_ups.append(EventL3(seed=event.seed))
+
+class HandlerL3(cqrs.EventHandler[EventL3]):
+    async def handle(self, event: EventL3) -> None:
+        # Terminal handler — no follow-ups (default events = ())
+        pass
+
+# In events_mapper:
+def domain_events_mapper(mapper: cqrs.EventMap) -> None:
+    mapper.bind(EventL1, HandlerL1)
+    mapper.bind(EventL2, HandlerL2)
+    mapper.bind(EventL3, HandlerL3)
+```
+
+When you emit `EventL1(seed="x")`, the processor runs: L1 → HandlerL1 emits L2 → HandlerL2 emits L3 → HandlerL3 runs. All in the same `emit_events()` call (sequential BFS or parallel with FIRST_COMPLETED).

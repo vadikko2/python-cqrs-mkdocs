@@ -22,7 +22,7 @@
 
 ### DomainEvent
 
-Domain events represent something that happened in the domain. They are processed by event handlers:
+Domain events represent something that happened in the domain. They are processed by event handlers. Handlers can return **follow-up events** via the `events` property; these are processed in the same pipeline (see [Event Flow](event_flow.md)).
 
 ```python
 class UserJoined(cqrs.DomainEvent, frozen=True):
@@ -32,6 +32,7 @@ class UserJoined(cqrs.DomainEvent, frozen=True):
 class UserJoinedEventHandler(cqrs.EventHandler[UserJoined]):
     async def handle(self, event: UserJoined) -> None:
         # Process domain event
+        # Optionally populate self._follow_ups and return via events property
         ...
 ```
 

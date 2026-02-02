@@ -22,34 +22,39 @@ Events can be processed in parallel to improve performance. This is controlled b
 
 ### How Parallel Processing Works
 
+In **sequential** mode, events and follow-ups (from `handler.events`) are processed in **BFS order**: one event at a time, then its follow-ups are appended to the queue. In **parallel** mode, events are processed under a semaphore; as soon as any task completes (FIRST_COMPLETED), its follow-up events are queued and started without waiting for sibling events. `emit_events` returns only when all events and follow-ups are done.
+
 ```mermaid
 graph TD
     Start[EventProcessor.emit_events] --> CheckEnable{Parallel Enabled?}
     
-    CheckEnable -->|No| Sequential[Sequential Processing]
-    Sequential --> LoopSeq[For Each Event]
-    LoopSeq --> EmitSeq[EventEmitter.emit]
+    CheckEnable -->|No| Sequential[Sequential: BFS]
+    Sequential --> PopSeq[Pop event from queue]
+    PopSeq --> EmitSeq[EventEmitter.emit]
     EmitSeq --> RouteSeq{Route Event}
     RouteSeq -->|DomainEvent| HandlerSeq[Execute Handlers]
     RouteSeq -->|NotificationEvent| BrokerSeq[Send to Broker]
-    HandlerSeq --> NextSeq{More Events?}
-    BrokerSeq --> NextSeq
-    NextSeq -->|Yes| LoopSeq
-    NextSeq -->|No| End1[End]
+    HandlerSeq --> CollectSeq[Collect handler.events]
+    BrokerSeq --> CollectSeq
+    CollectSeq --> ExtendSeq[Append follow-ups to queue]
+    ExtendSeq --> MoreSeq{Queue empty?}
+    MoreSeq -->|No| PopSeq
+    MoreSeq -->|Yes| End1[End]
     
-    CheckEnable -->|Yes| Parallel[Parallel Processing]
-    Parallel --> LoopPar[For Each Event]
-    LoopPar --> CreateTask[Create Task]
-    CreateTask --> Semaphore[Acquire Semaphore]
+    CheckEnable -->|Yes| Parallel[Parallel: Semaphore + FIRST_COMPLETED]
+    Parallel --> PopPar[Start tasks for queued events]
+    PopPar --> Semaphore[Acquire Semaphore per task]
     Semaphore --> EmitPar[EventEmitter.emit]
     EmitPar --> RoutePar{Route Event}
     RoutePar -->|DomainEvent| HandlerPar[Execute Handlers]
     RoutePar -->|NotificationEvent| BrokerPar[Send to Broker]
-    HandlerPar --> ReleaseSem[Release Semaphore]
-    BrokerPar --> ReleaseSem
-    ReleaseSem --> NextPar{More Events?}
-    NextPar -->|Yes| LoopPar
-    NextPar -->|No| End2[End]
+    HandlerPar --> CollectPar[Collect follow-ups]
+    BrokerPar --> CollectPar
+    CollectPar --> QueuePar[Queue follow-ups, start new tasks]
+    QueuePar --> WaitPar[Wait FIRST_COMPLETED]
+    WaitPar --> MorePar{Pending or queue?}
+    MorePar -->|Yes| PopPar
+    MorePar -->|No| End2[End]
     
     style Start fill:#e1f5ff
     style Sequential fill:#fff3e0
@@ -59,7 +64,7 @@ graph TD
 
 ### Implementation
 
-The `EventProcessor` handles parallel or sequential event emission:
+The `EventProcessor` handles parallel or sequential event emission. Follow-up events returned by handlers (via `handler.events`) are processed in the **same pipeline**: BFS in sequential mode, or under the same semaphore with FIRST_COMPLETED in parallel mode. The method returns when all events and follow-ups are done.
 
 ```python
 class EventProcessor:
@@ -75,27 +80,29 @@ class EventProcessor:
         self._concurrent_event_handle_enable = concurrent_event_handle_enable
         self._event_semaphore = asyncio.Semaphore(max_concurrent_event_handlers)
     
-    async def emit_events(self, events: List[Event]) -> None:
-        """Emit events via event emitter (parallel or sequential)."""
+    async def emit_events(self, events: Sequence[IEvent]) -> None:
+        """Emit events and process follow-ups in the same pipeline."""
         if not events or not self._event_emitter:
             return
         
         if not self._concurrent_event_handle_enable:
-            # Sequential processing
-            for event in events:
-                await self._event_emitter.emit(event)
+            # Sequential: BFS over events and follow-ups
+            to_process = deque(events)
+            while to_process:
+                event = to_process.popleft()
+                follow_ups = await self._event_emitter.emit(event)
+                to_process.extend(follow_ups)
         else:
-            # Parallel processing with semaphore limit (fire-and-forget)
-            for event in events:
-                asyncio.create_task(self._emit_event_with_semaphore(event))
+            # Parallel: tasks under semaphore; follow-ups queued on FIRST_COMPLETED
+            await self._emit_events_parallel_first_completed(deque(events))
     
-    async def _emit_event_with_semaphore(self, event: Event) -> None:
-        """Emit a single event with semaphore limit."""
+    async def _emit_one_event(self, event: IEvent) -> Sequence[IEvent]:
+        """Emit one event under semaphore; returns follow-ups from handler.events."""
         async with self._event_semaphore:
-            await self._event_emitter.emit(event)
+            return await self._event_emitter.emit(event)
 ```
 
-The `EventEmitter` then routes events to handlers or message brokers based on event type.
+The `EventEmitter.emit()` returns follow-up events from domain event handlers; the processor continues with these until the queue is empty.
 
 ### Configuration
 
@@ -140,9 +147,10 @@ class ProcessOrderCommandHandler(RequestHandler[ProcessOrderCommand, None]):
         self._events.append(EmailNotificationEvent(...))
 
 # With max_concurrent_event_handlers=3:
-# - Events 1-3 emit in parallel (fire-and-forget tasks)
-# - Event 4 waits for a semaphore slot
+# - Up to 3 events (or follow-ups) run at once under the semaphore
+# - When any task completes, its follow-ups (from handler.events) are queued and started (FIRST_COMPLETED)
+# - emit_events() returns only when all events and follow-ups are done
 # - Each event is routed by EventEmitter:
-#   - DomainEvents → processed by handlers
-#   - NotificationEvents → sent to message broker
+#   - DomainEvents → processed by handlers (follow-ups collected and processed in same pipeline)
+#   - NotificationEvents → sent to message broker (no follow-ups)
 ```

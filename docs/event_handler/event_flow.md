@@ -41,16 +41,21 @@ sequenceDiagram
     
     alt DomainEvent
         Emitter->>Handlers: 8. Execute Event Handlers
-        Handlers-->>Emitter: 9. Complete
+        Handlers-->>Emitter: 9. handler.events (follow-ups)
+        Emitter-->>Processor: 10. Return follow-ups
+        Note over Processor: Process follow-ups in same pipeline (BFS or parallel)
     else NotificationEvent
         Emitter->>Broker: 8. Send to Message Broker
         Broker-->>Emitter: 9. Complete
+        Emitter-->>Processor: 10. No follow-ups
     end
     
-    Emitter-->>Processor: 10. Complete
     Processor-->>Mediator: 11. Complete
     Mediator-->>Client: 12. Return Response
 ```
+
+!!! note "Follow-up events"
+    For domain events, handlers can return follow-up events via the `events` property. The processor continues emitting these in the same pipeline (sequential BFS or parallel with semaphore) until the queue is empty.
 
 ### Detailed Event Processing Flow
 
@@ -63,32 +68,35 @@ graph TD
     D -->|No| E[Return Response]
     D -->|Yes| F[EventProcessor.emit_events]
     
-    F -->|For Each Event| G{Parallel Enabled?}
+    F -->|Queue: initial events| G{Parallel Enabled?}
     
-    G -->|No| H[Sequential: EventEmitter.emit]
-    G -->|Yes| I[Parallel: Create Task with Semaphore]
-    I --> J[EventEmitter.emit]
+    G -->|No| H[Sequential: BFS]
+    G -->|Yes| I[Parallel: Semaphore + FIRST_COMPLETED]
     
-    H --> K{Event Type?}
-    J --> K
+    H --> J[Pop Event from Queue]
+    I --> J
     
-    K -->|DomainEvent| L[EventEmitter: Find Handlers]
-    K -->|NotificationEvent| M[EventEmitter: Send to Broker]
+    J --> K[EventEmitter.emit]
+    K --> L{Event Type?}
     
-    L --> N[EventMap Lookup]
-    N --> O[Resolve Handler from DI]
-    O --> P[Execute Event Handler]
-    P --> Q{More Events?}
+    L -->|DomainEvent| M[EventMap Lookup]
+    L -->|NotificationEvent| N[Send to Broker]
     
-    M --> Q
-    Q -->|Yes| F
-    Q -->|No| E
+    M --> O[Resolve Handler from DI]
+    O --> P[Execute handler.handle]
+    P --> Q[Collect handler.events - follow-ups]
+    Q --> R[Return follow-ups to Processor]
+    
+    N --> R
+    R --> S{More in Queue?}
+    S -->|Yes| G
+    S -->|No| E
     
     style A fill:#e1f5ff
     style B fill:#fff3e0
     style F fill:#c8e6c9
-    style L fill:#c8e6c9
     style P fill:#c8e6c9
+    style Q fill:#fff9c4
     style E fill:#f3e5f5
 ```
 
@@ -134,7 +142,7 @@ The `EventProcessor` handles parallel or sequential processing based on configur
 
 ### 3. Event Processing via EventEmitter
 
-Events are processed through `EventEmitter`, which routes them based on event type:
+Events are processed through `EventEmitter`, which routes them based on event type. For domain events, after each handler runs, follow-up events from `handler.events` are collected and returned; the processor then continues with these in the same pipeline (BFS in sequential mode, or under the same semaphore in parallel mode).
 
 ```mermaid
 graph TD
@@ -145,25 +153,54 @@ graph TD
     D -->|No| E[Log Warning]
     D -->|Yes| F[Loop Through Handlers]
     F -->|3. Resolve Handler| G[DI Container]
-    G -->|4. Execute Handler| H[Handler.handle]
-    H -->|5. Process Side Effects| I[Complete]
+    G -->|4. Execute handler.handle| H[Handler.handle]
+    H -->|5. Collect handler.events| I[Follow-up events]
+    I --> J[Return follow-ups to Processor]
     
-    B -->|NotificationEvent| J{Message Broker?}
-    J -->|No| K[Raise RuntimeError]
-    J -->|Yes| L[Send to Message Broker]
-    L --> I
+    B -->|NotificationEvent| K{Message Broker?}
+    K -->|No| L[Raise RuntimeError]
+    K -->|Yes| M[Send to Message Broker]
+    M --> N[Return empty - no follow-ups]
     
     style A fill:#e1f5ff
     style H fill:#c8e6c9
-    style I fill:#fff3e0
+    style I fill:#fff9c4
+    style J fill:#fff3e0
+```
+
+### 3.1. Follow-up events from event handlers (event propagation)
+
+Event handlers can produce **follow-up events** by implementing the `events` property. After `handle()` is called, the emitter reads `handler.events` and returns them to the processor. These follow-ups are processed in the **same pipeline**:
+
+| Mode | Behavior |
+|------|----------|
+| **Sequential** (`concurrent_event_handle_enable=False`) | Events and follow-ups are processed in **BFS order**: one event at a time, then its follow-ups are appended to the queue. |
+| **Parallel** (`concurrent_event_handle_enable=True`) | Events are processed under a semaphore; as soon as any task completes, its follow-ups are queued and started (FIRST_COMPLETED), without waiting for sibling events. |
+
+This allows **multi-level event chains**: e.g. `OrderCreated` → handler emits `InventoryReserved` → handler emits `NotificationScheduled`, all in one run.
+
+Example: handler that produces a follow-up event:
+
+```python
+class OrderCreatedEventHandler(cqrs.EventHandler[OrderCreatedEvent]):
+    def __init__(self) -> None:
+        self._follow_ups: list[cqrs.IEvent] = []
+
+    @property
+    def events(self) -> typing.Sequence[cqrs.IEvent]:
+        return tuple(self._follow_ups)
+
+    async def handle(self, event: OrderCreatedEvent) -> None:
+        # Side effects...
+        self._follow_ups.append(InventoryReservedEvent(order_id=event.order_id))
 ```
 
 ### 4. Event Routing
 
 `EventEmitter` automatically routes events based on their type:
 
-- **DomainEvent** — Processed by event handlers registered in EventMap (in-process, synchronous)
-- **NotificationEvent** — Sent to message broker (Kafka, RabbitMQ, etc.) for asynchronous processing
+- **DomainEvent** — Processed by event handlers registered in EventMap (in-process). Handlers may return follow-up events via the `events` property; these are processed in the same pipeline (BFS or parallel with semaphore).
+- **NotificationEvent** — Sent to message broker (Kafka, RabbitMQ, etc.) for asynchronous processing; no follow-ups.
 
 !!! important "Single Processing"
-    Events are processed **only once** through EventEmitter. There is no duplicate processing - DomainEvents are handled by event handlers, and NotificationEvents are sent to message brokers.
+    Each event instance is processed **only once** through EventEmitter. Follow-up events returned by handlers are **new** events that are then processed in the same run (same pipeline) until the queue is empty.
