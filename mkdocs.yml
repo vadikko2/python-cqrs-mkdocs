@@ -14,6 +14,7 @@ nav:
       - Request Mediator: bootstrap/request_mediator.md
       - Streaming Mediator: bootstrap/streaming_mediator.md
       - Event Mediator: bootstrap/event_mediator.md
+      - Saga Mediator: bootstrap/saga_mediator.md
       - Message Brokers: bootstrap/message_brokers.md
       - Middlewares: bootstrap/middlewares.md
       - DI Containers: bootstrap/di_containers.md

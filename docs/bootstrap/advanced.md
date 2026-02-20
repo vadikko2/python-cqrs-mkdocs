@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-code-tags: **Commands / Requests Handling**
+
+    Core concepts for commands, queries, and request handlers.
+
+    [:octicons-arrow-right-24: Read More](../request_handler.md)
+
 </div>
 
 ---

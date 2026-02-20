@@ -60,6 +60,7 @@
             { title: 'Request Mediator', url: 'bootstrap/request_mediator/', path: 'bootstrap/request_mediator' },
             { title: 'Streaming Mediator', url: 'bootstrap/streaming_mediator/', path: 'bootstrap/streaming_mediator' },
             { title: 'Event Mediator', url: 'bootstrap/event_mediator/', path: 'bootstrap/event_mediator' },
+            { title: 'Saga Mediator', url: 'bootstrap/saga_mediator/', path: 'bootstrap/saga_mediator' },
             { title: 'Message Brokers', url: 'bootstrap/message_brokers/', path: 'bootstrap/message_brokers' },
             { title: 'Middlewares', url: 'bootstrap/middlewares/', path: 'bootstrap/middlewares' },
             { title: 'DI Containers', url: 'bootstrap/di_containers/', path: 'bootstrap/di_containers' },

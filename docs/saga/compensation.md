@@ -12,6 +12,8 @@
 
 Compensation undoes the effects of completed steps when a saga fails, ensuring resources are properly released and the system returns to a consistent state.
 
+When the storage supports **`create_run()`**, the saga runs compensation within a single storage run and persists each successfully compensated step at a **checkpoint** (by committing the run after each step). This keeps the number of commits low and aligns with the checkpoint model used for forward execution.
+
 ## Overview
 
 When any step fails, all previously completed steps are automatically compensated in **reverse order**:
@@ -95,17 +97,21 @@ async def compensate(self, context: OrderContext) -> None:
 
 ## Compensation Retry
 
-Automatic retry for compensation failures:
+Automatic retry for compensation failures is configured on **`saga.transaction(...)`**:
 
 ```python
-saga = Saga(
-    steps=[...],
+saga = OrderSaga()  # steps defined on class
+
+async with saga.transaction(
+    context=context,
     container=container,
     storage=storage,
     compensation_retry_count=3,      # Number of retry attempts
-    compensation_retry_delay=1.0,     # Initial delay in seconds
-    compensation_retry_backoff=2.0,   # Exponential backoff multiplier
-)
+    compensation_retry_delay=1.0,   # Initial delay in seconds
+    compensation_retry_backoff=2.0, # Exponential backoff multiplier
+) as transaction:
+    async for step_result in transaction:
+        ...
 ```
 
 **Retry schedule:**

@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-message-processing: **Event Producing**
+
+    Publishing events to Kafka, RabbitMQ, and custom brokers.
+
+    [:octicons-arrow-right-24: Read More](../event_producing.md)
+
 </div>
 
 ---

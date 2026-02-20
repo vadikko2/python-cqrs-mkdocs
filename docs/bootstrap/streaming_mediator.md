@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-play-circle: **Stream Handling**
+
+    Incremental processing, SSE, and streaming configuration.
+
+    [:octicons-arrow-right-24: Read More](../stream_handling/index.md)
+
 </div>
 
 ---

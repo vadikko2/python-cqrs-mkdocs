@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-code-tags: **Commands / Requests Handling**
+
+    Commands, queries, handlers, and request/response mapping.
+
+    [:octicons-arrow-right-24: Read More](../request_handler.md)
+
 </div>
 
 ## Overview

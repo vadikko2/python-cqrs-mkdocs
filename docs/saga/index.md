@@ -170,7 +170,8 @@ async for step_result in mediator.stream(context, saga_id=saga_id):
 ## Key Features
 
 - **Automatic Compensation** — Failed steps trigger compensation of completed steps in reverse order
-- **State Persistence** — Saga state and execution history saved after each step
-- **Recovery** — Interrupted sagas can be resumed from persistent storage
+- **State Persistence** — Saga state and execution history saved (when storage supports **checkpoint commits**, persistence happens at key points: after create+RUNNING, after each step, after each compensation step, at completion/failure)
+- **Checkpoint Commits** — Storages that implement **`create_run()`** (Memory, SQLAlchemy) use one session per saga run and commit only at checkpoints, reducing commits and deadlock risk
+- **Recovery** — Interrupted sagas can be resumed from persistent storage; **Strict Backward Recovery** ensures that once in COMPENSATING/FAILED, only compensation proceeds
 - **Fallback Pattern** — Define alternative steps that execute when primary steps fail, with optional Circuit Breaker protection
 - **Eventual Consistency** — All sagas eventually reach terminal state (COMPLETED or FAILED)

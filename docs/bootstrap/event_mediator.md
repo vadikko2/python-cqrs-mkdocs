@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-bell-ring: **Events Handling**
+
+    Event types, flow, parallel processing, and handlers.
+
+    [:octicons-arrow-right-24: Read More](../event_handler/index.md)
+
 </div>
 
 ---

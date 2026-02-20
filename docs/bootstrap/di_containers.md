@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-puzzle: **Dependency Injection**
+
+    Container setup, scopes, and resolving handlers and dependencies.
+
+    [:octicons-arrow-right-24: Read More](../di.md)
+
 </div>
 
 ---

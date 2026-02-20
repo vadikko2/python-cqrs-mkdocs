@@ -8,6 +8,12 @@
 
     [:octicons-arrow-left-24: Back to Overview](index.md)
 
+-   :material-code-tags: **Commands / Requests Handling**
+
+    Request pipeline and handler execution where middlewares apply.
+
+    [:octicons-arrow-right-24: Read More](../request_handler.md)
+
 </div>
 
 ---

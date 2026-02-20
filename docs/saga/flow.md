@@ -16,63 +16,77 @@ Visual representations of saga execution, compensation, and recovery flows.
 
 ### Successful Saga Execution
 
+When the storage supports **`create_run()`**, the saga runs inside one session and **commits only at checkpoints** (after create + RUNNING, after each step, at COMPLETED). Otherwise, each storage call may commit immediately (legacy behaviour).
+
 ```mermaid
 sequenceDiagram
     participant Client
     participant Transaction as SagaTransaction
-    participant Storage as SagaStorage
+    participant Run as SagaStorageRun
     participant Steps as Steps
 
     Client->>Transaction: Execute saga(context, saga_id)
-    Transaction->>Storage: create_saga() + update_status(RUNNING)
+    Transaction->>Run: create_saga() + update_status(RUNNING)
+    Note over Transaction,Run: checkpoint: commit()
     
     loop For each step
         Transaction->>Steps: act(context)
         Steps-->>Transaction: Success
-        Transaction->>Storage: log_step(COMPLETED) + update_context()
+        Transaction->>Run: log_step(COMPLETED) + update_context()
+        Note over Transaction,Run: checkpoint: commit()
     end
     
-    Transaction->>Storage: update_status(COMPLETED)
+    Transaction->>Run: update_status(COMPLETED)
+    Note over Transaction,Run: checkpoint: commit()
     Transaction-->>Client: Success
 ```
 
 ### Failed Saga with Compensation
 
+When using a **run** (checkpoint path), a **commit** occurs after each completed step and after each compensated step; then once at the end when status is set to FAILED.
+
 ```mermaid
 sequenceDiagram
     participant Client
     participant Transaction as SagaTransaction
-    participant Storage as SagaStorage
+    participant Run as SagaStorageRun
     participant Step1 as Step 1
     participant Step2 as Step 2
     participant Step3 as Step 3
 
     Client->>Transaction: Execute saga(context, saga_id)
-    Transaction->>Storage: create_saga() + update_status(RUNNING)
+    Transaction->>Run: create_saga() + update_status(RUNNING)
+    Note over Transaction,Run: checkpoint: commit()
     
     Transaction->>Step1: act(context)
     Step1-->>Transaction: Success
-    Transaction->>Storage: log_step(Step1.act, COMPLETED)
+    Transaction->>Run: log_step(Step1.act, COMPLETED)
+    Note over Transaction,Run: checkpoint: commit()
     
     Transaction->>Step2: act(context)
     Step2-->>Transaction: Success
-    Transaction->>Storage: log_step(Step2.act, COMPLETED)
+    Transaction->>Run: log_step(Step2.act, COMPLETED)
+    Note over Transaction,Run: checkpoint: commit()
     
     Transaction->>Step3: act(context)
     Step3-->>Transaction: Exception
-    Transaction->>Storage: log_step(Step3.act, FAILED) + update_status(COMPENSATING)
+    Transaction->>Run: log_step(Step3.act, FAILED) + update_status(COMPENSATING)
+    Note over Transaction,Run: checkpoint: commit()
     
     Note over Transaction,Step2: Compensation in reverse order
     
     Transaction->>Step2: compensate(context)
     Step2-->>Transaction: Done
-    Transaction->>Storage: log_step(Step2.compensate, COMPLETED)
+    Transaction->>Run: log_step(Step2.compensate, COMPLETED)
+    Note over Transaction,Run: checkpoint: commit()
     
     Transaction->>Step1: compensate(context)
     Step1-->>Transaction: Done
-    Transaction->>Storage: log_step(Step1.compensate, COMPLETED)
+    Transaction->>Run: log_step(Step1.compensate, COMPLETED)
+    Note over Transaction,Run: checkpoint: commit()
     
-    Transaction->>Storage: update_status(FAILED)
+    Transaction->>Run: update_status(FAILED)
+    Note over Transaction,Run: checkpoint: commit()
     Transaction-->>Client: Exception raised
 ```
 

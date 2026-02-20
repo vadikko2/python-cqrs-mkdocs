@@ -34,11 +34,24 @@ class ISagaStorage(abc.ABC):
     async def get_sagas_for_recovery(limit, max_recovery_attempts=5, stale_after_seconds=None, saga_name=None) -> list[uuid.UUID]
     async def increment_recovery_attempts(saga_id, new_status: SagaStatus | None = None) -> None
     async def set_recovery_attempts(saga_id, attempts: int) -> None
+
+    # Optional: checkpoint commits (reduces storage load and deadlock risk)
+    def create_run(self) -> contextlib.AbstractAsyncContextManager[SagaStorageRun]:
+        """Yield a SagaStorageRun for one saga execution; raises NotImplementedError if not supported."""
+        raise NotImplementedError("This storage does not support create_run()")
 ```
 
 - **get_sagas_for_recovery** — Returns saga IDs that need recovery (RUNNING, COMPENSATING) with `recovery_attempts` &lt; `max_recovery_attempts`, optionally filtered by staleness and by saga name. When `saga_name` is `None` (default), returns all saga types; when set, only sagas with that name. Used by recovery jobs.
 - **increment_recovery_attempts** — Called automatically by `recover_saga()` on recovery failure; increments `recovery_attempts` and optionally updates status (e.g. to FAILED).
 - **set_recovery_attempts** — Sets the recovery attempt counter to an explicit value. Use to reset after successfully recovering a step (e.g. set to `0`) or to set to the maximum so the saga is excluded from further recovery (e.g. mark as permanently failed without changing status).
+
+### Checkpoint commits and `SagaStorageRun`
+
+When a storage implements **`create_run()`**, the saga can run in a single session with **checkpoint commits**: one commit only at key points (after creating the saga and setting RUNNING, after each completed step, after each compensated step, at completion or failure) instead of committing after every storage call. This reduces the number of commits, shortens lock hold time, and lowers deadlock risk (e.g. with SQLAlchemy).
+
+- **`SagaStorageRun`** — Protocol for a scoped “session” for a single saga. It exposes the same mutation/read methods as the storage (`create_saga`, `update_context`, `update_status`, `log_step`, `load_saga_state`, `get_step_history`) but **does not commit** automatically; the caller must call **`commit()`** at the desired checkpoints. **`rollback()`** aborts the run without persisting changes.
+- **`create_run()`** — Returns an async context manager that yields a `SagaStorageRun`. If a storage does not support it (e.g. a custom implementation), it may raise `NotImplementedError`; in that case `SagaTransaction` falls back to the previous behaviour (no single session, no checkpoint commits; each call may commit immediately depending on the implementation).
+- **`load_saga_state(..., read_for_update=True)`** — When loading state for recovery or exclusive update, the implementation can lock the row (e.g. `SELECT ... FOR UPDATE` in SQLAlchemy). Together with checkpoint commits, this shortens lock duration and reduces deadlock risk.
 
 ## Memory Storage
 
@@ -71,11 +84,12 @@ history = await storage.get_step_history(saga_id)
 
 - ✅ Fast and lightweight
 - ✅ No database setup required
+- ✅ Implements **`create_run()`** — yields `_MemorySagaStorageRun`; `commit()` and `rollback()` are no-ops, but the protocol is aligned with SQLAlchemy for tests.
 - ❌ Not persistent (data lost on restart)
 
 ## SQLAlchemy Storage
 
-Database-backed implementation for production. It uses a session factory to manage transactions internally, ensuring that every step is committed immediately ("checkpointing").
+Database-backed implementation for production. It uses a session factory. When the saga uses **`create_run()`**, all operations for one saga run go through a single **`AsyncSession`** and are committed only at checkpoints (after create + RUNNING, after each step, after each compensation step, at completion/failure), which reduces commits and deadlock risk.
 
 ### Database Schema
 
@@ -143,25 +157,21 @@ mediator = bootstrap.bootstrap(
 context = OrderContext(...)
 saga_id = uuid.uuid4()
 
-# The storage will automatically commit each step to the database
+# With SqlAlchemySagaStorage, commits occur at checkpoints (after each step, etc.)
 async for step_result in mediator.stream(context, saga_id=saga_id):
     print(f"Step: {step_result.step_type.__name__}")
 ```
 
 ### Transaction Management
 
-**SqlAlchemySagaStorage** handles transactions automatically:
-
-1.  Each method (`create_saga`, `log_step`, etc.) opens a new session.
-2.  The operation is performed.
-3.  `session.commit()` is called immediately.
-4.  The session is closed.
+**SqlAlchemySagaStorage** implements **`create_run()`**: it yields a **`_SqlAlchemySagaStorageRun`** backed by a single **`AsyncSession`** per saga run. All mutations go through that session and are committed only when the saga calls **`run.commit()`** at checkpoints (after creating the saga and setting RUNNING, after each completed step, after each compensated step, at completion or failure). On exception within the run context, the run's **`rollback()`** is invoked.
 
 This design ensures:
 
-- **Crash Safety:** Even if the application crashes mid-saga, all completed steps are safely persisted.
-- **Connection Efficiency:** Connections are returned to the pool immediately after each operation.
-- **Isolation:** Saga storage operations don't interfere with your business logic transactions.
+- **Fewer commits** — One commit per checkpoint instead of per storage call.
+- **Shorter lock time** — With `load_saga_state(..., read_for_update=True)`, the row is locked only for the duration of the run; checkpoint commits shorten that duration and reduce deadlock risk.
+- **Crash safety** — Completed checkpoints are persisted; recovery can resume from the last checkpoint.
+- **Backward compatibility** — Custom storages that do not implement `create_run()` continue to work; the saga falls back to calling storage methods directly (no single session).
 
 ### Concurrency Control
 
@@ -176,13 +186,13 @@ To prevent "lost updates" when multiple steps might update the context simultane
 - If matched, it updates the context and increments the version (`version + 1`).
 - If not matched, it raises `SagaConcurrencyError`, indicating the state was modified by another process.
 
-#### 2. Row Locking (Recovery Safety)
+#### 2. Row Locking (Recovery Safety and Deadlock Mitigation)
 
-When recovering a saga (e.g., after a crash), it is critical that only one worker picks up the saga to avoid duplicate execution.
+When recovering or exclusively updating a saga (e.g., after a crash), it is critical that only one worker picks up the saga to avoid duplicate execution.
 
-- `load_saga_state(..., read_for_update=True)` uses `SELECT ... FOR UPDATE` (in SQL databases).
-- This acquires a row-level lock on the saga execution record.
-- Other workers attempting to lock the same saga will wait or fail, ensuring exclusive access during the recovery process.
+- `load_saga_state(..., read_for_update=True)` uses `SELECT ... FOR UPDATE` (in SQL databases), acquiring a row-level lock on the saga execution record.
+- Other workers attempting to lock the same saga will wait or fail, ensuring exclusive access.
+- When the storage supports **`create_run()`**, the saga holds the session (and thus the lock) only between checkpoints; commits are done at key points, which shortens lock duration and reduces deadlock risk.
 
 ## Choosing Storage
 
