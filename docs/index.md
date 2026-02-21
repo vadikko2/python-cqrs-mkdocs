@@ -46,7 +46,7 @@
 
     Handle commands and queries with full type safety and async support.
 
-    [:octicons-arrow-right-24: Read More](request_handler.md)
+    [:octicons-arrow-right-24: Read More](request_handler/index.md)
 
 -   :material-sync: **Saga Pattern**
 

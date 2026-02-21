@@ -127,5 +127,5 @@ class TimestampedRequest(cqrs.IRequest):
 
 ## See Also
 
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation
 - [Best Practices](best_practices.md) - Recommendations for custom implementations

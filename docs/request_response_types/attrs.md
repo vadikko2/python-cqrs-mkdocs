@@ -151,4 +151,4 @@ class ImmutableRequest(cqrs.IRequest):
 ## See Also
 
 - [Dataclasses](dataclasses.md) - Standard library alternative
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation

@@ -12,7 +12,7 @@ FastAPI integration with `python-cqrs` allows you to build RESTful APIs where Fa
 | **Scalability** | Commands and queries can scale independently |
 
 !!! note "Prerequisites"
-    Understanding of [Bootstrap](bootstrap/index.md), [Request Handlers](request_handler.md), and [Stream Handling](stream_handling/index.md) is recommended.
+    Understanding of [Bootstrap](bootstrap/index.md), [Request Handlers](request_handler/index.md), and [Stream Handling](stream_handling/index.md) is recommended.
 
 !!! tip "Quick Start"
     This integration shows how to use mediators created via [Bootstrap](bootstrap/index.md) in FastAPI endpoints. See [Stream Handling](stream_handling/index.md) for SSE examples.

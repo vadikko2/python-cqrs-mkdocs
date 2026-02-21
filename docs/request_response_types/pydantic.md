@@ -111,5 +111,5 @@ restored = CreateUserCommand.from_dict(**data)
 
 ## See Also
 
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation
 - [Mixed Usage](mixed_usage.md) - Combining Pydantic with other types

@@ -2,7 +2,7 @@
 
 ## Overview
 
-Request handlers process commands (write operations) and queries (read operations) in your CQRS application. They are the core of your business logic and are automatically resolved through the [Dependency Injection](di.md) container configured in [Bootstrap](bootstrap/index.md).
+Request handlers process commands (write operations) and queries (read operations) in your CQRS application. They are the core of your business logic and are automatically resolved through the [Dependency Injection](../di.md) container configured in [Bootstrap](../bootstrap/index.md).
 
 | Concept | Description | Can Emit Events |
 |---------|-------------|----------------|
@@ -11,14 +11,15 @@ Request handlers process commands (write operations) and queries (read operation
 | **Handlers** | Implement business logic, resolved via DI | Depends on type |
 
 !!! note "Prerequisites"
-    Before creating handlers, ensure you've configured [Bootstrap](bootstrap/index.md) and understand [Dependency Injection](di.md).
+    Before creating handlers, ensure you've configured [Bootstrap](../bootstrap/index.md) and understand [Dependency Injection](../di.md).
 
 !!! tip "Related Topics"
-    - [Request / Response Types](request_response_types/index.md) — Different types for requests and responses (Pydantic, Dataclasses, attrs, etc.)
-    - [Stream Handling](stream_handling/index.md) — For incremental processing
-    - [Chain of Responsibility](chain_of_responsibility/index.md) — For sequential handler chains
-    - [Saga Pattern](saga/index.md) — For distributed transactions with compensation
-    - [Event Handling](event_handler/index.md) — For processing events emitted by command handlers
+    - [Request / Response Types](../request_response_types/index.md) — Different types for requests and responses (Pydantic, Dataclasses, attrs, etc.)
+    - [Stream Handling](../stream_handling/index.md) — For incremental processing
+    - [Chain of Responsibility](../chain_of_responsibility/index.md) — For sequential handler chains
+    - [Saga Pattern](../saga/index.md) — For distributed transactions with compensation
+    - [Event Handling](../event_handler/index.md) — For processing events emitted by command handlers
+    - [Request Handler Fallback](fallback.md) — Fallback mechanism for resilient command/query handling
 
 Request handlers can be divided into two main types:
 

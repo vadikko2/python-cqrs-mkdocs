@@ -15,7 +15,7 @@ Both libraries allow you to bind implementations to interfaces and automatically
     This section assumes you've already configured [Bootstrap](bootstrap/index.md). The DI container is passed to bootstrap functions to resolve handlers and their dependencies.
 
 !!! tip "Next Steps"
-    After understanding DI, proceed to [Request Handlers](request_handler.md) to learn how handlers use dependency injection.
+    After understanding DI, proceed to [Request Handlers](request_handler/index.md) to learn how handlers use dependency injection.
 
 ## Supported Libraries
 

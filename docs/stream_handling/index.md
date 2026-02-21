@@ -24,6 +24,12 @@ Stream handling allows you to process requests incrementally and yield results a
 
     [:octicons-arrow-right-24: Read More](reference.md)
 
+-   :material-backup-restore: **Fallback**
+
+    Fallback streaming handler when primary stream fails.
+
+    [:octicons-arrow-right-24: Read More](fallback.md)
+
 </div>
 
 `StreamingRequestHandler` works with `StreamingRequestMediator` to process requests incrementally. The handler yields results as they become available, and events are processed after each yield. This enables:
@@ -34,7 +40,7 @@ Stream handling allows you to process requests incrementally and yield results a
 - **SSE integration** — Perfect for Server-Sent Events in web applications
 
 !!! note "Prerequisites"
-    Understanding of [Request Handlers](../request_handler.md) and [Bootstrap](../bootstrap/index.md) is recommended.
+    Understanding of [Request Handlers](../request_handler/index.md) and [Bootstrap](../bootstrap/index.md) is recommended.
 
 !!! tip "Use Cases"
     Streaming is ideal for large batch operations, file processing, or any scenario where you want to provide real-time feedback. See [FastAPI Integration](fastapi_integration.md) for SSE examples.

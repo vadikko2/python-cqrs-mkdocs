@@ -317,4 +317,4 @@ Create team guidelines for type selection:
 
 - [Comparison Table](index.md#comparison-table) - Detailed comparison
 - [Mixed Usage](mixed_usage.md) - Combining different types
-- [Request Handlers](../request_handler.md) - Handler implementation
+- [Request Handlers](../request_handler/index.md) - Handler implementation

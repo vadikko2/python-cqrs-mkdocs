@@ -140,4 +140,4 @@ Consider using TypedDict when:
 ## See Also
 
 - [Standard Classes](standard_classes.md) - Similar approach with more flexibility
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation

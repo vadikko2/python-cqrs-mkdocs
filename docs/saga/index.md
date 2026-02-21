@@ -62,7 +62,7 @@ The `python-cqrs` package implements the **Orchestrated Saga** pattern. `SagaTra
 | **Recovery** | Mechanism to resume interrupted sagas from persistent storage |
 
 !!! note "Prerequisites"
-    Understanding of [Request Handlers](../request_handler.md) and [Dependency Injection](../di.md) is recommended.
+    Understanding of [Request Handlers](../request_handler/index.md) and [Dependency Injection](../di.md) is recommended.
 
 !!! tip "When to Use"
     Use Saga pattern when coordinating multiple operations across different services, where each operation can be compensated if the overall transaction fails.

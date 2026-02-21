@@ -153,9 +153,9 @@ The library provides two built-in implementations that you can use directly:
    - Fast and simple
 
 !!! note "Prerequisites"
-    Understanding of [Request Handlers](../request_handler.md) is recommended. Request and response types are used in handler definitions.
+    Understanding of [Request Handlers](../request_handler/index.md) is recommended. Request and response types are used in handler definitions.
 
 !!! tip "Related Topics"
-    - [Request Handlers](../request_handler.md) — Learn how to use types in handlers
+    - [Request Handlers](../request_handler/index.md) — Learn how to use types in handlers
     - [Bootstrap](../bootstrap/index.md) — Setup and configuration
     - [Dependency Injection](../di.md) — DI container usage

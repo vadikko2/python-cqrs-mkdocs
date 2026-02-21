@@ -24,6 +24,12 @@ The Chain of Responsibility pattern allows multiple handlers to process a reques
 
     [:octicons-arrow-right-24: Read More](../mermaid/chain_of_responsibility.md)
 
+-   :material-backup-restore: **Fallback**
+
+    Combine CoR with Request Handler Fallback when the chain raises.
+
+    [:octicons-arrow-right-24: Read More](fallback.md)
+
 </div>
 
 `CORRequestHandler` implements the Chain of Responsibility pattern, allowing multiple handlers to process a request sequentially. Each handler decides whether to process the request or pass it to the next handler in the chain. The chain stops when a handler successfully processes the request or when all handlers have been exhausted.
@@ -36,10 +42,10 @@ The Chain of Responsibility pattern allows multiple handlers to process a reques
 - **Easy to extend** — Add new handlers without modifying existing ones
 
 !!! note "Prerequisites"
-    Understanding of [Request Handlers](../request_handler.md) and [Bootstrap](../bootstrap/index.md) is recommended.
+    Understanding of [Request Handlers](../request_handler/index.md) and [Bootstrap](../bootstrap/index.md) is recommended.
 
 !!! tip "When to Use"
-    Use Chain of Responsibility when you have multiple processing strategies or need fallback mechanisms. For standard request handling, use regular [Request Handlers](../request_handler.md).
+    Use Chain of Responsibility when you have multiple processing strategies or need fallback mechanisms. For standard request handling, use regular [Request Handlers](../request_handler/index.md).
 
 ## Pattern Description
 

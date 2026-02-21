@@ -134,4 +134,4 @@ Consider using NamedTuple when:
 ## See Also
 
 - [Dataclasses](dataclasses.md) - Similar features with more flexibility
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation

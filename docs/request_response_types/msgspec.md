@@ -112,4 +112,4 @@ Msgspec is significantly faster than Pydantic for serialization:
 ## See Also
 
 - [Pydantic](pydantic.md) - Alternative with more features
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation

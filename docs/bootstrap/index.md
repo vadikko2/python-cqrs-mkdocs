@@ -57,7 +57,7 @@
 The `bootstrap` utilities simplify the initial configuration of your CQRS application. They automatically set up:
 
 - **Dependency Injection Container** — Resolves handlers and their dependencies (see [Dependency Injection](../di.md))
-- **Request Mapping** — Maps commands and queries to their handlers (see [Request Handlers](../request_handler.md))
+- **Request Mapping** — Maps commands and queries to their handlers (see [Request Handlers](../request_handler/index.md))
 - **Event Mapping** — Maps domain events to their handlers (see [Event Handling](../event_handler/index.md))
 - **Saga Mapping** — Maps saga context types to saga classes (see [Saga Pattern](../saga/index.md))
 - **Message Broker** — Configures event publishing (see [Event Producing](../event_producing.md))
@@ -65,7 +65,7 @@ The `bootstrap` utilities simplify the initial configuration of your CQRS applic
 - **Event Processing** — Configures parallel event processing
 
 !!! tip "Getting Started"
-    If you're new to `python-cqrs`, start here! Bootstrap is the foundation for all other features. After configuring bootstrap, proceed to [Request Handlers](../request_handler.md) to learn how to create command and query handlers.
+    If you're new to `python-cqrs`, start here! Bootstrap is the foundation for all other features. After configuring bootstrap, proceed to [Request Handlers](../request_handler/index.md) to learn how to create command and query handlers.
 
 !!! note "Navigation"
     Use the navigation menu on the left to explore different mediator types and configuration options. Each section covers a specific aspect of bootstrap configuration.

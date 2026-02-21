@@ -20,7 +20,9 @@ nav:
       - DI Containers: bootstrap/di_containers.md
       - Advanced: bootstrap/advanced.md
     - Dependency Injection: di.md
-    - Commands / Requests Handling: request_handler.md
+    - Commands / Requests Handling:
+      - Overview: request_handler/index.md
+      - Fallback: request_handler/fallback.md
     - Request / Response Types:
       - Overview: request_response_types/index.md
       - Pydantic: request_response_types/pydantic.md
@@ -37,10 +39,12 @@ nav:
       - Configuration: stream_handling/configuration.md
       - FastAPI Integration: stream_handling/fastapi_integration.md
       - Reference: stream_handling/reference.md
+      - Fallback: stream_handling/fallback.md
     - Chain of Responsibility:
       - Overview: chain_of_responsibility/index.md
       - Examples: chain_of_responsibility/examples.md
       - Advanced: chain_of_responsibility/advanced.md
+      - Fallback: chain_of_responsibility/fallback.md
     - Saga Pattern:
       - Overview: saga/index.md
       - Flow Diagrams: saga/flow.md
@@ -65,6 +69,7 @@ nav:
       - Event Types: event_handler/event_types.md
       - Examples: event_handler/examples.md
       - Best Practices: event_handler/best_practices.md
+      - Fallback: event_handler/fallback.md
     - Transaction Outbox:
       - Overview: outbox/index.md
       - Implementation: outbox/implementation.md

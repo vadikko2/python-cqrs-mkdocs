@@ -12,7 +12,7 @@
 
     Request pipeline and handler execution where middlewares apply.
 
-    [:octicons-arrow-right-24: Read More](../request_handler.md)
+    [:octicons-arrow-right-24: Read More](../request_handler/index.md)
 
 </div>
 

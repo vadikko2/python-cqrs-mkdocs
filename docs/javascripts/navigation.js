@@ -68,7 +68,8 @@
             // Dependency Injection
             { title: 'Dependency Injection', url: 'di/', path: 'di' },
             // Request Handler
-            { title: 'Commands / Requests Handling', url: 'request_handler/', path: 'request_handler' },
+            { title: 'Commands / Requests Handling', url: 'request_handler/', path: 'request_handler/index' },
+            { title: 'Request Handler Fallback', url: 'request_handler/fallback/', path: 'request_handler/fallback' },
             // Request / Response Types
             { title: 'Request / Response Types', url: 'request_response_types/', path: 'request_response_types/index' },
             { title: 'Pydantic', url: 'request_response_types/pydantic/', path: 'request_response_types/pydantic' },
@@ -85,10 +86,12 @@
             { title: 'Stream Configuration', url: 'stream_handling/configuration/', path: 'stream_handling/configuration' },
             { title: 'Stream FastAPI Integration', url: 'stream_handling/fastapi_integration/', path: 'stream_handling/fastapi_integration' },
             { title: 'Stream Reference', url: 'stream_handling/reference/', path: 'stream_handling/reference' },
+            { title: 'Stream Handling Fallback', url: 'stream_handling/fallback/', path: 'stream_handling/fallback' },
             // Chain of Responsibility
             { title: 'Chain of Responsibility', url: 'chain_of_responsibility/', path: 'chain_of_responsibility/index' },
             { title: 'CoR Examples', url: 'chain_of_responsibility/examples/', path: 'chain_of_responsibility/examples' },
             { title: 'CoR Advanced', url: 'chain_of_responsibility/advanced/', path: 'chain_of_responsibility/advanced' },
+            { title: 'CoR Fallback', url: 'chain_of_responsibility/fallback/', path: 'chain_of_responsibility/fallback' },
             // Saga
             { title: 'Saga Pattern', url: 'saga/', path: 'saga/index' },
             { title: 'Saga Flow Diagrams', url: 'saga/flow/', path: 'saga/flow' },
@@ -108,6 +111,7 @@
             { title: 'Event Types', url: 'event_handler/event_types/', path: 'event_handler/event_types' },
             { title: 'Event Examples', url: 'event_handler/examples/', path: 'event_handler/examples' },
             { title: 'Event Best Practices', url: 'event_handler/best_practices/', path: 'event_handler/best_practices' },
+            { title: 'Event Handler Fallback', url: 'event_handler/fallback/', path: 'event_handler/fallback' },
             // Outbox
             { title: 'Transaction Outbox', url: 'outbox/', path: 'outbox/index' },
             { title: 'Outbox Implementation', url: 'outbox/implementation/', path: 'outbox/implementation' },

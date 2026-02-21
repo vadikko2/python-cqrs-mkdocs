@@ -120,4 +120,4 @@ class ProcessDataResponse(cqrs.DCResponse):
 ## See Also
 
 - [Best Practices](best_practices.md) - Recommendations for choosing types
-- [Request Handlers](../request_handler.md) - Learn about handler implementation
+- [Request Handlers](../request_handler/index.md) - Learn about handler implementation

@@ -40,6 +40,12 @@
 
     [:octicons-arrow-right-24: Read More](best_practices.md)
 
+-   :material-backup-restore: **Fallback**
+
+    Fallback handler when primary event handler fails or circuit breaker is open.
+
+    [:octicons-arrow-right-24: Read More](fallback.md)
+
 </div>
 
 Event handlers process domain events that are emitted from command handlers. These events represent something that happened in the domain and trigger side effects like sending notifications, updating read models, or triggering other workflows.
@@ -55,7 +61,7 @@ When a command handler processes a request, it can emit domain events through th
 | **Side Effects** | Event handlers perform side effects without blocking the main command flow |
 
 !!! note "Prerequisites"
-    Understanding of [Request Handlers](../request_handler.md) and [Bootstrap](../bootstrap/index.md) is required. Events are emitted by command handlers and processed by event handlers.
+    Understanding of [Request Handlers](../request_handler/index.md) and [Bootstrap](../bootstrap/index.md) is required. Events are emitted by command handlers and processed by event handlers.
 
 !!! tip "Related Topics"
     - [Transaction Outbox](../outbox/index.md) — For reliable event delivery to message brokers
